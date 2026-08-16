@@ -1,0 +1,6 @@
+{
+  "name": "Aura Luxe - Premium Men's Massage & Spa",
+  "description": "Commercial-grade luxury men-to-men massage therapy and wellness spa web application featuring instant online booking, slot management, therapist schedules, AI spa assistant, and comprehensive admin management panel.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

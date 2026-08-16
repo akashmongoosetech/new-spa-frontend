@@ -1,0 +1,102 @@
+@import "tailwindcss";
+
+@theme {
+  /* Brand Typography */
+  --font-serif: 'Playfair Display', 'Cormorant Garamond', Georgia, serif;
+  --font-display: 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
+  --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+
+  /* Luxury Gold Palette */
+  --color-gold-50: #fdfbf7;
+  --color-gold-100: #f7f0df;
+  --color-gold-200: #eedfbe;
+  --color-gold-300: #e3ca95;
+  --color-gold-400: #d8b06c;
+  --color-gold-500: #c5a059;
+  --color-gold-600: #aa8140;
+  --color-gold-700: #886232;
+  --color-gold-800: #6f4e2c;
+  --color-gold-900: #5c4128;
+  --color-gold-950: #352212;
+
+  /* Aura Luxe Brand Identifiers */
+  --color-aura-gold: #c5a059;
+  --color-aura-gold-light: #dfc896;
+  --color-aura-gold-dark: #9e7b3a;
+  --color-aura-gold-bright: #e5b85a;
+  
+  --color-aura-dark: #0e1117;
+  --color-aura-charcoal: #161a23;
+  --color-aura-slate: #222734;
+  --color-aura-card: #1c212d;
+  
+  --color-aura-pearl: #fafaf7;
+  --color-aura-cream: #f4efe6;
+  --color-aura-sand: #e8ded1;
+  
+  --color-aura-emerald: #1c3b34;
+  --color-aura-emerald-dark: #122823;
+  --color-aura-sage: #809689;
+
+  /* Custom Spacing Scales for Luxury Layouts */
+  --spacing-18: 4.5rem;
+  --spacing-22: 5.5rem;
+  --spacing-26: 6.5rem;
+  --spacing-30: 7.5rem;
+  --spacing-36: 9rem;
+
+  /* Luxury Border Radii */
+  --radius-xs: 0.25rem;
+  --radius-sm: 0.375rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  --radius-2xl: 1.5rem;
+  --radius-3xl: 2rem;
+  --radius-pill: 9999px;
+}
+
+/* Custom Utilities for Luxury Finishes */
+@layer utilities {
+  .bg-gold-gradient {
+    background: linear-gradient(135deg, #dfc896 0%, #c5a059 50%, #9e7b3a 100%);
+  }
+
+  .text-gold-gradient {
+    background: linear-gradient(135deg, #f5e6c7 0%, #d4a341 50%, #b8832a 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .border-gold-subtle {
+    border-color: rgba(197, 160, 89, 0.25);
+  }
+
+  .shadow-gold-glow {
+    box-shadow: 0 0 25px -5px rgba(197, 160, 89, 0.25);
+  }
+
+  .shadow-luxury {
+    box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.08), 0 4px 12px -2px rgba(197, 160, 89, 0.05);
+  }
+}
+
+/* Custom Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0e1117;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #2a3140;
+  border-radius: 4px;
+  border: 2px solid #0e1117;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #c5a059;
+}
