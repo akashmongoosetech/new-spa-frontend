@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { ArrowLeft, Save, CheckCircle2, AlertCircle } from 'lucide-react';
-import { mockTherapists } from '../../data/mockData';
 import { api } from '../../services/api';
 
 export const AdminTherapistFormPage: React.FC = () => {
@@ -32,14 +31,7 @@ export const AdminTherapistFormPage: React.FC = () => {
           setImageUrl(existing.imageUrl);
         }
       } catch (err) {
-        const mock = mockTherapists.find((t) => t.id === id);
-        if (mock) {
-          setName(mock.name);
-          setTitle(mock.title);
-          setExp(mock.experienceYears);
-          setBio(mock.bio);
-          setImageUrl(mock.imageUrl);
-        }
+        // keep empty form
       }
     })();
   }, [id]);

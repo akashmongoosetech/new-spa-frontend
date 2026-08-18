@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Calendar as CalendarIcon,
@@ -102,17 +102,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   const [services, setServices] = useState<Service[]>([]);
   const [therapists, setTherapists] = useState<Therapist[]>([]);
   const [contacts, setContacts] = useState<ContactMessage[]>([]);
-  const [stats, setStats] = useState<any>({
-    totalRevenue: 28450,
-    totalBookings: 24,
-    confirmedCount: 12,
-    pendingCount: 4,
-    completedCount: 6,
-    cancelledCount: 2,
-    contactsCount: 8,
-    subscribersCount: 15,
-    websiteVisitors: 12840,
-  });
+  const [stats, setStats] = useState<any>({});
 
   const knownBookingIdsRef = useRef<Set<string>>(new Set());
 
@@ -212,15 +202,47 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [authToken, currentUser]);
 
-  // Analytics Chart Data
-  const chartData = [
-    { month: 'Jan', revenue: 18400, bookings: 14 },
-    { month: 'Feb', revenue: 22100, bookings: 18 },
-    { month: 'Mar', revenue: 25600, bookings: 21 },
-    { month: 'Apr', revenue: 21800, bookings: 17 },
-    { month: 'May', revenue: 29400, bookings: 26 },
-    { month: 'Jun', revenue: 34200, bookings: 31 },
-  ];
+  // Analytics Chart Data — computed from the real bookings list (last 6 months).
+  const chartData = useMemo(() => {
+    const months: { key: string; month: string; revenue: number; bookings: number }[] = [];
+    const now = new Date();
+    for (let i = 5; i >= 0; i -= 1) {
+      const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+      months.push({
+        key: `${d.getFullYear()}-${d.getMonth()}`,
+        month: d.toLocaleString('en', { month: 'short' }),
+        revenue: 0,
+        bookings: 0,
+      });
+    }
+    (bookings || []).forEach((b) => {
+      if (!b || !b.date) return;
+      const d = new Date(b.date);
+      if (Number.isNaN(d.getTime())) return;
+      const key = `${d.getFullYear()}-${d.getMonth()}`;
+      const m = months.find((x) => x.key === key);
+      if (!m) return;
+      m.bookings += 1;
+      if (b.status !== 'cancelled' && b.status !== 'rejected') {
+        m.revenue += b.totalPaid || 0;
+      }
+    });
+    return months;
+  }, [bookings]);
+
+  // Revenue trend vs the previous month, derived from real data.
+  const revenueMetrics = useMemo(() => {
+    const now = new Date();
+    const curKey = `${now.getFullYear()}-${now.getMonth()}`;
+    const prevD = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+    const prevKey = `${prevD.getFullYear()}-${prevD.getMonth()}`;
+    const cur = chartData.find((c) => c.key === curKey);
+    const prev = chartData.find((c) => c.key === prevKey);
+    const currentRevenue = cur?.revenue || 0;
+    const prevRevenue = prev?.revenue || 0;
+    const delta = prevRevenue > 0 ? Math.round(((currentRevenue - prevRevenue) / prevRevenue) * 1000) / 10 : 100;
+    return { currentRevenue, delta };
+  }, [chartData]);
 
   const unreadContactsCount = (contacts || []).filter((c) => c && c.status === 'new').length;
   const pendingBookingsCount = (bookings || []).filter((b) => b && b.status === 'pending').length;
@@ -237,7 +259,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
             <div className="p-8 rounded-3xl bg-gradient-to-r from-[#1A1A1A] via-gray-900 to-black text-white relative overflow-hidden shadow-2xl flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
               <div className="space-y-2 relative z-10">
                 <span className="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-[#2CB5A0] text-black">
-                  Bandra West Mumbai Sanctuary
+                  Bandra West Indore Sanctuary
                 </span>
                 <h1 className="text-2xl font-black tracking-tight">
                   Welcome back, {currentUser?.name || 'Administrator'}!
@@ -273,9 +295,9 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                     <DollarSign className="w-5 h-5" />
                   </div>
                 </div>
-                <h3 className="text-2xl font-black text-gray-900">{settings.currencySymbol || '₹'}{stats.totalRevenue || 185000}</h3>
+                <h3 className="text-2xl font-black text-gray-900">{settings.currencySymbol || '₹'}{stats?.totalRevenue ?? 0}</h3>
                 <div className="flex items-center gap-1.5 text-xs text-emerald-600 font-bold">
-                  <ArrowUpRight className="w-4 h-4" /> +18.4% <span className="text-gray-400 font-normal">vs last month</span>
+                  <ArrowUpRight className="w-4 h-4" /> {revenueMetrics.delta >= 0 ? '+' : ''}{revenueMetrics.delta}% <span className="text-gray-400 font-normal">vs last month</span>
                 </div>
               </div>
 
@@ -374,7 +396,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                           <p className="text-[10px] text-gray-500">{b.serviceTitle}</p>
                         </div>
                         <div className="text-right">
-                          <span className="font-bold text-[#2CB5A0]">${b.totalPaid}</span>
+                          <span className="font-bold text-[#2CB5A0]">{settings.currencySymbol || '₹'}{b.totalPaid}</span>
                           <p className="text-[9px] text-gray-400">{b.date}</p>
                         </div>
                       </div>

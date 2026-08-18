@@ -1,5 +1,5 @@
 import React from 'react';
-import { Printer, Download, Sparkles, CheckCircle2, Calendar, Clock, User, Phone, Mail, MapPin, DollarSign } from 'lucide-react';
+import { Printer, Download, Sparkles, CheckCircle2, Calendar, Clock, User, Phone, Mail, MapPin } from 'lucide-react';
 import { Modal } from '../ui/Modal';
 import { Booking } from '../../types';
 
@@ -29,7 +29,7 @@ export const PrintBookingModal: React.FC<PrintBookingModalProps> = ({ isOpen, on
               <h2 className="font-extrabold text-gray-900 text-lg tracking-wider">AURA LUXE SPA</h2>
             </div>
             <p className="text-xs text-gray-500 mt-1">Premier Men-to-Men Massage & Wellness Suites</p>
-            <p className="text-[11px] text-gray-400">Plot 42, Bandra Reclamation, Bandra West, Mumbai 400050 • +91 98200 12345</p>
+            <p className="text-[11px] text-gray-400">Indore, Ujjain, Dewas • +91 91716 06807</p>
           </div>
           <div className="text-right">
             <span className="inline-block px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-teal-100 text-[#2CB5A0]">
@@ -41,7 +41,7 @@ export const PrintBookingModal: React.FC<PrintBookingModalProps> = ({ isOpen, on
         </div>
 
         {/* Customer & Session Info Grid */}
-        <div className="grid grid-cols-2 gap-4 p-4 rounded-2xl bg-gray-50 border border-gray-100 text-xs">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-4 rounded-2xl bg-gray-50 border border-gray-100 text-xs">
           <div>
             <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Guest Information</span>
             <p className="font-bold text-gray-900 mt-1">{booking.firstName} {booking.lastName}</p>

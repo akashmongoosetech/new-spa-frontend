@@ -1,20 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import { useOutletContext, useNavigate } from 'react-router-dom';
 import { HomePage as OriginalHomePage } from '../HomePage';
-import { mockServices, mockTherapists, mockTestimonials, mockBlogs, mockSettings } from '../../data/mockData';
+import { mockSettings } from '../../data/mockData';
 import { api } from '../../services/api';
 
 export const HomePageWrapper: React.FC = () => {
   const navigate = useNavigate();
   const context = useOutletContext<{
-    services?: typeof mockServices;
-    therapists?: typeof mockTherapists;
+    services?: any[];
+    therapists?: any[];
     settings?: typeof mockSettings;
     onOpenBooking?: (serviceId?: string) => void;
   }>() || {};
 
-  const [testimonials, setTestimonials] = useState(mockTestimonials);
-  const [blogs, setBlogs] = useState(mockBlogs);
+  const [testimonials, setTestimonials] = useState<any[]>([]);
+  const [blogs, setBlogs] = useState<any[]>([]);
 
   useEffect(() => {
     (async () => {
@@ -23,10 +23,10 @@ export const HomePageWrapper: React.FC = () => {
           api.getTestimonials().catch(() => []),
           api.getBlogs().catch(() => []),
         ]);
-        if (Array.isArray(t) && t.length > 0) setTestimonials(t as any);
-        if (Array.isArray(b) && b.length > 0) setBlogs(b as any);
+        if (Array.isArray(t)) setTestimonials(t);
+        if (Array.isArray(b)) setBlogs(b);
       } catch (err) {
-        // keep mock fallbacks
+        // keep empty state
       }
     })();
   }, []);
@@ -34,8 +34,8 @@ export const HomePageWrapper: React.FC = () => {
   return (
     <OriginalHomePage
       settings={context.settings || mockSettings}
-      services={context.services || mockServices}
-      therapists={context.therapists || mockTherapists}
+      services={context.services ?? []}
+      therapists={context.therapists ?? []}
       testimonials={testimonials}
       blogs={blogs}
       onOpenBooking={context.onOpenBooking || (() => {})}

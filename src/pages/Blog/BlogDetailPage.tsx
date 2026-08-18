@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link, useOutletContext } from 'react-router-dom';
 import { Clock, User, Tag, ArrowLeft, Calendar } from 'lucide-react';
-import { mockBlogs, mockSettings } from '../../data/mockData';
+import { mockSettings } from '../../data/mockData';
 import { api } from '../../services/api';
 import { SEO } from '../../components/ui/SEO';
+import { LoadingSpinner } from '../../components/ui/LoadingSpinner';
 import NotFound from '../NotFound';
 
 export const BlogDetailPage: React.FC = () => {
@@ -14,16 +15,16 @@ export const BlogDetailPage: React.FC = () => {
   }>() || {};
 
   const settings = context.settings || mockSettings;
-  const [blogs, setBlogs] = useState(mockBlogs);
+  const [blogs, setBlogs] = useState<any[]>([]);
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
     (async () => {
       try {
         const b = await api.getBlogs();
-        if (Array.isArray(b) && b.length > 0) setBlogs(b as any);
+        if (Array.isArray(b)) setBlogs(b);
       } catch (err) {
-        // keep mock fallback
+        // keep empty state
       } finally {
         setLoaded(true);
       }
@@ -34,11 +35,13 @@ export const BlogDetailPage: React.FC = () => {
     (b) => b.slug === slug || b.id === slug
   );
 
-  if (loaded && !blog) {
-    return <NotFound />;
+  if (!loaded) {
+    return <LoadingSpinner fullScreen label="Loading article..." />;
   }
 
-  if (!blog) return null;
+  if (!blog) {
+    return <NotFound />;
+  }
 
   return (
     <div className="py-12 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto font-sans min-h-screen">

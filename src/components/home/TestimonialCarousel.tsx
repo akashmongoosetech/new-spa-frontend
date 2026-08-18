@@ -162,7 +162,7 @@ export const TestimonialCarousel: React.FC<TestimonialCarouselProps> = ({
             transition={{ delay: 0.2 }}
             className="text-gray-400 text-sm sm:text-base leading-relaxed max-w-2xl mx-auto"
           >
-            Unedited reviews from Mumbai's executive leaders, corporate directors, and wellness connoisseurs who trust Aura Luxe as their private restorative sanctuary.
+            Unedited reviews from Indore, Ujjain, Dewas executive leaders, corporate directors, and wellness connoisseurs who trust Aura Luxe as their private restorative sanctuary.
           </motion.p>
         </div>
 
@@ -205,7 +205,7 @@ export const TestimonialCarousel: React.FC<TestimonialCarouselProps> = ({
                     {[...Array(current.rating || 5)].map((_, i) => (
                       <Star key={i} className="w-4 h-4 fill-amber-400 text-amber-400" />
                     ))}
-                    <span className="text-xs font-bold text-white ml-1">5.0</span>
+                    <span className="text-xs font-bold text-white ml-1">{(current.rating || 5).toFixed(1)}</span>
                   </div>
                 </div>
 

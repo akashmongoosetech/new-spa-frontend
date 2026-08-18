@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Star, Plus, Trash2 } from 'lucide-react';
-import { mockTestimonials } from '../../data/mockData';
 import { api } from '../../services/api';
+import { showToast } from '../../utils/toastEvents';
 
 export const AdminTestimonialsPage: React.FC = () => {
-  const [items, setItems] = useState(mockTestimonials as any[]);
+  const [items, setItems] = useState<any[]>([]);
   const [name, setName] = useState('');
   const [role, setRole] = useState('');
   const [rating, setRating] = useState(5);
@@ -14,9 +14,9 @@ export const AdminTestimonialsPage: React.FC = () => {
     (async () => {
       try {
         const t = await api.getTestimonials();
-        if (Array.isArray(t) && t.length > 0) setItems(t);
+        if (Array.isArray(t)) setItems(t);
       } catch (err) {
-        // keep mock fallback
+        // keep empty state
       }
     })();
   }, []);
@@ -32,7 +32,7 @@ export const AdminTestimonialsPage: React.FC = () => {
       setRole('');
       setComment('');
     } catch (err: any) {
-      alert(err?.message || 'Failed to add testimonial.');
+      showToast({ type: 'error', title: 'Add Failed', message: err?.message || 'Failed to add testimonial.' });
     }
   };
 
@@ -42,7 +42,7 @@ export const AdminTestimonialsPage: React.FC = () => {
       await api.deleteTestimonial(id);
       setItems((prev) => prev.filter((t) => t.id !== id));
     } catch (err: any) {
-      alert(err?.message || 'Failed to delete testimonial.');
+      showToast({ type: 'error', title: 'Delete Failed', message: err?.message || 'Failed to delete testimonial.' });
     }
   };
 

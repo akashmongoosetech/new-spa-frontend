@@ -21,6 +21,7 @@ import { BusinessSettings } from '../types';
 
 interface GalleryPageProps {
   settings?: BusinessSettings;
+  photos?: GalleryPhoto[];
   onOpenBooking?: (serviceId?: string) => void;
   setActiveTab?: (tab: string) => void;
 }
@@ -149,21 +150,25 @@ const GALLERY_DATA: GalleryPhoto[] = [
   }
 ];
 
-export const GalleryPage: React.FC<GalleryPageProps> = ({ onOpenBooking }) => {
+export const GalleryPage: React.FC<GalleryPageProps> = ({ photos, onOpenBooking }) => {
   const [activeCategory, setActiveCategory] = useState<string>('all');
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
+  // Prefer live API content; the static showcase is only a fallback when this
+  // component is used without the wrapper (no data injected).
+  const galleryPhotos = photos || GALLERY_DATA;
+
   const categories = [
-    { id: 'all', label: 'All Collections', count: GALLERY_DATA.length },
-    { id: 'suites', label: 'VIP Therapy Suites', count: GALLERY_DATA.filter(i => i.category === 'suites').length },
-    { id: 'hydrotherapy', label: 'Hydrotherapy & Steam', count: GALLERY_DATA.filter(i => i.category === 'hydrotherapy').length },
-    { id: 'equipment', label: 'Professional Equipment', count: GALLERY_DATA.filter(i => i.category === 'equipment').length },
-    { id: 'ambiance', label: 'Ambiance & Lounge', count: GALLERY_DATA.filter(i => i.category === 'ambiance').length },
+    { id: 'all', label: 'All Collections', count: galleryPhotos.length },
+    { id: 'suites', label: 'VIP Therapy Suites', count: galleryPhotos.filter(i => i.category === 'suites').length },
+    { id: 'hydrotherapy', label: 'Hydrotherapy & Steam', count: galleryPhotos.filter(i => i.category === 'hydrotherapy').length },
+    { id: 'equipment', label: 'Professional Equipment', count: galleryPhotos.filter(i => i.category === 'equipment').length },
+    { id: 'ambiance', label: 'Ambiance & Lounge', count: galleryPhotos.filter(i => i.category === 'ambiance').length },
   ];
 
   const filteredPhotos = activeCategory === 'all'
-    ? GALLERY_DATA
-    : GALLERY_DATA.filter(p => p.category === activeCategory);
+    ? galleryPhotos
+    : galleryPhotos.filter(p => p.category === activeCategory);
 
   const currentPhoto = lightboxIndex !== null ? filteredPhotos[lightboxIndex] : null;
 
@@ -252,7 +257,16 @@ export const GalleryPage: React.FC<GalleryPageProps> = ({ onOpenBooking }) => {
               transition={{ duration: 0.3, delay: index * 0.05 }}
               key={photo.id}
               onClick={() => setLightboxIndex(index)}
-              className="group relative h-80 rounded-3xl overflow-hidden cursor-pointer border border-white/10 bg-[#141C1E] shadow-xl"
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  setLightboxIndex(index);
+                }
+              }}
+              role="button"
+              tabIndex={0}
+              aria-label={`View ${photo.title} in fullscreen`}
+              className="group relative h-80 rounded-3xl overflow-hidden cursor-pointer border border-white/10 bg-[#141C1E] shadow-xl focus:outline-none focus:ring-2 focus:ring-[#2CB5A0]/60"
             >
               <img
                 src={photo.url}
@@ -326,6 +340,9 @@ export const GalleryPage: React.FC<GalleryPageProps> = ({ onOpenBooking }) => {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="fixed inset-0 z-50 bg-black/95 backdrop-blur-2xl flex items-center justify-center p-2 sm:p-6 overflow-hidden"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Photo lightbox viewer"
           >
             {/* Close Button */}
             <button

@@ -28,9 +28,21 @@ export const ScheduleManager: React.FC = () => {
   // New Time Slot
   const [newSlotTime, setNewSlotTime] = useState('');
 
+  // Draft states for inline text/time inputs (saved on blur to avoid per-keystroke API calls)
+  const [openDraft, setOpenDraft] = useState('');
+  const [closeDraft, setCloseDraft] = useState('');
+  const [reasonDraft, setReasonDraft] = useState('');
+
   useEffect(() => {
     fetchSchedule();
   }, []);
+
+  useEffect(() => {
+    if (!config) return;
+    setOpenDraft(config.workingHoursStart || '');
+    setCloseDraft(config.workingHoursEnd || '');
+    setReasonDraft(config.emergencyClosureReason || '');
+  }, [config]);
 
   const fetchSchedule = async () => {
     try {
@@ -146,8 +158,11 @@ export const ScheduleManager: React.FC = () => {
             <label className="block text-xs font-bold text-rose-200 mb-1">Public Alert Reason shown to clients</label>
             <input
               type="text"
-              value={config.emergencyClosureReason}
-              onChange={(e) => handleSaveConfig({ emergencyClosureReason: e.target.value })}
+              value={reasonDraft}
+              onChange={(e) => setReasonDraft(e.target.value)}
+              onBlur={() => {
+                if (reasonDraft !== config.emergencyClosureReason) handleSaveConfig({ emergencyClosureReason: reasonDraft });
+              }}
               placeholder="e.g. Spa temporarily closed for exclusive private VIP executive event."
               className="w-full px-3.5 py-2 rounded-xl bg-black/40 border border-rose-700 text-white text-xs outline-none"
             />
@@ -163,13 +178,16 @@ export const ScheduleManager: React.FC = () => {
             <h3 className="font-extrabold text-gray-900 text-sm">Working Hours & Available Slots</h3>
           </div>
 
-          <div className="grid grid-cols-2 gap-3 text-xs">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
             <div>
               <label className="block font-bold text-gray-700 mb-1">Daily Opening Hour</label>
               <input
                 type="time"
-                value={config.workingHoursStart}
-                onChange={(e) => handleSaveConfig({ workingHoursStart: e.target.value })}
+                value={openDraft}
+                onChange={(e) => setOpenDraft(e.target.value)}
+                onBlur={() => {
+                  if (openDraft !== config.workingHoursStart) handleSaveConfig({ workingHoursStart: openDraft });
+                }}
                 className="w-full px-3.5 py-2 rounded-xl border text-xs outline-none"
               />
             </div>
@@ -177,8 +195,11 @@ export const ScheduleManager: React.FC = () => {
               <label className="block font-bold text-gray-700 mb-1">Daily Closing Hour</label>
               <input
                 type="time"
-                value={config.workingHoursEnd}
-                onChange={(e) => handleSaveConfig({ workingHoursEnd: e.target.value })}
+                value={closeDraft}
+                onChange={(e) => setCloseDraft(e.target.value)}
+                onBlur={() => {
+                  if (closeDraft !== config.workingHoursEnd) handleSaveConfig({ workingHoursEnd: closeDraft });
+                }}
                 className="w-full px-3.5 py-2 rounded-xl border text-xs outline-none"
               />
             </div>
@@ -243,7 +264,7 @@ export const ScheduleManager: React.FC = () => {
               ))}
             </div>
 
-            <form onSubmit={handleAddHoliday} className="grid grid-cols-5 gap-2 pt-1">
+            <form onSubmit={handleAddHoliday} className="grid grid-cols-1 sm:grid-cols-5 gap-2 pt-1">
               <input
                 type="date"
                 required

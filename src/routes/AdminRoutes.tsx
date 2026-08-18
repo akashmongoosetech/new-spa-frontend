@@ -17,6 +17,8 @@ const AdminBlogFormPage = lazy(() => import('../pages/Admin/AdminBlogFormPage'))
 const AdminGalleryPage = lazy(() => import('../pages/Admin/AdminGalleryPage'));
 const AdminTestimonialsPage = lazy(() => import('../pages/Admin/AdminTestimonialsPage'));
 const AdminFaqsPage = lazy(() => import('../pages/Admin/AdminFaqsPage'));
+const AdminCouponsPage = lazy(() => import('../pages/Admin/AdminCouponsPage'));
+const AdminEmailLogsPage = lazy(() => import('../pages/Admin/AdminEmailLogsPage'));
 const AdminUsersPage = lazy(() => import('../pages/Admin/AdminUsersPage'));
 const AdminSettingsPage = lazy(() => import('../pages/Admin/AdminSettingsPage'));
 const AdminSeoPage = lazy(() => import('../pages/Admin/AdminSeoPage'));
@@ -54,6 +56,8 @@ export const renderAdminRoutes = () => (
     <Route path="gallery" element={<AdminGalleryPage />} />
     <Route path="testimonials" element={<AdminTestimonialsPage />} />
     <Route path="faqs" element={<AdminFaqsPage />} />
+    <Route path="coupons" element={<AdminCouponsPage />} />
+    <Route path="email-logs" element={<AdminEmailLogsPage />} />
     <Route path="users" element={<AdminUsersPage />} />
     <Route path="settings" element={<AdminSettingsPage />} />
     <Route path="seo" element={<AdminSeoPage />} />

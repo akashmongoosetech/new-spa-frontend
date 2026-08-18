@@ -8,7 +8,7 @@ import { Toast, ToastMessage } from '../ui/Toast';
 import { playNotificationSound } from '../../utils/toastEvents';
 import { BookingWizard } from '../booking/BookingWizard';
 import { BookingLookupModal } from '../booking/BookingLookupModal';
-import { mockServices, mockTherapists, mockSettings } from '../../data/mockData';
+import { mockSettings } from '../../data/mockData';
 import { api } from '../../services/api';
 import { Service, Therapist, BusinessSettings, Booking } from '../../types';
 
@@ -41,8 +41,8 @@ export const Layout: React.FC<LayoutProps> = ({
   const navigate = useNavigate();
 
   const [settings, setSettings] = useState<BusinessSettings>(propSettings || mockSettings);
-  const [services, setServices] = useState<Service[]>(propServices || mockServices);
-  const [therapists, setTherapists] = useState<Therapist[]>(propTherapists || mockTherapists);
+  const [services, setServices] = useState<Service[]>(propServices || []);
+  const [therapists, setTherapists] = useState<Therapist[]>(propTherapists || []);
 
   // Load real data from the API when this layout is used without injected props.
   useEffect(() => {
@@ -55,11 +55,11 @@ export const Layout: React.FC<LayoutProps> = ({
           api.getSettings().catch(() => null),
         ]);
         if (cancelled) return;
-        if (Array.isArray(svc) && svc.length > 0) setServices(svc);
-        if (Array.isArray(thp) && thp.length > 0) setTherapists(thp);
+        if (Array.isArray(svc)) setServices(svc);
+        if (Array.isArray(thp)) setTherapists(thp);
         if (st) setSettings(st);
       } catch (err) {
-        // keep mock fallbacks
+        // keep placeholder state
       }
     })();
     return () => { cancelled = true; };

@@ -141,7 +141,9 @@ export const Toast: React.FC<ToastProps> = ({ toasts, onClose }) => {
   return (
     <div
       id="toast-container"
-      className="fixed bottom-6 right-6 z-50 flex flex-col gap-3 max-w-md w-full pointer-events-none px-4 sm:px-0"
+      aria-live="polite"
+      role="status"
+      className="fixed bottom-6 left-4 right-4 z-50 flex flex-col gap-3 sm:left-auto sm:right-6 sm:w-[420px] sm:max-w-[calc(100vw-3rem)] pointer-events-none"
     >
       <AnimatePresence mode="sync">
         {toasts.map((toast) => (

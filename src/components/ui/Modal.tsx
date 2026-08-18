@@ -2,6 +2,8 @@ import React, { useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { X } from 'lucide-react';
 
+let modalOpenCount = 0;
+
 export interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -30,15 +32,25 @@ export const Modal: React.FC<ModalProps> = ({
   };
   const widthClass = widthClasses[chosenSize] || (chosenSize.startsWith('max-w-') ? chosenSize : `max-w-${chosenSize}`);
   useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'unset';
-    }
-    return () => {
-      document.body.style.overflow = 'unset';
+    if (!isOpen) return;
+
+    modalOpenCount += 1;
+    document.body.style.overflow = 'hidden';
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
     };
-  }, [isOpen]);
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      modalOpenCount -= 1;
+      if (modalOpenCount <= 0) {
+        modalOpenCount = 0;
+        document.body.style.overflow = '';
+      }
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isOpen, onClose]);
 
   return (
     <AnimatePresence>
@@ -59,6 +71,9 @@ export const Modal: React.FC<ModalProps> = ({
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 10 }}
             transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+            role="dialog"
+            aria-modal="true"
+            aria-label={title || 'Modal dialog'}
             className={`relative w-full ${widthClass} bg-white rounded-2xl shadow-2xl border border-teal-100 overflow-hidden z-10 my-8`}
           >
             {title && (
@@ -67,6 +82,7 @@ export const Modal: React.FC<ModalProps> = ({
                 <button
                   id="modal-close-button"
                   onClick={onClose}
+                  aria-label="Close modal"
                   className="p-1 rounded-full text-gray-400 hover:text-gray-700 hover:bg-gray-100 transition-colors"
                 >
                   <X className="w-5 h-5" />
@@ -77,6 +93,7 @@ export const Modal: React.FC<ModalProps> = ({
               <button
                 id="modal-close-icon-only"
                 onClick={onClose}
+                aria-label="Close modal"
                 className="absolute top-4 right-4 z-20 p-2 rounded-full text-gray-400 hover:text-gray-700 hover:bg-gray-100/80 transition-colors"
               >
                 <X className="w-5 h-5" />

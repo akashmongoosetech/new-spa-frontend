@@ -36,6 +36,7 @@ export const TherapistManager: React.FC<TherapistManagerProps> = ({ therapists, 
   const [rating, setRating] = useState(4.9);
   const [featured, setFeatured] = useState(true);
   const [active, setActive] = useState(true);
+  const [saving, setSaving] = useState(false);
 
   const safeTherapists = therapists || [];
   const filteredTherapists = safeTherapists.filter(
@@ -100,6 +101,7 @@ export const TherapistManager: React.FC<TherapistManagerProps> = ({ therapists, 
     };
 
     try {
+      setSaving(true);
       if (editingTherapist) {
         await api.updateTherapist(editingTherapist.id, payload);
       } else {
@@ -109,6 +111,8 @@ export const TherapistManager: React.FC<TherapistManagerProps> = ({ therapists, 
       onRefreshTherapists();
     } catch (err) {
       console.error(err);
+    } finally {
+      setSaving(false);
     }
   };
 
@@ -139,6 +143,11 @@ export const TherapistManager: React.FC<TherapistManagerProps> = ({ therapists, 
       </div>
 
       {/* Grid View */}
+      {filteredTherapists.length === 0 ? (
+        <div className="bg-white rounded-2xl border border-gray-100 p-12 text-center text-sm text-gray-400">
+          No therapists match your search. Try a different query or add a new therapist.
+        </div>
+      ) : (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {filteredTherapists.map((t) => (
           <div
@@ -220,6 +229,7 @@ export const TherapistManager: React.FC<TherapistManagerProps> = ({ therapists, 
           </div>
         ))}
       </div>
+      )}
 
       {/* Add / Edit Therapist Modal */}
       <Modal
@@ -229,7 +239,7 @@ export const TherapistManager: React.FC<TherapistManagerProps> = ({ therapists, 
         size="lg"
       >
         <form onSubmit={handleSubmit} className="space-y-4 text-xs">
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <label className="block font-bold text-gray-700 mb-1">Full Name</label>
               <input
@@ -254,7 +264,7 @@ export const TherapistManager: React.FC<TherapistManagerProps> = ({ therapists, 
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <label className="block font-bold text-gray-700 mb-1">Experience (Years)</label>
               <input
@@ -357,9 +367,10 @@ export const TherapistManager: React.FC<TherapistManagerProps> = ({ therapists, 
             </button>
             <button
               type="submit"
-              className="px-6 py-2.5 rounded-xl bg-[#2CB5A0] hover:bg-teal-600 text-white font-bold cursor-pointer shadow-md shadow-[#2CB5A0]/20"
+              disabled={saving}
+              className="px-6 py-2.5 rounded-xl bg-[#2CB5A0] hover:bg-teal-600 text-white font-bold cursor-pointer shadow-md shadow-[#2CB5A0]/20 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Save Therapist Profile
+              {saving ? 'Saving...' : 'Save Therapist Profile'}
             </button>
           </div>
         </form>

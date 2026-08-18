@@ -3,29 +3,26 @@ import { useParams, Link, useOutletContext } from 'react-router-dom';
 import { Clock, Star, CheckCircle2, Calendar, ArrowLeft, ShieldCheck, Sparkles } from 'lucide-react';
 import { SEO } from '../../components/ui/SEO';
 import { createBooking } from '../../services/api';
-import { mockServices, mockSettings as defaultSettings } from '../../data/mockData';
+import { showToast } from '../../utils/toastEvents';
+import { mockSettings as defaultSettings } from '../../data/mockData';
 import NotFound from '../NotFound';
 
 export const ServiceDetailPage: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
   const context = useOutletContext<{
-    services?: typeof mockServices;
+    services?: any[];
     settings?: typeof defaultSettings;
     therapists?: any[];
     onOpenBooking?: (serviceId?: string) => void;
   }>() || {};
 
-  const services = context.services || mockServices;
+  const services = context.services ?? [];
   const therapists = context.therapists || [];
   const settings = context.settings || defaultSettings;
 
   const service = services.find(
     (s) => s.slug === slug || s.id === slug
   );
-
-  if (!service) {
-    return <NotFound />;
-  }
 
   const [bookingData, setBookingData] = useState<{
     customerName: string;
@@ -42,10 +39,12 @@ export const ServiceDetailPage: React.FC = () => {
     selectedTime: '10:00 AM',
     selectedTherapist: ''
   });
-
+  const [bookingStatus, setBookingStatus] = useState<'idle' | 'submitting'>('idle');
 
 
   const handleBook = async () => {
+    if (!service) return;
+    setBookingStatus('submitting');
     try {
       const result = await createBooking({
         serviceId: service.id,
@@ -61,12 +60,25 @@ export const ServiceDetailPage: React.FC = () => {
         totalPaid: service.price,
         paymentMethod: 'pay_at_venue'
       });
-      // On success, navigate away or show success message
-      alert('Booking confirmed! Booking number: ' + result.bookingNumber);
-    } catch (err) {
-      alert('Failed to create booking: ' + (err?.response?.data?.message || err.message));
+      setBookingStatus('idle');
+      showToast({
+        type: 'success',
+        title: 'Booking Confirmed!',
+        message: `Your reservation #${result.bookingNumber} has been confirmed. A confirmation email was dispatched.`,
+      });
+    } catch (err: any) {
+      setBookingStatus('idle');
+      showToast({
+        type: 'error',
+        title: 'Booking Failed',
+        message: err?.response?.data?.message || err?.message || 'Please try again or contact support.',
+      });
     }
   };
+
+  if (!service) {
+    return <NotFound />;
+  }
 
   return (
     <div className="py-12 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto font-sans min-h-screen">
@@ -137,7 +149,7 @@ export const ServiceDetailPage: React.FC = () => {
 
         {/* Sidebar Card */}
         <div className="lg:col-span-1">
-          <div className="bg-white rounded-2xl border border-gray-200 p-6 shadow-xl sticky top-28 space-y-6">
+          <div className="bg-white rounded-2xl border border-gray-200 p-6 shadow-xl lg:sticky lg:top-28 space-y-6">
             <div className="flex items-baseline justify-between border-b pb-4">
               <div>
                 <span className="text-3xl font-extrabold text-[#1A1A1A]">
@@ -253,10 +265,11 @@ export const ServiceDetailPage: React.FC = () => {
 
                 <button
                   type="submit"
-                  className="w-full py-4 bg-[#2CB5A0] hover:bg-[#259b89] text-white rounded-xl font-bold text-sm tracking-wide transition-all shadow-lg shadow-[#2CB5A0]/20 flex items-center justify-center gap-2"
+                  disabled={bookingStatus === 'submitting'}
+                  className="w-full py-4 bg-[#2CB5A0] hover:bg-[#259b89] text-white rounded-xl font-bold text-sm tracking-wide transition-all shadow-lg shadow-[#2CB5A0]/20 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <Calendar className="w-4 h-4" />
-                  Confirm Booking
+                  {bookingStatus === 'submitting' ? 'Reserving Appointment...' : 'Confirm Booking'}
                 </button>
               </form>
             </div>

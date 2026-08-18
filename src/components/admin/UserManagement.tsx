@@ -24,6 +24,7 @@ export const UserManagement: React.FC<UserManagementProps> = ({ currentUser, sea
   const [users, setUsers] = useState<AdminUser[]>([]);
   const [activities, setActivities] = useState<LoginActivity[]>([]);
   const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
 
   // Modal State
   const [showUserModal, setShowUserModal] = useState(false);
@@ -53,6 +54,8 @@ export const UserManagement: React.FC<UserManagementProps> = ({ currentUser, sea
   };
 
   const safeUsers = users || [];
+  const isSuperAdmin =
+    (currentUser?.role || '').toLowerCase().replace(/\s+/g, '_') === 'super_admin';
   const filteredUsers = safeUsers.filter(
     (u) =>
       u &&
@@ -83,6 +86,7 @@ export const UserManagement: React.FC<UserManagementProps> = ({ currentUser, sea
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setSaving(true);
     try {
       if (editingUser) {
         await api.updateAdminUser(editingUser.id, { name, email, role, status, password: password || undefined });
@@ -93,6 +97,8 @@ export const UserManagement: React.FC<UserManagementProps> = ({ currentUser, sea
       fetchData();
     } catch (err) {
       console.error(err);
+    } finally {
+      setSaving(false);
     }
   };
 
@@ -129,7 +135,7 @@ export const UserManagement: React.FC<UserManagementProps> = ({ currentUser, sea
           <h2 className="text-xl font-black text-gray-900 tracking-tight">Staff & Role-Based Access Control (RBAC)</h2>
           <p className="text-xs text-gray-500">Manage administrator privileges, staff roles, and track real-time security login activities.</p>
         </div>
-        {currentUser?.role === 'super_admin' && (
+        {isSuperAdmin && (
           <button
             onClick={handleOpenAdd}
             className="px-4 py-2.5 rounded-xl bg-[#2CB5A0] hover:bg-teal-600 text-white font-bold text-xs flex items-center gap-2 cursor-pointer shadow-md shadow-[#2CB5A0]/20"
@@ -139,7 +145,11 @@ export const UserManagement: React.FC<UserManagementProps> = ({ currentUser, sea
         )}
       </div>
 
-      {/* Users Table */}
+      {loading ? (
+        <div className="p-12 text-center text-sm text-gray-400 bg-white rounded-3xl border border-gray-100">
+          Loading staff accounts and security logs...
+        </div>
+      ) : (
       <div className="bg-white rounded-3xl border border-gray-100 shadow-xs overflow-hidden">
         <div className="p-4 border-b bg-gray-50 flex items-center justify-between text-xs">
           <h3 className="font-extrabold text-gray-900 flex items-center gap-2">
@@ -160,7 +170,14 @@ export const UserManagement: React.FC<UserManagementProps> = ({ currentUser, sea
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100 font-medium text-gray-700">
-              {filteredUsers.map((u) => (
+              {filteredUsers.length === 0 ? (
+                <tr>
+                  <td colSpan={6} className="py-12 text-center text-gray-400">
+                    No staff accounts found.
+                  </td>
+                </tr>
+              ) : (
+              filteredUsers.map((u) => (
                 <tr key={u.id} className="hover:bg-gray-50/80 transition-colors">
                   <td className="py-4 px-6 flex items-center gap-3">
                     <img src={u.avatarUrl} alt={u.name} className="w-8 h-8 rounded-full object-cover ring-2 ring-[#2CB5A0]" />
@@ -207,11 +224,12 @@ export const UserManagement: React.FC<UserManagementProps> = ({ currentUser, sea
                     )}
                   </td>
                 </tr>
-              ))}
+              )))}
             </tbody>
           </table>
         </div>
       </div>
+      )}
 
       {/* Login Activity Logs */}
       <div className="bg-white rounded-3xl border border-gray-100 shadow-xs p-6 space-y-4">
@@ -231,7 +249,14 @@ export const UserManagement: React.FC<UserManagementProps> = ({ currentUser, sea
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100 font-medium">
-              {activities.slice(0, 8).map((act) => (
+              {activities.length === 0 ? (
+                <tr>
+                  <td colSpan={5} className="py-12 text-center text-gray-400">
+                    No login activity recorded yet.
+                  </td>
+                </tr>
+              ) : (
+              activities.slice(0, 8).map((act) => (
                 <tr key={act.id}>
                   <td className="py-3 px-4 font-bold text-gray-900">{act.userName} ({act.userEmail})</td>
                   <td className="py-3 px-4 text-gray-500">{new Date(act.timestamp).toLocaleString()}</td>
@@ -247,7 +272,7 @@ export const UserManagement: React.FC<UserManagementProps> = ({ currentUser, sea
                     </span>
                   </td>
                 </tr>
-              ))}
+              )))}
             </tbody>
           </table>
         </div>
@@ -293,7 +318,7 @@ export const UserManagement: React.FC<UserManagementProps> = ({ currentUser, sea
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <label className="block font-bold text-gray-700 mb-1">Role</label>
               <select
@@ -330,9 +355,10 @@ export const UserManagement: React.FC<UserManagementProps> = ({ currentUser, sea
             </button>
             <button
               type="submit"
-              className="px-6 py-2.5 rounded-xl bg-[#2CB5A0] hover:bg-teal-600 text-white font-bold cursor-pointer shadow-md shadow-[#2CB5A0]/20"
+              disabled={saving}
+              className="px-6 py-2.5 rounded-xl bg-[#2CB5A0] hover:bg-teal-600 text-white font-bold cursor-pointer shadow-md shadow-[#2CB5A0]/20 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Save Staff User
+              {saving ? 'Saving...' : 'Save Staff User'}
             </button>
           </div>
         </form>

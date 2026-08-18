@@ -5,7 +5,6 @@ import {
   Edit2,
   Trash2,
   Clock,
-  DollarSign,
   Star,
   Check,
   Tag
@@ -36,6 +35,7 @@ export const ServiceManager: React.FC<ServiceManagerProps> = ({ services, onRefr
   const [includedInput, setIncludedInput] = useState('');
   const [featured, setFeatured] = useState(true);
   const [active, setActive] = useState(true);
+  const [saving, setSaving] = useState(false);
 
   const safeServices = services || [];
   const filteredServices = safeServices.filter(
@@ -53,7 +53,7 @@ export const ServiceManager: React.FC<ServiceManagerProps> = ({ services, onRefr
     setPrice(180);
     setDurationMinutes(60);
     setShortDescription('An elite therapeutic session tailored for gentlemen muscle relief.');
-    setFullDescription('Experience therapeutic excellence crafted exclusively for men in Bandra West, Mumbai.');
+    setFullDescription('Experience therapeutic excellence crafted exclusively for men in Indore, Ujjain, Dewas.');
     setImageUrl('https://images.unsplash.com/photo-1544161515-4ab6ce6db874?auto=format&fit=crop&q=80&w=600');
     setBenefitsInput('Deep muscle recovery, Tension relief, Enhanced circulation, Stress mitigation');
     setIncludedInput('Hydrotherapy access, Organic aromatic oil choice, Post-session herbal elixir');
@@ -101,6 +101,7 @@ export const ServiceManager: React.FC<ServiceManagerProps> = ({ services, onRefr
     };
 
     try {
+      setSaving(true);
       if (editingService) {
         await api.updateService(editingService.id, payload);
       } else {
@@ -110,6 +111,8 @@ export const ServiceManager: React.FC<ServiceManagerProps> = ({ services, onRefr
       onRefreshServices();
     } catch (err) {
       console.error(err);
+    } finally {
+      setSaving(false);
     }
   };
 
@@ -140,6 +143,11 @@ export const ServiceManager: React.FC<ServiceManagerProps> = ({ services, onRefr
       </div>
 
       {/* Services List Grid */}
+      {filteredServices.length === 0 ? (
+        <div className="bg-white rounded-2xl border border-gray-100 p-12 text-center text-sm text-gray-400">
+          No services match your search. Try a different query or add a new service.
+        </div>
+      ) : (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {filteredServices.map((s) => (
           <div
@@ -217,6 +225,7 @@ export const ServiceManager: React.FC<ServiceManagerProps> = ({ services, onRefr
           </div>
         ))}
       </div>
+      )}
 
       {/* Add / Edit Service Modal */}
       <Modal
@@ -238,10 +247,11 @@ export const ServiceManager: React.FC<ServiceManagerProps> = ({ services, onRefr
             />
           </div>
 
-          <div className="grid grid-cols-3 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <div>
-              <label className="block font-bold text-gray-700 mb-1">Category</label>
+              <label htmlFor="service-category" className="block font-bold text-gray-700 mb-1">Category</label>
               <select
+                id="service-category"
                 value={category}
                 onChange={(e: any) => setCategory(e.target.value)}
                 className="w-full px-3 py-2.5 rounded-xl border font-semibold outline-none"
@@ -253,8 +263,9 @@ export const ServiceManager: React.FC<ServiceManagerProps> = ({ services, onRefr
               </select>
             </div>
             <div>
-              <label className="block font-bold text-gray-700 mb-1">Price ($ USD)</label>
+              <label htmlFor="service-price" className="block font-bold text-gray-700 mb-1">Price (₹ INR)</label>
               <input
+                id="service-price"
                 type="number"
                 required
                 min={1}
@@ -264,8 +275,9 @@ export const ServiceManager: React.FC<ServiceManagerProps> = ({ services, onRefr
               />
             </div>
             <div>
-              <label className="block font-bold text-gray-700 mb-1">Duration (Minutes)</label>
+              <label htmlFor="service-duration" className="block font-bold text-gray-700 mb-1">Duration (Minutes)</label>
               <input
+                id="service-duration"
                 type="number"
                 required
                 min={15}
@@ -352,9 +364,10 @@ export const ServiceManager: React.FC<ServiceManagerProps> = ({ services, onRefr
             </button>
             <button
               type="submit"
-              className="px-6 py-2.5 rounded-xl bg-[#2CB5A0] hover:bg-teal-600 text-white font-bold cursor-pointer shadow-md shadow-[#2CB5A0]/20"
+              disabled={saving}
+              className="px-6 py-2.5 rounded-xl bg-[#2CB5A0] hover:bg-teal-600 text-white font-bold cursor-pointer shadow-md shadow-[#2CB5A0]/20 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Save Service
+              {saving ? 'Saving...' : 'Save Service'}
             </button>
           </div>
         </form>

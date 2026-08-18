@@ -1,12 +1,12 @@
 import React from 'react';
 import { useOutletContext, useNavigate } from 'react-router-dom';
 import { AboutPage as OriginalAboutPage } from '../AboutPage';
-import { mockTherapists, mockSettings } from '../../data/mockData';
+import { mockSettings } from '../../data/mockData';
 
 export const AboutPageWrapper: React.FC = () => {
   const navigate = useNavigate();
   const context = useOutletContext<{
-    therapists?: typeof mockTherapists;
+    therapists?: any[];
     settings?: typeof mockSettings;
     onOpenBooking?: (serviceId?: string) => void;
   }>() || {};
@@ -14,7 +14,7 @@ export const AboutPageWrapper: React.FC = () => {
   return (
     <OriginalAboutPage
       settings={context.settings || mockSettings}
-      therapists={context.therapists || mockTherapists}
+      therapists={context.therapists ?? []}
       onOpenBooking={context.onOpenBooking || (() => {})}
       setActiveTab={(tab) => {
         if (tab === 'home') navigate('/');

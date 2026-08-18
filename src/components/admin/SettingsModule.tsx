@@ -19,6 +19,7 @@ export const SettingsModule: React.FC = () => {
   const [settings, setSettings] = useState<BusinessSettings | null>(null);
   const [loading, setLoading] = useState(true);
   const [savedMsg, setSavedMsg] = useState(false);
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     fetchSettings();
@@ -38,6 +39,7 @@ export const SettingsModule: React.FC = () => {
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!settings) return;
+    setSaving(true);
     try {
       const updated = await api.updateSettings(settings);
       setSettings(updated);
@@ -45,6 +47,8 @@ export const SettingsModule: React.FC = () => {
       setTimeout(() => setSavedMsg(false), 2500);
     } catch (err) {
       console.error(err);
+    } finally {
+      setSaving(false);
     }
   };
 
@@ -99,7 +103,7 @@ export const SettingsModule: React.FC = () => {
         {activeTab === 'general' && (
           <div className="space-y-4">
             <h3 className="font-extrabold text-gray-900 text-sm border-b pb-3">Business Profile & Contact Details</h3>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className="block font-bold text-gray-700 mb-1">Business Name</label>
                 <input
@@ -120,7 +124,7 @@ export const SettingsModule: React.FC = () => {
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className="block font-bold text-gray-700 mb-1">Official Phone</label>
                 <input
@@ -151,7 +155,7 @@ export const SettingsModule: React.FC = () => {
               />
             </div>
 
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               <div>
                 <label className="block font-bold text-gray-700 mb-1">Instagram URL</label>
                 <input
@@ -201,7 +205,7 @@ export const SettingsModule: React.FC = () => {
         {activeTab === 'smtp' && (
           <div className="space-y-4">
             <h3 className="font-extrabold text-gray-900 text-sm border-b pb-3">SMTP Mail Server Settings</h3>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className="block font-bold text-gray-700 mb-1">SMTP Host Server</label>
                 <input
@@ -222,7 +226,7 @@ export const SettingsModule: React.FC = () => {
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className="block font-bold text-gray-700 mb-1">Sender Name</label>
                 <input
@@ -281,7 +285,7 @@ export const SettingsModule: React.FC = () => {
         {activeTab === 'booking' && (
           <div className="space-y-4">
             <h3 className="font-extrabold text-gray-900 text-sm border-b pb-3">Booking Rules & Restrictions</h3>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className="block font-bold text-gray-700 mb-1">Advance Booking Window (Days)</label>
                 <input
@@ -317,7 +321,7 @@ export const SettingsModule: React.FC = () => {
         {activeTab === 'security' && (
           <div className="space-y-4">
             <h3 className="font-extrabold text-gray-900 text-sm border-b pb-3">Security & Session Protocols</h3>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className="block font-bold text-gray-700 mb-1">Session Timeout (Minutes)</label>
                 <input
@@ -361,9 +365,10 @@ export const SettingsModule: React.FC = () => {
         <div className="pt-4 flex justify-end border-t">
           <button
             type="submit"
-            className="px-6 py-2.5 rounded-xl bg-[#2CB5A0] hover:bg-teal-600 text-white font-bold flex items-center gap-2 cursor-pointer shadow-md shadow-[#2CB5A0]/20"
+            disabled={saving}
+            className="px-6 py-2.5 rounded-xl bg-[#2CB5A0] hover:bg-teal-600 text-white font-bold flex items-center gap-2 cursor-pointer shadow-md shadow-[#2CB5A0]/20 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            <Save className="w-4 h-4" /> Save System Settings
+            <Save className="w-4 h-4" /> {saving ? 'Saving...' : 'Save System Settings'}
           </button>
         </div>
       </form>

@@ -1,15 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { BookingPage as OriginalBookingPage } from '../BookingPage';
 import { getServices, getTherapists, getSettings } from '../../services/api';
-import { mockServices, mockTherapists, mockSettings as defaultSettings } from '../../data/mockData';
-import { BusinessSettings } from '../../types';
+import { mockSettings as defaultSettings } from '../../data/mockData';
+import { BusinessSettings, Service, Therapist } from '../../types';
 
 export const BookingPageWrapper: React.FC = () => {
-  const [services, setServices] = useState<typeof mockServices>(mockServices);
-  const [therapists, setTherapists] = useState<typeof mockTherapists>(mockTherapists);
+  const [services, setServices] = useState<Service[]>([]);
+  const [therapists, setTherapists] = useState<Therapist[]>([]);
   const [settings, setSettings] = useState<BusinessSettings>(defaultSettings);
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const initialServiceId = searchParams.get('service') || undefined;
 
   useEffect(() => {
     async function fetchData() {
@@ -19,12 +21,11 @@ export const BookingPageWrapper: React.FC = () => {
           getTherapists(),
           getSettings()
         ]);
-        setServices(svc);
-        setTherapists(thp);
-        setSettings(st);
+        if (Array.isArray(svc)) setServices(svc);
+        if (Array.isArray(thp)) setTherapists(thp);
+        if (st) setSettings(st);
       } catch (err) {
         console.error('Failed to fetch booking data:', err);
-        // Keep mock data as fallback
       }
     }
     fetchData();
@@ -42,6 +43,7 @@ export const BookingPageWrapper: React.FC = () => {
   return (
     <OriginalBookingPage
       {...context}
+      initialServiceId={initialServiceId}
     />
   );
 };

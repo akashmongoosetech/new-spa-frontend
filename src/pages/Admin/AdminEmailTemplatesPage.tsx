@@ -9,6 +9,7 @@ export const AdminEmailTemplatesPage: React.FC = () => {
   const [contactBody, setContactBody] = useState('');
   const [error, setError] = useState('');
   const [saved, setSaved] = useState(false);
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -26,6 +27,7 @@ export const AdminEmailTemplatesPage: React.FC = () => {
     e.preventDefault();
     setError('');
     setSaved(false);
+    setSaving(true);
     try {
       await api.updateSettings({
         bookingEmailTemplate: bookingBody,
@@ -34,6 +36,8 @@ export const AdminEmailTemplatesPage: React.FC = () => {
       setSaved(true);
     } catch (err: any) {
       setError(err?.message || 'Failed to save templates.');
+    } finally {
+      setSaving(false);
     }
   };
 
@@ -103,10 +107,11 @@ export const AdminEmailTemplatesPage: React.FC = () => {
 
           <button
             type="submit"
-            className="px-6 py-3 bg-[#2CB5A0] text-white rounded-xl text-xs font-bold flex items-center gap-2 shadow-sm"
+            disabled={saving}
+            className="px-6 py-3 bg-[#2CB5A0] text-white rounded-xl text-xs font-bold flex items-center gap-2 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <Save className="w-4 h-4" />
-            Save Templates
+            {saving ? 'Saving...' : 'Save Templates'}
           </button>
         </form>
       </div>

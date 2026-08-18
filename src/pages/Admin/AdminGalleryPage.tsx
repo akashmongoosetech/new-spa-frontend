@@ -1,12 +1,18 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Image, Upload, Trash2 } from 'lucide-react';
 import { api } from '../../services/api';
+import { showToast } from '../../utils/toastEvents';
 
 export const AdminGalleryPage: React.FC = () => {
   const [items, setItems] = useState<any[]>([]);
   const [title, setTitle] = useState('');
+  const [subtitle, setSubtitle] = useState('');
   const [category, setCategory] = useState('suites');
   const [imageUrl, setImageUrl] = useState('');
+  const [description, setDescription] = useState('');
+  const [highlights, setHighlights] = useState('');
+  const [dimensions, setDimensions] = useState('');
+  const [sanitizationLevel, setSanitizationLevel] = useState('');
   const [uploading, setUploading] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
 
@@ -29,7 +35,7 @@ export const AdminGalleryPage: React.FC = () => {
       const res = await api.uploadFile(file);
       setImageUrl(res.url);
     } catch (err: any) {
-      alert(err?.message || 'Upload failed.');
+      showToast({ type: 'error', title: 'Upload Failed', message: err?.message || 'Upload failed.' });
     } finally {
       setUploading(false);
       if (fileRef.current) fileRef.current.value = '';
@@ -40,13 +46,27 @@ export const AdminGalleryPage: React.FC = () => {
     e.preventDefault();
     if (!title || !imageUrl) return;
     try {
-      await api.createGalleryItem({ title, category, imageUrl });
+      await api.createGalleryItem({
+        title,
+        subtitle,
+        category,
+        imageUrl,
+        description,
+        highlights: highlights.split(',').map((h) => h.trim()).filter(Boolean),
+        dimensions,
+        sanitizationLevel,
+      });
       const g = await api.getGallery();
       if (Array.isArray(g)) setItems(g);
       setTitle('');
+      setSubtitle('');
       setImageUrl('');
+      setDescription('');
+      setHighlights('');
+      setDimensions('');
+      setSanitizationLevel('');
     } catch (err: any) {
-      alert(err?.message || 'Failed to add gallery item.');
+      showToast({ type: 'error', title: 'Add Failed', message: err?.message || 'Failed to add gallery item.' });
     }
   };
 
@@ -56,7 +76,7 @@ export const AdminGalleryPage: React.FC = () => {
       await api.deleteGalleryItem(id);
       setItems((prev) => prev.filter((i) => i.id !== id));
     } catch (err: any) {
-      alert(err?.message || 'Failed to delete gallery item.');
+      showToast({ type: 'error', title: 'Delete Failed', message: err?.message || 'Failed to delete gallery item.' });
     }
   };
 
@@ -107,6 +127,44 @@ export const AdminGalleryPage: React.FC = () => {
         <button type="submit" className="px-4 py-2.5 bg-[#1A1A1A] hover:bg-black text-white rounded-xl text-xs font-bold cursor-pointer">
           Add Item
         </button>
+      </form>
+
+      <form onSubmit={handleAdd} className="bg-white rounded-2xl border border-gray-200 p-4 shadow-sm grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+        <input
+          type="text"
+          value={subtitle}
+          onChange={(e) => setSubtitle(e.target.value)}
+          placeholder="Subtitle (e.g. Private Master Suite)"
+          className="border border-gray-300 rounded-xl px-3 py-2.5 text-xs outline-none focus:border-[#2CB5A0]"
+        />
+        <input
+          type="text"
+          value={dimensions}
+          onChange={(e) => setDimensions(e.target.value)}
+          placeholder="Dimensions (e.g. 350 sq ft Suite)"
+          className="border border-gray-300 rounded-xl px-3 py-2.5 text-xs outline-none focus:border-[#2CB5A0]"
+        />
+        <input
+          type="text"
+          value={sanitizationLevel}
+          onChange={(e) => setSanitizationLevel(e.target.value)}
+          placeholder="Sanitization level (e.g. Hospital-Grade UV-C)"
+          className="border border-gray-300 rounded-xl px-3 py-2.5 text-xs outline-none focus:border-[#2CB5A0]"
+        />
+        <input
+          type="text"
+          value={highlights}
+          onChange={(e) => setHighlights(e.target.value)}
+          placeholder="Highlights (comma separated)"
+          className="border border-gray-300 rounded-xl px-3 py-2.5 text-xs outline-none focus:border-[#2CB5A0]"
+        />
+        <textarea
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          placeholder="Short description"
+          rows={2}
+          className="sm:col-span-2 lg:col-span-4 border border-gray-300 rounded-xl px-3 py-2.5 text-xs outline-none focus:border-[#2CB5A0] resize-none"
+        />
       </form>
 
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">

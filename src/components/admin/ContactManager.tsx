@@ -16,6 +16,7 @@ import {
 import { ContactMessage } from '../../types';
 import { Modal } from '../ui/Modal';
 import { api } from '../../services/api';
+import { showToast } from '../../utils/toastEvents';
 
 interface ContactManagerProps {
   contacts: ContactMessage[];
@@ -140,7 +141,11 @@ export const ContactManager: React.FC<ContactManagerProps> = ({ contacts, onRefr
               try {
                 await api.downloadExportReport('contacts');
               } catch (err: any) {
-                alert(err?.message || 'Failed to export CSV.');
+                showToast({
+                  type: 'error',
+                  title: 'Export Failed',
+                  message: err?.message || 'Failed to export CSV.',
+                });
               }
             }}
             className="px-4 py-2.5 rounded-xl border border-gray-200 bg-white hover:bg-gray-50 text-gray-700 font-bold text-xs flex items-center gap-2 cursor-pointer shadow-xs"
@@ -151,8 +156,8 @@ export const ContactManager: React.FC<ContactManagerProps> = ({ contacts, onRefr
       </div>
 
       {/* Filter Tabs */}
-      <div className="p-4 bg-white rounded-2xl border border-gray-100 shadow-xs flex items-center justify-between text-xs">
-        <div className="flex items-center bg-gray-100 p-1 rounded-xl">
+      <div className="p-4 bg-white rounded-2xl border border-gray-100 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+        <div className="flex flex-wrap items-center bg-gray-100 p-1 rounded-xl gap-0.5">
           {['all', 'new', 'in_progress', 'replied', 'closed'].map((st) => (
             <button
               key={st}

@@ -74,7 +74,20 @@ export const AuditLogsView: React.FC = () => {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100 font-medium text-gray-700">
-              {filteredLogs.map((log) => (
+              {loading ? (
+                <tr>
+                  <td colSpan={5} className="py-12 text-center text-gray-400">
+                    Loading audit trail...
+                  </td>
+                </tr>
+              ) : filteredLogs.length === 0 ? (
+                <tr>
+                  <td colSpan={5} className="py-12 text-center text-gray-400">
+                    No audit records found.
+                  </td>
+                </tr>
+              ) : (
+              filteredLogs.map((log) => (
                 <tr key={log.id} className="hover:bg-gray-50/80">
                   <td className="py-3.5 px-6 text-gray-500 text-[11px] font-mono">
                     {new Date(log.timestamp).toLocaleString()}
@@ -84,7 +97,7 @@ export const AuditLogsView: React.FC = () => {
                   <td className="py-3.5 px-6 text-gray-600 max-w-sm truncate">{log.details}</td>
                   <td className="py-3.5 px-6 font-mono text-gray-400 text-[10px]">{log.ipAddress || '127.0.0.1'}</td>
                 </tr>
-              ))}
+              )))}
             </tbody>
           </table>
         </div>

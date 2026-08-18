@@ -10,6 +10,7 @@ export const AdminProfilePage: React.FC = () => {
   const [userId, setUserId] = useState<string | null>(null);
   const [error, setError] = useState('');
   const [saved, setSaved] = useState(false);
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -47,6 +48,7 @@ export const AdminProfilePage: React.FC = () => {
     if (!userId) return;
     setError('');
     setSaved(false);
+    setSaving(true);
     try {
       await api.updateAdminUser(userId, { name, email, phone });
       const updated = await api.getAdminUsers();
@@ -55,6 +57,8 @@ export const AdminProfilePage: React.FC = () => {
       setSaved(true);
     } catch (err: any) {
       setError(err?.message || 'Failed to update profile.');
+    } finally {
+      setSaving(false);
     }
   };
 
@@ -123,10 +127,11 @@ export const AdminProfilePage: React.FC = () => {
           <div className="sm:col-span-2">
             <button
               type="submit"
-              className="px-6 py-3 bg-[#2CB5A0] text-white rounded-xl text-xs font-bold flex items-center gap-2 shadow-sm"
+              disabled={saving}
+              className="px-6 py-3 bg-[#2CB5A0] text-white rounded-xl text-xs font-bold flex items-center gap-2 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <Save className="w-4 h-4" />
-              Update Profile
+              {saving ? 'Saving...' : 'Update Profile'}
             </button>
           </div>
         </form>

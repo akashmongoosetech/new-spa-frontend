@@ -57,7 +57,7 @@ export const HomePage: React.FC<HomePageProps> = ({
   const faqs = [
     {
       q: 'Is Aura Luxe strictly a professional Men-to-Men massage therapy spa?',
-      a: 'Yes. Aura Luxe is Bandra West Mumbai\'s premier licensed Men-to-Men massage therapy center. All our therapists are certified male practitioners dedicated to providing elite therapeutic wellness in an ethical, comfortable, and highly professional sanctuary.'
+      a: 'Yes. Aura Luxe is Indore\'s premier licensed Men-to-Men massage therapy center. All our therapists are certified male practitioners dedicated to providing elite therapeutic wellness in an ethical, comfortable, and highly professional sanctuary.'
     },
     {
       q: 'How do I book an appointment with my preferred male therapist?',
@@ -390,7 +390,7 @@ export const HomePage: React.FC<HomePageProps> = ({
                 Book Your Executive Session Today
               </h2>
               <p className="text-gray-300 text-sm max-w-xl">
-                Experience the finest Men-to-Men massage therapy in Bandra West, Mumbai. Immediate online slot confirmation.
+                Experience the finest Men-to-Men massage therapy in Indore, Ujjain, Dewas. Immediate online slot confirmation.
               </p>
             </div>
             <div className="lg:col-span-4 flex flex-col gap-3">

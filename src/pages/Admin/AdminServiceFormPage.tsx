@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { ArrowLeft, Save, CheckCircle2, AlertCircle } from 'lucide-react';
-import { mockServices } from '../../data/mockData';
 import { api } from '../../services/api';
 
 export const AdminServiceFormPage: React.FC = () => {
@@ -36,16 +35,7 @@ export const AdminServiceFormPage: React.FC = () => {
           setImageUrl(existing.imageUrl);
         }
       } catch (err) {
-        const mock = mockServices.find((s) => s.id === id);
-        if (mock) {
-          setTitle(mock.title);
-          setPrice(mock.price);
-          setDuration(mock.durationMinutes);
-          setCategory(mock.category as string);
-          setShortDesc(mock.shortDescription);
-          setFullDesc(mock.fullDescription);
-          setImageUrl(mock.imageUrl);
-        }
+        // keep empty form
       }
     })();
   }, [id]);

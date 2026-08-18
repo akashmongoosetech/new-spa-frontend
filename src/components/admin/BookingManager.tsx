@@ -21,6 +21,7 @@ import {
 import { Booking, Service, Therapist } from '../../types';
 import { Modal } from '../ui/Modal';
 import { api } from '../../services/api';
+import { showToast } from '../../utils/toastEvents';
 import { BookingConfirmationModal } from '../booking/BookingConfirmationModal';
 
 interface BookingManagerProps {
@@ -156,7 +157,7 @@ export const BookingManager: React.FC<BookingManagerProps> = ({
               try {
                 await api.downloadExportReport('bookings');
               } catch (err: any) {
-                alert(err?.message || 'Failed to export CSV.');
+                showToast({ type: 'error', title: 'Export Failed', message: err?.message || 'Failed to export CSV.' });
               }
             }}
             className="px-4 py-2.5 rounded-xl border border-gray-200 bg-white hover:bg-gray-50 text-gray-700 font-bold text-xs flex items-center gap-2 cursor-pointer shadow-xs"
@@ -224,10 +225,14 @@ export const BookingManager: React.FC<BookingManagerProps> = ({
             onClick={async () => {
               try {
                 const res = await api.triggerAllReminders();
-                alert(`Automated Email Reminder Job Complete! Dispatched ${res.count} appointment reminder emails.`);
+                showToast({
+                  type: 'success',
+                  title: 'Reminders Dispatched',
+                  message: `Dispatched ${res.count} appointment reminder emails.`,
+                });
                 onRefreshBookings();
               } catch (err: any) {
-                alert('Failed to dispatch reminders.');
+                showToast({ type: 'error', title: 'Reminder Job Failed', message: 'Failed to dispatch reminders.' });
               }
             }}
             className="px-3.5 py-2 rounded-xl bg-amber-50 text-amber-800 border border-amber-200 hover:bg-amber-100 font-bold text-xs flex items-center gap-1.5 transition-colors cursor-pointer"

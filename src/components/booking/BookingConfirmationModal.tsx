@@ -8,7 +8,6 @@ import {
   User,
   Phone,
   Mail,
-  DollarSign,
   Printer,
   X,
   AlertTriangle,
@@ -43,8 +42,6 @@ export const BookingConfirmationModal: React.FC<BookingConfirmationModalProps> =
   onBookingUpdated,
   onBookingCancelled,
 }) => {
-  if (!booking) return null;
-
   // View States: 'details' | 'cancel_confirm' | 'reschedule'
   const [viewState, setViewState] = useState<'details' | 'cancel_confirm' | 'reschedule'>('details');
 
@@ -54,17 +51,17 @@ export const BookingConfirmationModal: React.FC<BookingConfirmationModalProps> =
   const [cancelLoading, setCancelLoading] = useState(false);
 
   // Reschedule form
-  const [newDate, setNewDate] = useState(booking.date || new Date().toISOString().split('T')[0]);
-  const [newTimeSlot, setNewTimeSlot] = useState(booking.timeSlot || '02:00 PM');
-  const [newTherapistId, setNewTherapistId] = useState(booking.therapistId || 'any');
+  const [newDate, setNewDate] = useState(booking?.date || new Date().toISOString().split('T')[0]);
+  const [newTimeSlot, setNewTimeSlot] = useState(booking?.timeSlot || '02:00 PM');
+  const [newTherapistId, setNewTherapistId] = useState(booking?.therapistId || 'any');
   const [rescheduleLoading, setRescheduleLoading] = useState(false);
 
   // General feedback
   const [feedbackMessage, setFeedbackMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
   const [copiedId, setCopiedId] = useState(false);
 
-  const matchedTherapist = therapists.find((t) => t.id === (newTherapistId !== 'any' ? newTherapistId : booking.therapistId));
-  const therapistDisplayName = matchedTherapist ? matchedTherapist.name : booking.therapistName || 'Assigned Certified Therapist';
+  const matchedTherapist = therapists.find((t) => t.id === (newTherapistId !== 'any' ? newTherapistId : booking?.therapistId));
+  const therapistDisplayName = matchedTherapist ? matchedTherapist.name : booking?.therapistName || 'Assigned Certified Therapist';
 
   const timeSlotOptions = [
     '09:00 AM',
@@ -195,6 +192,8 @@ export const BookingConfirmationModal: React.FC<BookingConfirmationModalProps> =
     }
   };
 
+  if (!booking) return null;
+
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="Appointment Confirmation & Details" maxWidth="2xl">
       <div className="font-sans text-gray-800 space-y-6">
@@ -276,7 +275,7 @@ export const BookingConfirmationModal: React.FC<BookingConfirmationModalProps> =
                   </div>
                   <div className="pt-1 flex items-center gap-1.5 text-gray-600">
                     <MapPin className="w-3.5 h-3.5 text-[#2CB5A0] shrink-0" />
-                    <span className="text-[11px]">Plot 42, Bandra Reclamation, Bandra West, Mumbai</span>
+                    <span className="text-[11px]">Indore, Ujjain, Dewas</span>
                   </div>
                 </div>
               </div>

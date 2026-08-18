@@ -25,16 +25,19 @@ export const AuthModals: React.FC<AuthModalsProps> = ({
   const [signupPassword, setSignupPassword] = useState('');
   const [signupRole, setSignupRole] = useState('admin');
   const [signupMsg, setSignupMsg] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+  const [signupLoading, setSignupLoading] = useState(false);
 
   // Forgot Password State
   const [forgotEmail, setForgotEmail] = useState('');
   const [forgotMsg, setForgotMsg] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+  const [forgotLoading, setForgotLoading] = useState(false);
 
   // Change Password State
   const [currPassword, setCurrPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [changeMsg, setChangeMsg] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+  const [changeLoading, setChangeLoading] = useState(false);
 
   // Map frontend role keys to backend role names (backend never allows Super Admin via signup).
   const roleToBackend = (role: string): string => {
@@ -48,23 +51,29 @@ export const AuthModals: React.FC<AuthModalsProps> = ({
   const handleSignupSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSignupMsg(null);
+    setSignupLoading(true);
     try {
       await api.adminSignup({ name: signupName, email: signupEmail, password: signupPassword, role: roleToBackend(signupRole) });
       setSignupMsg({ type: 'success', text: 'Admin account created successfully!' });
       setTimeout(() => setShowSignupModal(false), 1500);
     } catch (err: any) {
       setSignupMsg({ type: 'error', text: err.message || 'Failed to create account.' });
+    } finally {
+      setSignupLoading(false);
     }
   };
 
   const handleForgotSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setForgotMsg(null);
+    setForgotLoading(true);
     try {
       const res = await api.forgotPassword(forgotEmail);
       setForgotMsg({ type: 'success', text: res.message });
     } catch (err: any) {
       setForgotMsg({ type: 'error', text: err.message });
+    } finally {
+      setForgotLoading(false);
     }
   };
 
@@ -74,12 +83,16 @@ export const AuthModals: React.FC<AuthModalsProps> = ({
       setChangeMsg({ type: 'error', text: 'New passwords do not match.' });
       return;
     }
+    setChangeMsg(null);
+    setChangeLoading(true);
     try {
       const res = await api.changePassword(currPassword, newPassword);
       setChangeMsg({ type: 'success', text: res.message });
       setTimeout(() => setShowChangePasswordModal(false), 1500);
     } catch (err: any) {
       setChangeMsg({ type: 'error', text: err.message });
+    } finally {
+      setChangeLoading(false);
     }
   };
 
@@ -140,9 +153,10 @@ export const AuthModals: React.FC<AuthModalsProps> = ({
           </div>
           <button
             type="submit"
-            className="w-full py-3 rounded-xl bg-[#2CB5A0] hover:bg-teal-600 text-white font-bold text-xs transition-colors cursor-pointer"
+            disabled={signupLoading}
+            className="w-full py-3 rounded-xl bg-[#2CB5A0] hover:bg-teal-600 text-white font-bold text-xs transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Create Staff Account
+            {signupLoading ? 'Creating Account...' : 'Create Staff Account'}
           </button>
         </form>
       </Modal>
@@ -169,9 +183,10 @@ export const AuthModals: React.FC<AuthModalsProps> = ({
           </div>
           <button
             type="submit"
-            className="w-full py-3 rounded-xl bg-[#1A1A1A] hover:bg-black text-white font-bold text-xs transition-colors cursor-pointer"
+            disabled={forgotLoading}
+            className="w-full py-3 rounded-xl bg-[#1A1A1A] hover:bg-black text-white font-bold text-xs transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Send Reset Instructions
+            {forgotLoading ? 'Sending...' : 'Send Reset Instructions'}
           </button>
         </form>
       </Modal>
@@ -216,9 +231,10 @@ export const AuthModals: React.FC<AuthModalsProps> = ({
           </div>
           <button
             type="submit"
-            className="w-full py-3 rounded-xl bg-[#2CB5A0] hover:bg-teal-600 text-white font-bold text-xs transition-colors cursor-pointer"
+            disabled={changeLoading}
+            className="w-full py-3 rounded-xl bg-[#2CB5A0] hover:bg-teal-600 text-white font-bold text-xs transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Update Password
+            {changeLoading ? 'Updating...' : 'Update Password'}
           </button>
         </form>
       </Modal>

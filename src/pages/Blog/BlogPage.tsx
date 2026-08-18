@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useOutletContext, useNavigate } from 'react-router-dom';
 import { BlogPage as OriginalBlogPage } from '../BlogPage';
-import { mockBlogs, mockSettings } from '../../data/mockData';
+import { mockSettings } from '../../data/mockData';
 import { api } from '../../services/api';
 
 export const BlogPageWrapper: React.FC = () => {
@@ -11,15 +11,15 @@ export const BlogPageWrapper: React.FC = () => {
     onOpenBooking?: (serviceId?: string) => void;
   }>() || {};
 
-  const [blogs, setBlogs] = useState(mockBlogs);
+  const [blogs, setBlogs] = useState<any[]>([]);
 
   useEffect(() => {
     (async () => {
       try {
         const b = await api.getBlogs();
-        if (Array.isArray(b) && b.length > 0) setBlogs(b as any);
+        if (Array.isArray(b)) setBlogs(b);
       } catch (err) {
-        // keep mock fallback
+        // keep empty state
       }
     })();
   }, []);

@@ -1,19 +1,19 @@
 import React from 'react';
 import { useParams, Link, useOutletContext } from 'react-router-dom';
 import { Star, Award, ShieldCheck, Calendar, ArrowLeft, CheckCircle2, Clock } from 'lucide-react';
-import { mockTherapists, mockSettings } from '../../data/mockData';
+import { mockSettings } from '../../data/mockData';
 import { SEO } from '../../components/ui/SEO';
 import NotFound from '../NotFound';
 
 export const TherapistDetailPage: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
   const context = useOutletContext<{
-    therapists?: typeof mockTherapists;
+    therapists?: any[];
     settings?: typeof mockSettings;
     onOpenBooking?: (serviceId?: string) => void;
   }>() || {};
 
-  const therapists = context.therapists || mockTherapists;
+  const therapists = context.therapists ?? [];
   const settings = context.settings || mockSettings;
 
   const therapist = therapists.find(

@@ -78,6 +78,8 @@ export const FAQPage: React.FC<FAQPageProps> = ({ faqs }) => {
               <div key={faq.id} className="bg-white rounded-2xl border border-gray-200/80 overflow-hidden shadow-sm">
                 <button
                   onClick={() => setOpenIndex(isOpen ? null : idx)}
+                  aria-expanded={isOpen}
+                  aria-controls={`faq-panel-${faq.id}`}
                   className="w-full p-5 text-left font-bold text-gray-900 text-sm flex justify-between items-center gap-4 hover:bg-gray-50 cursor-pointer"
                 >
                   <span className="flex items-center gap-2">
@@ -87,7 +89,12 @@ export const FAQPage: React.FC<FAQPageProps> = ({ faqs }) => {
                   {isOpen ? <ChevronUp className="w-5 h-5 text-[#2CB5A0]" /> : <ChevronDown className="w-5 h-5 text-gray-400" />}
                 </button>
                 {isOpen && (
-                  <div className="px-5 pb-5 pt-2 text-xs text-gray-600 leading-relaxed border-t border-gray-100">
+                  <div
+                    id={`faq-panel-${faq.id}`}
+                    role="region"
+                    aria-label={faq.question}
+                    className="px-5 pb-5 pt-2 text-xs text-gray-600 leading-relaxed border-t border-gray-100"
+                  >
                     {faq.answer}
                   </div>
                 )}

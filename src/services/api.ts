@@ -202,8 +202,8 @@ function mapBusinessSettings(s: any): BusinessSettings {
     phone: s.phone || '+91 98200 12345',
     whatsapp: s.whatsapp || s.phone || '+91 98200 12345',
     email: s.email || 'concierge@auraluxespa.in',
-    address: s.address || 'Plot 42, Bandra Reclamation, Bandra West, Mumbai, Maharashtra 400050',
-    city: s.city || 'Mumbai, Maharashtra',
+    address: s.address || 'Indore, Ujjain, Dewas',
+    city: s.city || 'Indore, Ujjain, Dewas',
     workingHours: s.workingHours || s.openingHours || 'Mon - Sun: 09:00 AM - 10:00 PM IST',
     currencySymbol: s.currencySymbol || '₹',
     currencyCode: s.currencyCode || 'INR',
@@ -591,13 +591,43 @@ export const api = {
     return data;
   },
 
-  async createGalleryItem(data: { title: string; category?: string; imageUrl: string }): Promise<any> {
+  async createGalleryItem(data: {
+    title: string;
+    category?: string;
+    imageUrl: string;
+    subtitle?: string;
+    description?: string;
+    highlights?: string[];
+    dimensions?: string;
+    sanitizationLevel?: string;
+  }): Promise<any> {
     const res = await http.post<any>('/gallery', data);
     return res.data;
   },
 
   async deleteGalleryItem(id: string): Promise<{ success: boolean }> {
     const res = await http.delete<{ success: boolean }>(`/gallery/${id}`);
+    return res.data;
+  },
+
+  // FAQs
+  async getFaqs(): Promise<any[]> {
+    const { data } = await http.get<any[]>('/faqs');
+    return data;
+  },
+
+  async createFaq(data: { question: string; answer: string; category?: string; order?: number; active?: boolean }): Promise<any> {
+    const res = await http.post<any>('/faqs', data);
+    return res.data;
+  },
+
+  async updateFaq(id: string, data: { question?: string; answer?: string; category?: string; order?: number; active?: boolean }): Promise<any> {
+    const res = await http.put<any>(`/faqs/${id}`, data);
+    return res.data;
+  },
+
+  async deleteFaq(id: string): Promise<{ success: boolean }> {
+    const res = await http.delete<{ success: boolean }>(`/faqs/${id}`);
     return res.data;
   },
 
@@ -663,6 +693,11 @@ export const api = {
     } catch (error) {
       throw new Error(getErrorMessage(error, 'Invalid credentials'));
     }
+  },
+
+  async getCurrentUser(): Promise<AdminUser> {
+    const { data } = await http.get<AdminUser>('/admin/me');
+    return mapAdminUser(data);
   },
 
   async adminSignup(data: { name: string; email: string; password: string; role?: string }): Promise<AdminUser> {

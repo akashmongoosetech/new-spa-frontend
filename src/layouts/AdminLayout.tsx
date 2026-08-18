@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { AdminSidebar, AdminTab } from '../components/admin/AdminSidebar';
 import { AdminHeader } from '../components/admin/AdminHeader';
-import { mockSettings } from '../data/mockData';
 import { AdminUser, BusinessSettings, NotificationItem } from '../types';
 import { api } from '../services/api';
 
@@ -10,7 +9,7 @@ export const AdminLayout: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const [settings, setSettings] = useState<BusinessSettings>(mockSettings);
+  const [settings, setSettings] = useState<BusinessSettings | null>(null);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -19,20 +18,38 @@ export const AdminLayout: React.FC = () => {
   const [unreadContactsCount, setUnreadContactsCount] = useState(0);
   const [pendingBookingsCount, setPendingBookingsCount] = useState(0);
 
-  const [currentUser] = useState<AdminUser | null>(() => {
+  const [currentUser, setCurrentUser] = useState<AdminUser | null>(() => {
     const saved = localStorage.getItem('aura_admin_user');
-    return saved
-      ? JSON.parse(saved)
-      : {
-          id: 'adm-1',
-          name: 'Master Director',
-          email: 'admin@auraluxespa.com',
-          role: 'super_admin',
-          avatarUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=300&auto=format&fit=crop',
-          phone: '+1 (800) 555-2872',
-          createdAt: new Date().toISOString(),
-        };
+    return saved ? JSON.parse(saved) : null;
   });
+
+  // Validate the session against the backend and load real settings.
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const [me, st] = await Promise.all([
+          api.getCurrentUser(),
+          api.getSettings(),
+        ]);
+        if (cancelled) return;
+        if (me) {
+          setCurrentUser(me);
+          localStorage.setItem('aura_admin_user', JSON.stringify(me));
+        }
+        if (st) setSettings(st);
+      } catch (err: any) {
+        if (err?.response?.status === 401) {
+          localStorage.removeItem('aura_admin_user');
+          localStorage.removeItem('aura_admin_token');
+          navigate('/admin-login');
+        }
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   // Load real badge counts + notifications for the shell.
   useEffect(() => {
@@ -120,6 +137,10 @@ export const AdminLayout: React.FC = () => {
     }
     setNotifications((prev) => prev.filter((n) => n.id !== id));
   };
+
+  if (!currentUser) {
+    return null;
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 flex text-gray-900 font-sans antialiased">

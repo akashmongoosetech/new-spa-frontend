@@ -165,6 +165,13 @@ export const BookingWizard: React.FC<BookingWizardProps> = ({
     window.print();
   };
 
+  const handleCardKeyDown = (e: React.KeyboardEvent, action: () => void) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      action();
+    }
+  };
+
   return (
     <div className="bg-[#0F1517] text-gray-100 rounded-3xl p-4 sm:p-7 max-w-4xl mx-auto shadow-2xl border border-white/10 font-sans relative overflow-hidden">
       {/* Background Subtle Accent Glow */}
@@ -293,6 +300,11 @@ export const BookingWizard: React.FC<BookingWizardProps> = ({
             </p>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-h-[480px] overflow-y-auto pr-1 scrollbar-thin">
+              {services.length === 0 && (
+                <div className="col-span-full p-8 text-center text-gray-400 text-sm bg-[#141C1E] border border-white/10 rounded-2xl">
+                  No therapies are currently available. Please check back soon.
+                </div>
+              )}
               {services.map((srv) => {
                 const isSelected = srv.id === selectedServiceId;
                 return (
@@ -300,7 +312,11 @@ export const BookingWizard: React.FC<BookingWizardProps> = ({
                     key={srv.id}
                     id={`select-service-${srv.id}`}
                     onClick={() => setSelectedServiceId(srv.id)}
-                    className={`p-4 rounded-2xl border transition-all cursor-pointer relative flex flex-col justify-between ${
+                    onKeyDown={(e) => handleCardKeyDown(e, () => setSelectedServiceId(srv.id))}
+                    role="button"
+                    tabIndex={0}
+                    aria-pressed={isSelected}
+                    className={`p-4 rounded-2xl border transition-all cursor-pointer relative flex flex-col justify-between focus:outline-none focus:ring-2 focus:ring-[#2CB5A0]/60 ${
                       isSelected
                         ? 'border-[#2CB5A0] bg-[#18282B] shadow-lg shadow-[#2CB5A0]/15 scale-[1.01]'
                         : 'border-white/10 hover:border-white/20 bg-[#141C1E] hover:bg-[#182225]'
@@ -311,7 +327,7 @@ export const BookingWizard: React.FC<BookingWizardProps> = ({
                         <img
                           src={srv.imageUrl}
                           alt={srv.title}
-                          className="w-18 h-18 rounded-2xl object-cover shrink-0 border border-white/10"
+                          className="w-20 h-20 rounded-2xl object-cover shrink-0 border border-white/10"
                         />
                         <div className="flex-1">
                           <h3 className="text-base font-bold text-white leading-snug">
@@ -385,7 +401,11 @@ export const BookingWizard: React.FC<BookingWizardProps> = ({
               <div
                 id="select-therapist-any"
                 onClick={() => setSelectedTherapistId('any')}
-                className={`p-5 rounded-2xl border transition-all cursor-pointer flex items-center gap-4 ${
+                onKeyDown={(e) => handleCardKeyDown(e, () => setSelectedTherapistId('any'))}
+                role="button"
+                tabIndex={0}
+                aria-pressed={selectedTherapistId === 'any'}
+                className={`p-5 rounded-2xl border transition-all cursor-pointer flex items-center gap-4 focus:outline-none focus:ring-2 focus:ring-[#2CB5A0]/60 ${
                   selectedTherapistId === 'any'
                     ? 'border-[#2CB5A0] bg-[#18282B] shadow-lg shadow-[#2CB5A0]/15'
                     : 'border-white/10 bg-[#141C1E] hover:border-white/20 hover:bg-[#182225]'
@@ -408,6 +428,11 @@ export const BookingWizard: React.FC<BookingWizardProps> = ({
               </div>
 
               {/* Specific Male Therapists */}
+              {therapists.length === 0 && (
+                <div className="col-span-full p-8 text-center text-gray-400 text-sm bg-[#141C1E] border border-white/10 rounded-2xl">
+                  No therapists are currently available. The spa will assign the best available practitioner.
+                </div>
+              )}
               {therapists.map((th) => {
                 const isSelected = th.id === selectedTherapistId;
                 return (
@@ -415,7 +440,11 @@ export const BookingWizard: React.FC<BookingWizardProps> = ({
                     key={th.id}
                     id={`select-therapist-${th.id}`}
                     onClick={() => setSelectedTherapistId(th.id)}
-                    className={`p-4 rounded-2xl border transition-all cursor-pointer flex gap-4 items-center ${
+                    onKeyDown={(e) => handleCardKeyDown(e, () => setSelectedTherapistId(th.id))}
+                    role="button"
+                    tabIndex={0}
+                    aria-pressed={isSelected}
+                    className={`p-4 rounded-2xl border transition-all cursor-pointer flex gap-4 items-center focus:outline-none focus:ring-2 focus:ring-[#2CB5A0]/60 ${
                       isSelected
                         ? 'border-[#2CB5A0] bg-[#18282B] shadow-lg shadow-[#2CB5A0]/15'
                         : 'border-white/10 bg-[#141C1E] hover:border-white/20 hover:bg-[#182225]'

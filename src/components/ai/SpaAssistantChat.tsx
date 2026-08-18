@@ -66,7 +66,7 @@ export const SpaAssistantChat: React.FC<SpaAssistantChatProps> = ({ onOpenBookin
         {
           id: `ast-err-${Date.now()}`,
           sender: 'assistant',
-          text: 'Our **Swedish Relaxation ($140)** and **Deep Tissue Recovery ($180)** are top recommendations! You can book anytime using the **Book Appointment** button.'
+          text: 'Our **Swedish Relaxation (₹140)** and **Deep Tissue Recovery (₹180)** are top recommendations! You can book anytime using the **Book Appointment** button.'
         }
       ]);
     } finally {
@@ -118,7 +118,9 @@ export const SpaAssistantChat: React.FC<SpaAssistantChatProps> = ({ onOpenBookin
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
             transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-            className="fixed bottom-20 right-4 sm:right-6 z-50 w-[92vw] sm:w-[420px] h-[560px] bg-white rounded-3xl shadow-2xl border border-teal-100 flex flex-col overflow-hidden font-sans"
+            className="fixed bottom-20 right-4 sm:right-6 z-50 w-[92vw] sm:w-[420px] h-[560px] max-h-[calc(100dvh-6rem)] bg-white rounded-3xl shadow-2xl border border-teal-100 flex flex-col overflow-hidden font-sans"
+            role="dialog"
+            aria-label="Aura Spa Concierge chat"
           >
             {/* Header */}
             <div className="bg-[#1A1A1A] text-white p-4 flex items-center justify-between border-b border-gray-800">
@@ -138,6 +140,7 @@ export const SpaAssistantChat: React.FC<SpaAssistantChatProps> = ({ onOpenBookin
                   id="ai-chat-reset-btn"
                   onClick={handleClearChat}
                   title="Clear Conversation"
+                  aria-label="Clear conversation"
                   className="p-1.5 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800 transition-colors"
                 >
                   <RotateCcw className="w-4 h-4" />
@@ -145,6 +148,7 @@ export const SpaAssistantChat: React.FC<SpaAssistantChatProps> = ({ onOpenBookin
                 <button
                   id="ai-chat-close-btn"
                   onClick={() => setIsOpen(false)}
+                  aria-label="Close chat"
                   className="p-1.5 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800 transition-colors"
                 >
                   <X className="w-5 h-5" />

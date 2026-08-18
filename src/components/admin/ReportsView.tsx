@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { FileText, Download, TrendingUp, Users, Calendar, MessageSquare, ShieldCheck } from 'lucide-react';
 import { api } from '../../services/api';
+import { showToast } from '../../utils/toastEvents';
 
 export const ReportsView: React.FC = () => {
   const [downloading, setDownloading] = useState<string | null>(null);
@@ -10,7 +11,7 @@ export const ReportsView: React.FC = () => {
       setDownloading(type);
       await api.downloadExportReport(type as any);
     } catch (err: any) {
-      alert(err?.message || 'Failed to download report.');
+      showToast({ type: 'error', title: 'Download Failed', message: err?.message || 'Failed to download report.' });
     } finally {
       setDownloading(null);
     }

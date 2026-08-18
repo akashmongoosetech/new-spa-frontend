@@ -19,8 +19,8 @@ export interface SEOConfig {
 
 const DEFAULT_SEO: Required<Omit<SEOConfig, 'jsonLd' | 'path'>> = {
   title: "Aura Luxe Spa | Premier Men's Massage Therapy & Wellness Sanctuary Bandra",
-  description: "Licensed Men-to-Men massage therapy sanctuary in Bandra West, Mumbai. Deep Tissue, Swedish, Ayurvedic Abhyanga, and Hot Stone in private soundproof suites.",
-  keywords: "men to men massage Mumbai, male massage therapist Bandra, deep tissue massage Mumbai, Ayurvedic Abhyanga, male spa Mumbai, male wellness sanctuary",
+  description: "Licensed Men-to-Men massage therapy sanctuary in Indore. Deep Tissue, Swedish, Ayurvedic Abhyanga, and Hot Stone in private soundproof suites.",
+  keywords: "men to men massage Indore, Ujjain, Dewas, male massage therapist Bandra, deep tissue massage Indore, Ujjain, Dewas, Ayurvedic Abhyanga, male spa Indore, Ujjain, Dewas, male wellness sanctuary",
   ogImage: "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?q=80&w=1200&auto=format&fit=crop",
   favicon: 'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>✨</text></svg>',
   canonicalUrl: "https://auraluxespa.in",
@@ -132,7 +132,7 @@ export const generateLocalBusinessSchema = (customData?: Record<string, any>): R
     "@id": `${BASE_URL}/#spa-business`,
     "name": "Aura Luxe Spa & Wellness Sanctuary",
     "alternateName": "Aura Luxe Men's Wellness Sanctuary",
-    "description": "Licensed Men-to-Men luxury massage therapy sanctuary in Bandra West, Mumbai. Offering deep tissue muscle recovery, Swedish relaxation, Ayurvedic Abhyanga, and volcanic hot stone therapies in private soundproof VIP suites.",
+    "description": "Licensed Men-to-Men luxury massage therapy sanctuary in Indore, Ujjain, Dewas. Offering deep tissue muscle recovery, Swedish relaxation, Ayurvedic Abhyanga, and volcanic hot stone therapies in private soundproof VIP suites.",
     "url": BASE_URL,
     "telephone": "+919820012345",
     "email": "concierge@auraluxespa.in",
@@ -148,8 +148,8 @@ export const generateLocalBusinessSchema = (customData?: Record<string, any>): R
     "address": {
       "@type": "PostalAddress",
       "streetAddress": "Plot 42, Bandra Reclamation, Bandra West",
-      "addressLocality": "Mumbai",
-      "addressRegion": "Maharashtra",
+      "addressLocality": "Indore",
+      "addressRegion": "Madhya Pradesh",
       "postalCode": "400050",
       "addressCountry": "IN"
     },
@@ -256,7 +256,7 @@ export const getSEOPresets = (pageName: string, params?: Record<string, any>): S
   switch (pageName) {
     case 'home':
       return {
-        title: "Aura Luxe Spa | Luxury Men's Massage Therapy Bandra West, Mumbai",
+        title: "Aura Luxe Spa | Luxury Men's Massage Therapy Indore",
         description: "Experience executive male wellness in private soundproof suites. Certified male therapists, deep tissue muscle recovery, Swedish relaxation, and hot stone therapy.",
         ogImage: "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?q=80&w=1200&auto=format&fit=crop",
         path: "/",

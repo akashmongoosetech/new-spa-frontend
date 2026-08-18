@@ -77,7 +77,7 @@ export const Hero: React.FC<HeroProps> = ({
               Serenity
             </h1>
             <p className="text-[#A3B8B5] text-lg sm:text-xl font-light max-w-2xl leading-relaxed pt-2">
-              Mumbai's exclusive sanctuary for executive men. Experience restorative Deep Tissue, Swedish Relaxation, Ayurvedic Abhyanga, and Hot Stone Therapy by certified male bodywork masters in private luxury suites.
+              Indore, Ujjain, Dewas exclusive sanctuary for executive men. Experience restorative Deep Tissue, Swedish Relaxation, Ayurvedic Abhyanga, and Hot Stone Therapy by certified male bodywork masters in private luxury suites.
             </p>
           </motion.div>
 

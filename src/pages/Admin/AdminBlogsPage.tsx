@@ -1,19 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Plus, Edit2, Eye, Trash2 } from 'lucide-react';
-import { mockBlogs } from '../../data/mockData';
 import { api } from '../../services/api';
+import { showToast } from '../../utils/toastEvents';
 
 export const AdminBlogsPage: React.FC = () => {
-  const [blogs, setBlogs] = useState(mockBlogs as any[]);
+  const [blogs, setBlogs] = useState<any[]>([]);
 
   useEffect(() => {
     (async () => {
       try {
         const b = await api.getBlogs();
-        if (Array.isArray(b) && b.length > 0) setBlogs(b);
+        if (Array.isArray(b)) setBlogs(b);
       } catch (err) {
-        // keep mock fallback
+        // keep empty state
       }
     })();
   }, []);
@@ -24,7 +24,7 @@ export const AdminBlogsPage: React.FC = () => {
       await api.deleteBlog(id);
       setBlogs((prev) => prev.filter((b) => b.id !== id));
     } catch (err: any) {
-      alert(err?.message || 'Failed to delete article.');
+      showToast({ type: 'error', title: 'Delete Failed', message: err?.message || 'Failed to delete article.' });
     }
   };
 

@@ -36,17 +36,22 @@ export const Footer: React.FC<FooterProps> = ({
   const [newsletterEmail, setNewsletterEmail] = useState('');
   const [subscribing, setSubscribing] = useState(false);
   const [subscribedSuccess, setSubscribedSuccess] = useState(false);
+  const [newsletterError, setNewsletterError] = useState('');
 
   const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!newsletterEmail || !newsletterEmail.includes('@')) return;
+    if (!newsletterEmail || !newsletterEmail.includes('@')) {
+      setNewsletterError('Please enter a valid email address.');
+      return;
+    }
     setSubscribing(true);
+    setNewsletterError('');
     try {
       await onSubscribeNewsletter(newsletterEmail);
       setSubscribedSuccess(true);
       setNewsletterEmail('');
     } catch (err) {
-      console.error(err);
+      setNewsletterError('Subscription failed. Please try again or contact support.');
     } finally {
       setSubscribing(false);
     }
@@ -86,12 +91,17 @@ export const Footer: React.FC<FooterProps> = ({
                 </div>
               ) : (
                 <form onSubmit={handleSubscribe} className="flex flex-col sm:flex-row gap-3">
+                  <label htmlFor="footer-newsletter-email" className="sr-only">
+                    Email address for the private Aura Luxe newsletter
+                  </label>
                   <input
+                    id="footer-newsletter-email"
                     type="email"
                     value={newsletterEmail}
                     onChange={(e) => setNewsletterEmail(e.target.value)}
                     placeholder="Enter your private email..."
                     required
+                    aria-invalid={!!newsletterError}
                     className="flex-1 bg-black/50 border border-white/15 rounded-2xl px-4 py-3.5 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-[#2CB5A0] focus:ring-1 focus:ring-[#2CB5A0] transition-all"
                   />
                   <button
@@ -103,6 +113,11 @@ export const Footer: React.FC<FooterProps> = ({
                     <Send className="w-4 h-4" />
                   </button>
                 </form>
+              )}
+              {newsletterError && (
+                <p role="status" className="mt-3 text-xs font-medium text-rose-400">
+                  {newsletterError}
+                </p>
               )}
             </div>
           </div>
@@ -127,7 +142,7 @@ export const Footer: React.FC<FooterProps> = ({
             </div>
 
             <p className="text-xs sm:text-sm leading-relaxed text-gray-400">
-              Mumbai's benchmark licensed Men-to-Men massage therapy sanctuary situated in Bandra West. Dedicated to unmatched privacy, medical-grade hygiene, and executive stress recovery.
+              Indore, Ujjain, Dewas benchmark licensed Men-to-Men massage therapy sanctuary situated in Bandra West. Dedicated to unmatched privacy, medical-grade hygiene, and executive stress recovery.
             </p>
 
             <div className="space-y-2 pt-1 text-xs">
@@ -273,7 +288,7 @@ export const Footer: React.FC<FooterProps> = ({
             <div className="space-y-3 text-xs text-gray-400">
               <div className="flex items-start gap-2.5">
                 <MapPin className="w-4 h-4 text-[#2CB5A0] shrink-0 mt-0.5" />
-                <span className="leading-relaxed">{settings?.address || 'Bandra West, Mumbai'}</span>
+                <span className="leading-relaxed">{settings?.address || 'Indore, Ujjain, Dewas'}</span>
               </div>
               <div className="flex items-center gap-2.5">
                 <Phone className="w-4 h-4 text-[#2CB5A0] shrink-0" />

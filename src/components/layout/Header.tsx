@@ -105,7 +105,7 @@ export const Header: React.FC<HeaderProps> = ({
           </button>
 
           {/* Desktop Links */}
-          <div className="hidden lg:flex items-center gap-1">
+          <div className="hidden xl:flex items-center gap-1">
             {navItems.map((item) => {
               if (item.hasMega) {
                 return (
@@ -114,10 +114,14 @@ export const Header: React.FC<HeaderProps> = ({
                     className="relative"
                     onMouseEnter={() => setMegaMenuOpen(true)}
                     onMouseLeave={() => setMegaMenuOpen(false)}
+                    onFocus={() => setMegaMenuOpen(true)}
+                    onBlur={() => setTimeout(() => setMegaMenuOpen(false), 150)}
                   >
                     <button
                       id="nav-mega-therapies-btn"
                       onClick={() => setActiveTab('services')}
+                      aria-expanded={megaMenuOpen}
+                      aria-haspopup="true"
                       className={`px-3.5 py-2 rounded-lg text-sm font-medium transition-all flex items-center gap-1 ${
                         activeTab === 'services'
                           ? 'text-[#2CB5A0] bg-teal-50/80 font-semibold'
@@ -166,7 +170,7 @@ export const Header: React.FC<HeaderProps> = ({
                                 {srv.title}
                               </div>
                               <div className="text-xs text-gray-500 font-medium mt-0.5">
-                                {srv.durationMinutes} mins • ${srv.price}
+                                {srv.durationMinutes} mins • ₹{srv.price}
                               </div>
                             </div>
                           </button>
@@ -214,6 +218,7 @@ export const Header: React.FC<HeaderProps> = ({
               rel="noreferrer"
               className="p-2.5 rounded-xl border border-emerald-200 text-emerald-700 hover:bg-emerald-50 transition-colors flex items-center justify-center"
               title="Chat on WhatsApp"
+              aria-label="Chat on WhatsApp"
             >
               <MessageCircle className="w-5 h-5 text-emerald-600" />
             </a>
@@ -232,7 +237,9 @@ export const Header: React.FC<HeaderProps> = ({
           <button
             id="mobile-menu-toggle-btn"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="lg:hidden p-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors"
+            aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
+            aria-expanded={mobileMenuOpen}
+            className="xl:hidden p-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors"
           >
             {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </button>
@@ -240,7 +247,7 @@ export const Header: React.FC<HeaderProps> = ({
 
         {/* Mobile Navigation Drawer */}
         {mobileMenuOpen && (
-          <div className="lg:hidden bg-white border-b border-gray-200 px-4 py-5 shadow-2xl animate-in slide-in-from-top duration-200">
+          <div className="xl:hidden bg-white border-b border-gray-200 px-4 py-5 shadow-2xl animate-in slide-in-from-top duration-200 max-h-[calc(100vh-6rem)] overflow-y-auto">
             <div className="flex flex-col gap-1.5 mb-5">
               {navItems.map((item) => (
                 <button
