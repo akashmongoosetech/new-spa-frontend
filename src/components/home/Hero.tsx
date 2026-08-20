@@ -39,8 +39,8 @@ export const Hero: React.FC<HeroProps> = ({
           referrerPolicy="no-referrer"
         />
         {/* Layered vignette overlays for optical contrast */}
-        <div className="absolute inset-0 bg-gradient-to-r from-[#0D1113]/95 via-[#0D1113]/80 to-[#0D1113]/60" />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#0D1113] via-transparent to-black/40" />
+        <div className="absolute inset-0 bg-linear-to-r from-[#0D1113]/95 via-[#0D1113]/80 to-[#0D1113]/60" />
+        <div className="absolute inset-0 bg-linear-to-t from-[#0D1113] via-transparent to-black/40" />
       </div>
 
       {/* Decorative Golden Glow Elements */}
@@ -71,7 +71,7 @@ export const Hero: React.FC<HeroProps> = ({
           >
             <h1 className="text-4xl sm:text-6xl lg:text-7xl font-serif font-extrabold leading-[1.1] tracking-tight text-white">
               Indulge in <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#2CB5A0] via-[#81E3D4] to-[#E3C99B]">
+              <span className="text-transparent bg-clip-text bg-linear-to-r from-[#2CB5A0] via-[#81E3D4] to-[#E3C99B]">
                 Aura Luxe
               </span>{' '}
               Serenity
@@ -112,7 +112,7 @@ export const Hero: React.FC<HeroProps> = ({
             <button
               id="hero-book-now-main-btn"
               onClick={() => onOpenBooking()}
-              className="group relative w-full sm:w-auto px-9 py-4 rounded-2xl bg-gradient-to-r from-[#2CB5A0] via-[#249685] to-[#1A6E61] text-white font-bold text-base shadow-xl hover:shadow-[#2CB5A0]/25 hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 flex items-center justify-center gap-3 cursor-pointer overflow-hidden"
+              className="group relative w-full sm:w-auto px-9 py-4 rounded-2xl bg-linear-to-r from-[#2CB5A0] via-[#249685] to-[#1A6E61] text-white font-bold text-base shadow-xl hover:shadow-[#2CB5A0]/25 hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 flex items-center justify-center gap-3 cursor-pointer overflow-hidden"
             >
               <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity" />
               <Calendar className="w-5 h-5 text-teal-100 group-hover:rotate-12 transition-transform" />
@@ -193,7 +193,7 @@ export const Hero: React.FC<HeroProps> = ({
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                 referrerPolicy="no-referrer"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
+              <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent" />
               <div className="absolute bottom-3 left-3 right-3 flex justify-between items-end">
                 <span className="px-3 py-1 rounded-lg bg-black/60 backdrop-blur-md text-xs font-semibold text-teal-200">
                   <Clock className="w-3 h-3 inline mr-1" /> 60 - 90 Minutes

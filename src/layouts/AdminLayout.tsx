@@ -84,6 +84,7 @@ export const AdminLayout: React.FC = () => {
     if (p.includes('/calendar') || p.includes('/schedule')) return 'schedule';
     if (p.includes('/reports')) return 'reports';
     if (p.includes('/users')) return 'users';
+    if (p.includes('/applications')) return 'applications';
     if (p.includes('/settings')) return 'settings';
     if (p.includes('/activity-logs')) return 'audit';
     return 'overview';

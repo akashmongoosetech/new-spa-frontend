@@ -67,9 +67,9 @@ export const Footer: React.FC<FooterProps> = ({
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Newsletter Banner */}
-        <div className="bg-gradient-to-r from-[#121A1C] via-[#162124] to-[#0F1618] rounded-3xl p-8 sm:p-10 border border-white/10 shadow-2xl mb-16 relative overflow-hidden backdrop-blur-md">
+        <div className="bg-linear-to-r from-[#121A1C] via-[#162124] to-[#0F1618] rounded-3xl p-8 sm:p-10 border border-white/10 shadow-2xl mb-16 relative overflow-hidden backdrop-blur-md">
           <div className="absolute -right-10 -bottom-10 w-72 h-72 bg-[#2CB5A0]/10 rounded-full blur-3xl pointer-events-none" />
-          <div className="absolute top-0 left-0 w-2 h-full bg-gradient-to-b from-[#2CB5A0] to-[#C7A36A]" />
+          <div className="absolute top-0 left-0 w-2 h-full bg-linear-to-b from-[#2CB5A0] to-[#C7A36A]" />
 
           <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
             <div className="lg:col-span-7 space-y-3">
@@ -107,7 +107,7 @@ export const Footer: React.FC<FooterProps> = ({
                   <button
                     type="submit"
                     disabled={subscribing}
-                    className="px-6 py-3.5 rounded-2xl bg-gradient-to-r from-[#2CB5A0] to-[#208878] hover:brightness-110 text-white font-bold text-sm transition-all shadow-lg hover:shadow-[#2CB5A0]/20 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 shrink-0"
+                    className="px-6 py-3.5 rounded-2xl bg-linear-to-r from-[#2CB5A0] to-[#208878] hover:brightness-110 text-white font-bold text-sm transition-all shadow-lg hover:shadow-[#2CB5A0]/20 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 shrink-0"
                   >
                     <span>{subscribing ? 'Joining...' : 'Join Private Club'}</span>
                     <Send className="w-4 h-4" />
@@ -128,7 +128,7 @@ export const Footer: React.FC<FooterProps> = ({
           {/* Col 1: Brand Info */}
           <div className="lg:col-span-4 space-y-5">
             <div className="flex items-center gap-3">
-              <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-[#2CB5A0] to-[#1A6E61] flex items-center justify-center text-white font-serif font-bold text-2xl shadow-lg border border-teal-400/30">
+              <div className="w-11 h-11 rounded-2xl bg-linear-to-br from-[#2CB5A0] to-[#1A6E61] flex items-center justify-center text-white font-serif font-bold text-2xl shadow-lg border border-teal-400/30">
                 A
               </div>
               <div>

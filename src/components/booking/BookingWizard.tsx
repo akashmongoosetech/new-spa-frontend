@@ -299,7 +299,7 @@ export const BookingWizard: React.FC<BookingWizardProps> = ({
               Select your signature therapy session. All treatments include private suite access and post-session herbal tea.
             </p>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-h-[480px] overflow-y-auto pr-1 scrollbar-thin">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-h-120 overflow-y-auto pr-1 scrollbar-thin">
               {services.length === 0 && (
                 <div className="col-span-full p-8 text-center text-gray-400 text-sm bg-[#141C1E] border border-white/10 rounded-2xl">
                   No therapies are currently available. Please check back soon.
@@ -374,7 +374,7 @@ export const BookingWizard: React.FC<BookingWizardProps> = ({
                 id="wizard-step1-next-btn"
                 type="button"
                 onClick={() => setStep(2)}
-                className="px-7 py-3 rounded-2xl bg-gradient-to-r from-[#2CB5A0] to-[#1a6e61] hover:brightness-110 text-white font-bold text-sm shadow-xl flex items-center gap-2 cursor-pointer transition-all"
+                className="px-7 py-3 rounded-2xl bg-linear-to-r from-[#2CB5A0] to-[#1a6e61] hover:brightness-110 text-white font-bold text-sm shadow-xl flex items-center gap-2 cursor-pointer transition-all"
               >
                 <span>Continue to Select Therapist</span>
                 <ArrowRight className="w-4 h-4" />
@@ -396,7 +396,7 @@ export const BookingWizard: React.FC<BookingWizardProps> = ({
               All therapists are certified male practitioners specialized in deep tissue, sports therapy, and Swedish pressure points.
             </p>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-h-[480px] overflow-y-auto pr-1 scrollbar-thin">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-h-120 overflow-y-auto pr-1 scrollbar-thin">
               {/* Option: Any Available Therapist */}
               <div
                 id="select-therapist-any"
@@ -411,7 +411,7 @@ export const BookingWizard: React.FC<BookingWizardProps> = ({
                     : 'border-white/10 bg-[#141C1E] hover:border-white/20 hover:bg-[#182225]'
                 }`}
               >
-                <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#2CB5A0] to-[#1A6E61] flex items-center justify-center text-white font-bold text-lg shrink-0 shadow-md">
+                <div className="w-14 h-14 rounded-2xl bg-linear-to-br from-[#2CB5A0] to-[#1A6E61] flex items-center justify-center text-white font-bold text-lg shrink-0 shadow-md">
                   <User className="w-7 h-7" />
                 </div>
                 <div className="flex-1">
@@ -500,7 +500,7 @@ export const BookingWizard: React.FC<BookingWizardProps> = ({
                 id="wizard-step2-next-btn"
                 type="button"
                 onClick={() => setStep(3)}
-                className="px-7 py-3 rounded-2xl bg-gradient-to-r from-[#2CB5A0] to-[#1a6e61] hover:brightness-110 text-white font-bold text-sm shadow-xl flex items-center gap-2 cursor-pointer transition-all"
+                className="px-7 py-3 rounded-2xl bg-linear-to-r from-[#2CB5A0] to-[#1a6e61] hover:brightness-110 text-white font-bold text-sm shadow-xl flex items-center gap-2 cursor-pointer transition-all"
               >
                 <span>Continue to Date & Time</span>
                 <ArrowRight className="w-4 h-4" />
@@ -541,7 +541,7 @@ export const BookingWizard: React.FC<BookingWizardProps> = ({
                 type="button"
                 onClick={() => setStep(4)}
                 disabled={!selectedTimeSlot}
-                className="px-7 py-3 rounded-2xl bg-gradient-to-r from-[#2CB5A0] to-[#1a6e61] hover:brightness-110 text-white font-bold text-sm shadow-xl flex items-center gap-2 cursor-pointer transition-all disabled:opacity-40"
+                className="px-7 py-3 rounded-2xl bg-linear-to-r from-[#2CB5A0] to-[#1a6e61] hover:brightness-110 text-white font-bold text-sm shadow-xl flex items-center gap-2 cursor-pointer transition-all disabled:opacity-40"
               >
                 <span>Continue to Personal Details</span>
                 <ArrowRight className="w-4 h-4" />
@@ -750,7 +750,7 @@ export const BookingWizard: React.FC<BookingWizardProps> = ({
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="px-8 py-3.5 rounded-2xl bg-gradient-to-r from-[#2CB5A0] to-[#1a6e61] text-white font-bold text-sm shadow-xl hover:brightness-110 transition-all flex items-center gap-2 cursor-pointer disabled:opacity-50"
+                  className="px-8 py-3.5 rounded-2xl bg-linear-to-r from-[#2CB5A0] to-[#1a6e61] text-white font-bold text-sm shadow-xl hover:brightness-110 transition-all flex items-center gap-2 cursor-pointer disabled:opacity-50"
                 >
                   {submitting ? (
                     <span>Reserving Appointment...</span>

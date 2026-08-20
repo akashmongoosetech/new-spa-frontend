@@ -14,7 +14,8 @@ import {
   ChevronRight,
   Award,
   Lock,
-  X
+  X,
+  UserPlus
 } from 'lucide-react';
 import { AdminUser } from '../../types';
 
@@ -26,6 +27,7 @@ export type AdminTab =
   | 'services'
   | 'schedule'
   | 'users'
+  | 'applications'
   | 'settings'
   | 'reports'
   | 'audit';
@@ -64,6 +66,7 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
 
   // Role-based visibility check
   const isAllowed = (tab: AdminTab) => {
+    if (tab === 'applications') return role === 'super_admin';
     if (role === 'super_admin' || role === 'admin') return true;
     if (role === 'manager') {
       return ['overview', 'bookings', 'contacts', 'therapists', 'services', 'schedule', 'reports'].includes(tab);
@@ -83,6 +86,7 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
     { id: 'schedule', label: 'Schedule & Calendar', icon: Clock },
     { id: 'reports', label: 'Reports & Export', icon: FileText },
     { id: 'users', label: 'Staff & RBAC', icon: Shield },
+    { id: 'applications', label: 'Staff Applications', icon: UserPlus },
     { id: 'settings', label: 'System Settings', icon: Settings },
     { id: 'audit', label: 'Audit Logs', icon: Lock },
   ];
@@ -108,7 +112,7 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
           <div className="h-20 px-5 flex items-center justify-between border-b border-gray-800/80">
             {!isCollapsed && (
               <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-[#2CB5A0] to-emerald-400 flex items-center justify-center font-black text-black text-lg shadow-lg shadow-[#2CB5A0]/20">
+                <div className="w-9 h-9 rounded-xl bg-linear-to-tr from-[#2CB5A0] to-emerald-400 flex items-center justify-center font-black text-black text-lg shadow-lg shadow-[#2CB5A0]/20">
                   A
                 </div>
                 <div>
@@ -135,7 +139,7 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
 
           {/* User Badge */}
           {currentUser && !isCollapsed && (
-            <div className="p-4 mx-3 my-3 rounded-2xl bg-gradient-to-r from-gray-900 to-gray-800/90 border border-gray-800 flex items-center gap-3">
+            <div className="p-4 mx-3 my-3 rounded-2xl bg-linear-to-r from-gray-900 to-gray-800/90 border border-gray-800 flex items-center gap-3">
               <img
                 src={currentUser.avatarUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=200'}
                 alt={currentUser.name}

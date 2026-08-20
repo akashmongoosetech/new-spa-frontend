@@ -20,7 +20,7 @@ export const AuthLayout: React.FC = () => {
       {/* Center Auth Content */}
       <div className="w-full max-w-md mx-auto my-8">
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-tr from-[#2CB5A0] to-[#C7A36A] p-0.5 shadow-xl shadow-[#2CB5A0]/10 mb-4">
+          <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-linear-to-tr from-[#2CB5A0] to-[#C7A36A] p-0.5 shadow-xl shadow-[#2CB5A0]/10 mb-4">
             <div className="w-full h-full bg-[#0F172A] rounded-[14px] flex items-center justify-center">
               <Sparkles className="w-7 h-7 text-[#2CB5A0]" />
             </div>

@@ -91,7 +91,7 @@ export const Header: React.FC<HeaderProps> = ({
             }}
             className="flex items-center gap-2.5 text-left group cursor-pointer"
           >
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#2CB5A0] to-[#1a6e61] flex items-center justify-center text-white font-serif font-bold text-xl shadow-md group-hover:scale-105 transition-transform">
+            <div className="w-10 h-10 rounded-xl bg-linear-to-br from-[#2CB5A0] to-[#1a6e61] flex items-center justify-center text-white font-serif font-bold text-xl shadow-md group-hover:scale-105 transition-transform">
               A
             </div>
             <div>
@@ -134,7 +134,7 @@ export const Header: React.FC<HeaderProps> = ({
 
                     {/* Mega Menu Dropdown */}
                     {megaMenuOpen && (
-                      <div className="absolute top-full left-0 w-[580px] bg-white rounded-2xl shadow-2xl border border-teal-100 p-5 grid grid-cols-2 gap-3 z-50 animate-in fade-in slide-in-from-top-2 duration-200">
+                      <div className="absolute top-full left-0 w-145 bg-white rounded-2xl shadow-2xl border border-teal-100 p-5 grid grid-cols-2 gap-3 z-50 animate-in fade-in slide-in-from-top-2 duration-200">
                         <div className="col-span-2 pb-2 mb-1 border-b border-gray-100 flex items-center justify-between">
                           <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">
                             Curated Massage Treatments
@@ -226,7 +226,7 @@ export const Header: React.FC<HeaderProps> = ({
             <button
               id="header-book-cta-btn"
               onClick={() => onOpenBooking()}
-              className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#2CB5A0] to-[#1a6e61] text-white font-semibold text-sm shadow-md hover:shadow-lg hover:brightness-105 transition-all flex items-center gap-2 cursor-pointer"
+              className="px-5 py-2.5 rounded-xl bg-linear-to-r from-[#2CB5A0] to-[#1a6e61] text-white font-semibold text-sm shadow-md hover:shadow-lg hover:brightness-105 transition-all flex items-center gap-2 cursor-pointer"
             >
               <Calendar className="w-4 h-4" />
               <span>Book Appointment</span>

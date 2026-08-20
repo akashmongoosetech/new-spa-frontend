@@ -56,7 +56,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({
               <img
                 src="https://images.unsplash.com/photo-1540555700478-4be289fbecef?q=80&w=1200&auto=format&fit=crop"
                 alt="Aura Luxe Spa Environment"
-                className="w-full h-[400px] object-cover"
+                className="w-full h-100 object-cover"
               />
             </div>
           </div>

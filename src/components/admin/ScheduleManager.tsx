@@ -132,7 +132,7 @@ export const ScheduleManager: React.FC = () => {
       </div>
 
       {/* Emergency Lockdown Switch */}
-      <div className="p-6 bg-gradient-to-r from-rose-900 to-rose-950 text-white rounded-3xl border border-rose-800 shadow-lg space-y-4">
+      <div className="p-6 bg-linear-to-r from-rose-900 to-rose-950 text-white rounded-3xl border border-rose-800 shadow-lg space-y-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="p-2.5 rounded-2xl bg-rose-500/20 text-rose-300 border border-rose-500/30">

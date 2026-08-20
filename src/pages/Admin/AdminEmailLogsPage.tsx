@@ -106,7 +106,7 @@ export const AdminEmailLogsPage: React.FC = () => {
               <iframe
                 title="Email preview"
                 srcDoc={selected.htmlContent || '<p style="font-family:sans-serif;color:#333">No HTML preview available.</p>'}
-                className="w-full h-full min-h-[300px] border border-gray-200 rounded-xl"
+                className="w-full h-full min-h-75 border border-gray-200 rounded-xl"
                 sandbox=""
               />
             </div>

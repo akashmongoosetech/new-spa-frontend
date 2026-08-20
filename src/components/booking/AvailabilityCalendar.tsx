@@ -92,7 +92,7 @@ export const AvailabilityCalendar: React.FC<AvailabilityCalendarProps> = ({
                 onClick={() => onSelectDate(item.dateStr)}
                 className={`flex-shrink-0 w-20 py-3.5 px-2 rounded-2xl border text-center transition-all cursor-pointer relative ${
                   isSelected
-                    ? 'bg-gradient-to-b from-[#2CB5A0] to-[#1A6E61] text-white border-transparent shadow-lg shadow-[#2CB5A0]/20 scale-105'
+                    ? 'bg-linear-to-b from-[#2CB5A0] to-[#1A6E61] text-white border-transparent shadow-lg shadow-[#2CB5A0]/20 scale-105'
                     : 'bg-[#182225] border-white/10 text-gray-300 hover:border-[#2CB5A0]/50 hover:bg-[#1E2C2F]'
                 }`}
               >

@@ -20,6 +20,7 @@ const AdminFaqsPage = lazy(() => import('../pages/Admin/AdminFaqsPage'));
 const AdminCouponsPage = lazy(() => import('../pages/Admin/AdminCouponsPage'));
 const AdminEmailLogsPage = lazy(() => import('../pages/Admin/AdminEmailLogsPage'));
 const AdminUsersPage = lazy(() => import('../pages/Admin/AdminUsersPage'));
+const AdminApplicationsPage = lazy(() => import('../pages/Admin/AdminApplicationsPage'));
 const AdminSettingsPage = lazy(() => import('../pages/Admin/AdminSettingsPage'));
 const AdminSeoPage = lazy(() => import('../pages/Admin/AdminSeoPage'));
 const AdminEmailTemplatesPage = lazy(() => import('../pages/Admin/AdminEmailTemplatesPage'));
@@ -59,6 +60,7 @@ export const renderAdminRoutes = () => (
     <Route path="coupons" element={<AdminCouponsPage />} />
     <Route path="email-logs" element={<AdminEmailLogsPage />} />
     <Route path="users" element={<AdminUsersPage />} />
+    <Route path="applications" element={<AdminApplicationsPage />} />
     <Route path="settings" element={<AdminSettingsPage />} />
     <Route path="seo" element={<AdminSeoPage />} />
     <Route path="email-templates" element={<AdminEmailTemplatesPage />} />

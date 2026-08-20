@@ -52,7 +52,7 @@ const ToastItem: React.FC<{ toast: ToastMessage; onClose: (id: string) => void }
     >
       <div className="flex items-start gap-3">
         {toast.type === 'admin_alert' && (
-          <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-[#2CB5A0] to-emerald-400 text-black flex items-center justify-center shrink-0 shadow-md animate-bounce">
+          <div className="w-8 h-8 rounded-xl bg-linear-to-tr from-[#2CB5A0] to-emerald-400 text-black flex items-center justify-center shrink-0 shadow-md animate-bounce">
             <Bell className="w-4 h-4 text-black font-black" />
           </div>
         )}
@@ -143,7 +143,7 @@ export const Toast: React.FC<ToastProps> = ({ toasts, onClose }) => {
       id="toast-container"
       aria-live="polite"
       role="status"
-      className="fixed bottom-6 left-4 right-4 z-50 flex flex-col gap-3 sm:left-auto sm:right-6 sm:w-[420px] sm:max-w-[calc(100vw-3rem)] pointer-events-none"
+      className="fixed bottom-6 left-4 right-4 z-50 flex flex-col gap-3 sm:left-auto sm:right-6 sm:w-105 sm:max-w-[calc(100vw-3rem)] pointer-events-none"
     >
       <AnimatePresence mode="sync">
         {toasts.map((toast) => (

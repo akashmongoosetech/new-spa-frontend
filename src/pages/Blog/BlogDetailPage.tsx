@@ -115,7 +115,7 @@ export const BlogDetailPage: React.FC = () => {
           </div>
         )}
 
-        <div className="bg-gradient-to-r from-[#1A1A1A] to-[#2A2A2A] text-white p-8 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-6 shadow-xl">
+        <div className="bg-linear-to-r from-[#1A1A1A] to-[#2A2A2A] text-white p-8 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-6 shadow-xl">
           <div className="space-y-1 text-center sm:text-left">
             <h3 className="text-xl font-serif font-bold text-[#C7A36A]">Experience Restorative Healing</h3>
             <p className="text-xs text-gray-300 font-light">Book your personalized therapeutic session with our licensed specialists.</p>

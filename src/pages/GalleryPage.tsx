@@ -230,7 +230,7 @@ export const GalleryPage: React.FC<GalleryPageProps> = ({ photos, onOpenBooking 
                 }}
                 className={`px-4 py-2.5 rounded-2xl text-xs font-bold transition-all cursor-pointer flex items-center gap-2 border ${
                   isSelected
-                    ? 'bg-gradient-to-r from-[#2CB5A0] to-[#1A6E61] text-white border-transparent shadow-lg shadow-[#2CB5A0]/20 scale-105'
+                    ? 'bg-linear-to-r from-[#2CB5A0] to-[#1A6E61] text-white border-transparent shadow-lg shadow-[#2CB5A0]/20 scale-105'
                     : 'bg-[#141C1E] border-white/10 text-gray-400 hover:text-white hover:bg-[#182225] hover:border-white/20'
                 }`}
               >
@@ -283,7 +283,7 @@ export const GalleryPage: React.FC<GalleryPageProps> = ({ photos, onOpenBooking 
               </div>
 
               {/* Bottom Glass Overlay */}
-              <div className="absolute inset-0 bg-gradient-to-t from-[#0C1214] via-[#0C1214]/40 to-transparent opacity-85 group-hover:opacity-95 transition-opacity p-6 flex flex-col justify-end text-white">
+              <div className="absolute inset-0 bg-linear-to-t from-[#0C1214] via-[#0C1214]/40 to-transparent opacity-85 group-hover:opacity-95 transition-opacity p-6 flex flex-col justify-end text-white">
                 <div className="flex items-center gap-2 text-[#81E3D4] text-xs font-bold mb-1 transform translate-y-2 group-hover:translate-y-0 transition-transform">
                   <Maximize2 className="w-3.5 h-3.5" />
                   <span>Click for Fullscreen Lightbox</span>
@@ -308,7 +308,7 @@ export const GalleryPage: React.FC<GalleryPageProps> = ({ photos, onOpenBooking 
         </motion.div>
 
         {/* Bottom Banner */}
-        <div className="p-8 rounded-3xl bg-gradient-to-r from-[#142023] via-[#1A2C30] to-[#142023] border border-[#2CB5A0]/30 shadow-2xl flex flex-col md:flex-row items-center justify-between gap-6">
+        <div className="p-8 rounded-3xl bg-linear-to-r from-[#142023] via-[#1A2C30] to-[#142023] border border-[#2CB5A0]/30 shadow-2xl flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="space-y-2 text-center md:text-left">
             <span className="text-xs font-bold uppercase tracking-wider text-[#2CB5A0] bg-[#2CB5A0]/15 px-3 py-1 rounded-full border border-[#2CB5A0]/30">
               Private Spa Suite Reservations
@@ -324,7 +324,7 @@ export const GalleryPage: React.FC<GalleryPageProps> = ({ photos, onOpenBooking 
           <button
             id="gallery-book-now-btn"
             onClick={() => onOpenBooking && onOpenBooking()}
-            className="px-8 py-4 rounded-2xl bg-gradient-to-r from-[#2CB5A0] to-[#1A6E61] hover:brightness-110 text-white font-bold text-sm shadow-xl flex items-center gap-2 shrink-0 cursor-pointer transition-all"
+            className="px-8 py-4 rounded-2xl bg-linear-to-r from-[#2CB5A0] to-[#1A6E61] hover:brightness-110 text-white font-bold text-sm shadow-xl flex items-center gap-2 shrink-0 cursor-pointer transition-all"
           >
             <Calendar className="w-4 h-4" />
             <span>Book Private Suite Session</span>
@@ -377,7 +377,7 @@ export const GalleryPage: React.FC<GalleryPageProps> = ({ photos, onOpenBooking 
             {/* Lightbox Main Container */}
             <div className="w-full max-w-6xl max-h-[92vh] bg-[#121A1C] rounded-3xl border border-white/15 overflow-hidden flex flex-col lg:flex-row shadow-2xl relative">
               {/* Photo Display Viewport */}
-              <div className="flex-1 bg-black flex items-center justify-center relative min-h-[300px] lg:min-h-[550px] p-4">
+              <div className="flex-1 bg-black flex items-center justify-center relative min-h-75 lg:min-h-[550px] p-4">
                 <motion.img
                   key={currentPhoto.id}
                   initial={{ opacity: 0, scale: 0.95 }}
@@ -452,7 +452,7 @@ export const GalleryPage: React.FC<GalleryPageProps> = ({ photos, onOpenBooking 
                       setLightboxIndex(null);
                       if (onOpenBooking) onOpenBooking();
                     }}
-                    className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-[#2CB5A0] to-[#1A6E61] hover:brightness-110 text-white font-bold text-xs shadow-xl flex items-center justify-center gap-2 cursor-pointer transition-all"
+                    className="w-full py-3.5 rounded-2xl bg-linear-to-r from-[#2CB5A0] to-[#1A6E61] hover:brightness-110 text-white font-bold text-xs shadow-xl flex items-center justify-center gap-2 cursor-pointer transition-all"
                   >
                     <Calendar className="w-4 h-4" />
                     <span>Book Session in This Suite</span>

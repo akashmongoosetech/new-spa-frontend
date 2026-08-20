@@ -101,7 +101,7 @@ export const SpaAssistantChat: React.FC<SpaAssistantChatProps> = ({ onOpenBookin
           onClick={() => setIsOpen(!isOpen)}
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
-          className="relative px-5 py-3.5 rounded-full bg-gradient-to-r from-[#2CB5A0] to-[#1a6e61] text-white shadow-2xl flex items-center gap-2.5 font-sans font-bold text-sm cursor-pointer border border-teal-300/30"
+          className="relative px-5 py-3.5 rounded-full bg-linear-to-r from-[#2CB5A0] to-[#1a6e61] text-white shadow-2xl flex items-center gap-2.5 font-sans font-bold text-sm cursor-pointer border border-teal-300/30"
         >
           <Sparkles className="w-5 h-5 text-amber-300 animate-spin-slow" />
           <span className="hidden sm:inline">Aura AI Spa Assistant</span>
@@ -118,7 +118,7 @@ export const SpaAssistantChat: React.FC<SpaAssistantChatProps> = ({ onOpenBookin
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
             transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-            className="fixed bottom-20 right-4 sm:right-6 z-50 w-[92vw] sm:w-[420px] h-[560px] max-h-[calc(100dvh-6rem)] bg-white rounded-3xl shadow-2xl border border-teal-100 flex flex-col overflow-hidden font-sans"
+            className="fixed bottom-20 right-4 sm:right-6 z-50 w-[92vw] sm:w-105 h-140 max-h-[calc(100dvh-6rem)] bg-white rounded-3xl shadow-2xl border border-teal-100 flex flex-col overflow-hidden font-sans"
             role="dialog"
             aria-label="Aura Spa Concierge chat"
           >

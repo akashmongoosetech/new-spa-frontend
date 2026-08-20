@@ -53,8 +53,8 @@ export const AuthModals: React.FC<AuthModalsProps> = ({
     setSignupMsg(null);
     setSignupLoading(true);
     try {
-      await api.adminSignup({ name: signupName, email: signupEmail, password: signupPassword, role: roleToBackend(signupRole) });
-      setSignupMsg({ type: 'success', text: 'Admin account created successfully!' });
+      await api.adminSignup({ name: signupName, email: signupEmail, password: signupPassword, requestedRole: roleToBackend(signupRole) });
+      setSignupMsg({ type: 'success', text: 'Application submitted for director approval!' });
       setTimeout(() => setShowSignupModal(false), 1500);
     } catch (err: any) {
       setSignupMsg({ type: 'error', text: err.message || 'Failed to create account.' });

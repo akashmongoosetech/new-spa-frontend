@@ -73,7 +73,7 @@ export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
         {/* Center glowing brand ornament / dot */}
         <div className="relative flex items-center justify-center">
           <div
-            className={`${currentSize.innerDot} rounded-full bg-gradient-to-tr from-[#9E7B3A] via-[#C5A059] to-[#DFC896] shadow-[0_0_12px_rgba(197,160,89,0.8)] animate-pulse`}
+            className={`${currentSize.innerDot} rounded-full bg-linear-to-tr from-[#9E7B3A] via-[#C5A059] to-[#DFC896] shadow-[0_0_12px_rgba(197,160,89,0.8)] animate-pulse`}
           />
         </div>
       </div>

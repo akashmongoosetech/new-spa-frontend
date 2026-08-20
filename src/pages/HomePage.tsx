@@ -380,7 +380,7 @@ export const HomePage: React.FC<HomePageProps> = ({
 
       {/* CONTACT MAP & CALL TO ACTION */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 pb-12">
-        <div className="bg-gradient-to-r from-teal-900 via-slate-900 to-gray-900 text-white rounded-3xl p-8 sm:p-12 shadow-2xl relative overflow-hidden">
+        <div className="bg-linear-to-r from-teal-900 via-slate-900 to-gray-900 text-white rounded-3xl p-8 sm:p-12 shadow-2xl relative overflow-hidden">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
             <div className="lg:col-span-8 space-y-4">
               <span className="text-xs font-bold text-[#6FD3C4] uppercase tracking-widest">

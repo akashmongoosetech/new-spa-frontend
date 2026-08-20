@@ -234,6 +234,18 @@ export interface AdminUser {
   lastLoginIp?: string;
 }
 
+export interface StaffApplication {
+  id: string;
+  name: string;
+  email: string;
+  requestedRole: 'Admin' | 'Manager' | 'Receptionist';
+  status: 'pending' | 'approved' | 'rejected';
+  note?: string;
+  reviewNote?: string;
+  createdAt: string;
+  reviewedAt?: string | null;
+}
+
 export interface NotificationItem {
   id: string;
   type: 'booking' | 'contact' | 'cancellation' | 'newsletter' | 'login' | 'security';

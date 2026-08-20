@@ -128,9 +128,9 @@ export const TestimonialCarousel: React.FC<TestimonialCarouselProps> = ({
   };
 
   return (
-    <section className="bg-gradient-to-b from-[#0B0F10] via-[#0E1517] to-[#0A0E10] text-white py-20 relative overflow-hidden border-y border-white/10">
+    <section className="bg-linear-to-b from-[#0B0F10] via-[#0E1517] to-[#0A0E10] text-white py-20 relative overflow-hidden border-y border-white/10">
       {/* Background Decorative Lighting Effect */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#2CB5A0]/10 rounded-full blur-[140px] pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-150 h-150 bg-[#2CB5A0]/10 rounded-full blur-[140px] pointer-events-none" />
       <div className="absolute top-0 right-10 w-80 h-80 bg-[#C7A36A]/10 rounded-full blur-[120px] pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -170,7 +170,7 @@ export const TestimonialCarousel: React.FC<TestimonialCarouselProps> = ({
         <div className="max-w-4xl mx-auto relative">
           {/* Main Card Wrapper */}
           <div
-            className="relative bg-[#121A1C]/90 backdrop-blur-xl rounded-3xl p-8 sm:p-12 border border-white/15 shadow-2xl overflow-hidden min-h-[340px] flex flex-col justify-between"
+            className="relative bg-[#121A1C]/90 backdrop-blur-xl rounded-3xl p-8 sm:p-12 border border-white/15 shadow-2xl overflow-hidden min-h-85 flex flex-col justify-between"
             onMouseEnter={() => setIsAutoplay(false)}
             onMouseLeave={() => setIsAutoplay(true)}
           >
@@ -218,7 +218,7 @@ export const TestimonialCarousel: React.FC<TestimonialCarouselProps> = ({
                 <div className="flex items-center justify-between pt-4 border-t border-white/10">
                   <div className="flex items-center gap-4">
                     {/* Avatar or Initials */}
-                    <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-[#C7A36A] bg-gradient-to-tr from-[#1A6E61] to-[#2CB5A0] flex items-center justify-center text-white font-bold text-lg shadow-md shrink-0">
+                    <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-[#C7A36A] bg-linear-to-tr from-[#1A6E61] to-[#2CB5A0] flex items-center justify-center text-white font-bold text-lg shadow-md shrink-0">
                       {current.avatarUrl ? (
                         <img
                           src={current.avatarUrl}
@@ -323,7 +323,7 @@ export const TestimonialCarousel: React.FC<TestimonialCarouselProps> = ({
           <div className="mt-10 text-center">
             <button
               onClick={() => onOpenBooking()}
-              className="px-8 py-3.5 rounded-2xl bg-gradient-to-r from-[#2CB5A0] to-[#1A6E61] text-white font-bold text-sm shadow-xl hover:shadow-[#2CB5A0]/25 hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer inline-flex items-center gap-2"
+              className="px-8 py-3.5 rounded-2xl bg-linear-to-r from-[#2CB5A0] to-[#1A6E61] text-white font-bold text-sm shadow-xl hover:shadow-[#2CB5A0]/25 hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer inline-flex items-center gap-2"
             >
               <Sparkles className="w-4 h-4 text-[#E3C99B]" />
               <span>Experience Aura Luxe Luxury Today</span>

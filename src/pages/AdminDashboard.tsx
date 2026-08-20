@@ -52,6 +52,7 @@ const TAB_PATH: Record<AdminTab, string> = {
   schedule: '/admin/calendar',
   reports: '/admin/reports',
   users: '/admin/users',
+  applications: '/admin/applications',
   settings: '/admin/settings',
   audit: '/admin/activity-logs',
 };
@@ -256,7 +257,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
         {activeTab === 'overview' && (
           <div className="space-y-8">
             {/* Welcome Banner */}
-            <div className="p-8 rounded-3xl bg-gradient-to-r from-[#1A1A1A] via-gray-900 to-black text-white relative overflow-hidden shadow-2xl flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+            <div className="p-8 rounded-3xl bg-linear-to-r from-[#1A1A1A] via-gray-900 to-black text-white relative overflow-hidden shadow-2xl flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
               <div className="space-y-2 relative z-10">
                 <span className="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-[#2CB5A0] text-black">
                   Bandra West Indore Sanctuary

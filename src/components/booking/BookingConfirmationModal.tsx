@@ -76,6 +76,7 @@ export const BookingConfirmationModal: React.FC<BookingConfirmationModalProps> =
   ];
 
   const handleCopyBookingNumber = () => {
+    if (!booking) return;
     navigator.clipboard.writeText(booking.bookingNumber);
     setCopiedId(true);
     setTimeout(() => setCopiedId(false), 2000);
@@ -87,6 +88,7 @@ export const BookingConfirmationModal: React.FC<BookingConfirmationModalProps> =
 
   // Cancel Handler
   const handleConfirmCancel = async () => {
+    if (!booking) return;
     setCancelLoading(true);
     setFeedbackMessage(null);
     try {
@@ -117,6 +119,7 @@ export const BookingConfirmationModal: React.FC<BookingConfirmationModalProps> =
 
   // Reschedule Handler
   const handleConfirmReschedule = async () => {
+    if (!booking) return;
     if (!newDate || !newTimeSlot) {
       setFeedbackMessage({ type: 'error', text: 'Please select both a date and time slot.' });
       return;
@@ -220,7 +223,7 @@ export const BookingConfirmationModal: React.FC<BookingConfirmationModalProps> =
         {viewState === 'details' && (
           <div className="space-y-6">
             {/* Header Banner */}
-            <div className="bg-gradient-to-r from-[#1A1A1A] to-[#2B2B2B] text-white p-5 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-sm border border-gray-800">
+            <div className="bg-linear-to-r from-[#1A1A1A] to-[#2B2B2B] text-white p-5 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-sm border border-gray-800">
               <div className="space-y-1">
                 <div className="flex items-center gap-2">
                   <span className="text-[10px] uppercase font-bold text-teal-400 tracking-wider">
@@ -489,7 +492,7 @@ export const BookingConfirmationModal: React.FC<BookingConfirmationModalProps> =
             <div className="space-y-4 bg-white p-4 rounded-xl border border-teal-100 text-xs">
               {/* Date Picker */}
               <div>
-                <label className="block font-bold text-gray-800 mb-1 flex items-center gap-1">
+                <label className="font-bold text-gray-800 mb-1 flex items-center gap-1">
                   <Calendar className="w-4 h-4 text-[#2CB5A0]" />
                   <span>Select New Appointment Date:</span>
                 </label>
@@ -504,7 +507,7 @@ export const BookingConfirmationModal: React.FC<BookingConfirmationModalProps> =
 
               {/* Time Slot Picker */}
               <div>
-                <label className="block font-bold text-gray-800 mb-1 flex items-center gap-1">
+                <label className="font-bold text-gray-800 mb-1 flex items-center gap-1">
                   <Clock className="w-4 h-4 text-[#2CB5A0]" />
                   <span>Select Preferred Time Slot:</span>
                 </label>
@@ -532,7 +535,7 @@ export const BookingConfirmationModal: React.FC<BookingConfirmationModalProps> =
               {/* Therapist Choice (Optional) */}
               {therapists.length > 0 && (
                 <div>
-                  <label className="block font-bold text-gray-800 mb-1 flex items-center gap-1">
+                  <label className="font-bold text-gray-800 mb-1 flex items-center gap-1">
                     <User className="w-4 h-4 text-[#2CB5A0]" />
                     <span>Therapist Preference:</span>
                   </label>

@@ -13,6 +13,7 @@ import {
   NewsletterSubscriber,
   LoginActivity,
   AdminUser,
+  StaffApplication,
   NotificationItem,
   ScheduleConfig
 } from '../types';
@@ -55,7 +56,6 @@ function getErrorMessage(error: unknown, fallback: string): string {
 // ---------- Response mappers (backend snake_case -> frontend camelCase) ----------
 
 function mapService(s: any): Service {
-  if (!s) return null;
   return {
     id: s.id,
     title: s.title,
@@ -78,7 +78,6 @@ function mapService(s: any): Service {
 }
 
 function mapTherapist(t: any): Therapist {
-  if (!t) return null;
   return {
     id: t.id,
     name: t.name,
@@ -98,7 +97,6 @@ function mapTherapist(t: any): Therapist {
 }
 
 function mapBooking(b: any): Booking {
-  if (!b) return null;
   const fullName = b.customerName || '';
   const nameParts = fullName.split(' ');
   const firstName = nameParts[0] || fullName || b.firstName || '';
@@ -132,7 +130,6 @@ function mapBooking(b: any): Booking {
 }
 
 function mapTestimonial(t: any): Testimonial {
-  if (!t) return null;
   return {
     id: t.id,
     clientName: t.name || t.clientName,
@@ -147,7 +144,6 @@ function mapTestimonial(t: any): Testimonial {
 }
 
 function mapBlogPost(b: any): BlogPost {
-  if (!b) return null;
   return {
     id: b.id,
     title: b.title,
@@ -165,7 +161,6 @@ function mapBlogPost(b: any): BlogPost {
 }
 
 function mapContactMessage(c: any): ContactMessage {
-  if (!c) return null;
   return {
     id: c.id,
     name: c.name,
@@ -181,7 +176,6 @@ function mapContactMessage(c: any): ContactMessage {
 }
 
 function mapCoupon(c: any): Coupon {
-  if (!c) return null;
   return {
     id: c.id,
     code: c.code,
@@ -195,7 +189,6 @@ function mapCoupon(c: any): Coupon {
 }
 
 function mapBusinessSettings(s: any): BusinessSettings {
-  if (!s) return null;
   const base: BusinessSettings = {
     businessName: s.businessName || s.siteName || 'Aura Luxe Spa & Wellness',
     tagline: s.tagline || 'Premier Indian Massage Therapy & Holistic Wellness Sanctuary',
@@ -284,7 +277,6 @@ function mapRoleToBackend(role: string): string {
 }
 
 function mapAdminUser(u: any): AdminUser {
-  if (!u) return null;
   return {
     id: u.id,
     name: u.name,
@@ -299,7 +291,6 @@ function mapAdminUser(u: any): AdminUser {
 }
 
 function mapNotificationItem(n: any): NotificationItem {
-  if (!n) return null;
   return {
     id: n.id,
     type: n.type || 'info',
@@ -700,13 +691,39 @@ export const api = {
     return mapAdminUser(data);
   },
 
-  async adminSignup(data: { name: string; email: string; password: string; role?: string }): Promise<AdminUser> {
+  async adminSignup(data: { name: string; email: string; password: string; requestedRole?: string }): Promise<{ success: boolean; message: string }> {
     try {
-      const res = await http.post<{ message: string; user: any }>('/admin/signup', data);
-      return mapAdminUser(res.data.user);
+      const res = await http.post<{ success: boolean; message: string }>('/admin/signup', {
+        name: data.name,
+        email: data.email,
+        password: data.password,
+        requestedRole: data.requestedRole || 'Receptionist',
+      });
+      return res.data;
     } catch (error) {
-      throw new Error(getErrorMessage(error, 'Failed to sign up'));
+      throw new Error(getErrorMessage(error, 'Failed to submit application'));
     }
+  },
+
+  // Staff applications (Super Admin review queue)
+  async getStaffApplications(): Promise<StaffApplication[]> {
+    const { data } = await http.get<StaffApplication[]>('/admin/applications');
+    return Array.isArray(data) ? data : [];
+  },
+
+  async approveStaffApplication(id: string): Promise<StaffApplication> {
+    const res = await http.post<StaffApplication>(`/admin/applications/${id}/approve`);
+    return res.data;
+  },
+
+  async rejectStaffApplication(id: string, reason?: string): Promise<StaffApplication> {
+    const res = await http.post<StaffApplication>(`/admin/applications/${id}/reject`, { reason });
+    return res.data;
+  },
+
+  async deleteStaffApplication(id: string): Promise<{ success: boolean }> {
+    const res = await http.delete<{ success: boolean }>(`/admin/applications/${id}`);
+    return res.data;
   },
 
   async forgotPassword(email: string): Promise<{ success: boolean; message: string }> {
@@ -847,5 +864,5 @@ export const getTherapists = () => api.getTherapists();
 export const getSettings = () => api.getSettings();
 export const createBooking = (data: any) => api.createBooking(data);
 export const adminLogin = (email: string, password: string) => api.adminLogin(email, password);
-export const adminSignup = (data: { name: string; email: string; password: string; role?: string }) => api.adminSignup(data);
+export const adminSignup = (data: { name: string; email: string; password: string; requestedRole?: string }) => api.adminSignup(data);
 export default api;
