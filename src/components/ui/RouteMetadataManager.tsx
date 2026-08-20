@@ -10,7 +10,7 @@ export const RouteMetadataManager: React.FC = () => {
 
     if (path.startsWith('/admin')) {
       updatePageSEO({
-        title: 'Aura Luxe Spa | Executive CRM & Sanctuary Management',
+        title: 'Tripod Wellness | Executive CRM & Sanctuary Management',
         description: 'Secure administrative management portal for client bookings, therapist schedules, and sanctuary operations.',
         path,
         robots: 'noindex, nofollow',

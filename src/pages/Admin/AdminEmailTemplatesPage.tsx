@@ -3,9 +3,9 @@ import { Save, CheckCircle2, AlertCircle } from 'lucide-react';
 import { api } from '../../services/api';
 
 export const AdminEmailTemplatesPage: React.FC = () => {
-  const [bookingSubject, setBookingSubject] = useState('Appointment Confirmed - Aura Luxe Spa & Wellness');
+  const [bookingSubject, setBookingSubject] = useState('Appointment Confirmed - Tripod Wellness');
   const [bookingBody, setBookingBody] = useState('');
-  const [contactSubject, setContactSubject] = useState('We received your inquiry - Aura Luxe Spa');
+  const [contactSubject, setContactSubject] = useState('We received your inquiry - Tripod Wellness');
   const [contactBody, setContactBody] = useState('');
   const [error, setError] = useState('');
   const [saved, setSaved] = useState(false);
@@ -79,7 +79,7 @@ export const AdminEmailTemplatesPage: React.FC = () => {
               rows={6}
               value={bookingBody}
               onChange={(e) => setBookingBody(e.target.value)}
-              placeholder="Dear {{customerName}},&#10;&#10;Thank you for choosing Aura Luxe Spa. Your appointment for {{serviceName}} with {{therapistName}} on {{date}} at {{time}} has been confirmed.&#10;&#10;Warm regards,&#10;The Aura Luxe Concierge Team"
+              placeholder="Dear {{customerName}},&#10;&#10;Thank you for choosing Tripod Wellness. Your appointment for {{serviceName}} with {{therapistName}} on {{date}} at {{time}} has been confirmed.&#10;&#10;Warm regards,&#10;The Tripod Wellness Concierge Team"
               className="w-full border border-gray-300 rounded-xl p-3 text-sm font-mono text-xs focus:border-[#2CB5A0] focus:outline-none"
             />
           </div>
@@ -100,7 +100,7 @@ export const AdminEmailTemplatesPage: React.FC = () => {
               rows={4}
               value={contactBody}
               onChange={(e) => setContactBody(e.target.value)}
-              placeholder="Dear {{name}},&#10;&#10;Thank you for reaching out to Aura Luxe Spa. Our concierge team will respond within 2 business hours.&#10;&#10;Warm regards,&#10;The Aura Luxe Concierge Team"
+              placeholder="Dear {{name}},&#10;&#10;Thank you for reaching out to Tripod Wellness. Our concierge team will respond within 2 business hours.&#10;&#10;Warm regards,&#10;The Tripod Wellness Concierge Team"
               className="w-full border border-gray-300 rounded-xl p-3 text-sm font-mono text-xs focus:border-[#2CB5A0] focus:outline-none"
             />
           </div>

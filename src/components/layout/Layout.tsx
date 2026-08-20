@@ -182,7 +182,7 @@ export const Layout: React.FC<LayoutProps> = ({
     }
     try {
       await api.subscribeNewsletter(email);
-      addToast('success', `Subscribed ${email} to Aura Luxe updates!`);
+      addToast('success', `Subscribed ${email} to Tripod Wellness updates!`);
     } catch (err: any) {
       addToast('error', err?.message || 'Failed to subscribe. Please try again.');
     }

@@ -7,7 +7,7 @@ export const SitemapPage: React.FC = () => {
   const links = [
     { label: 'Home Sanctuary', path: '/' },
     { label: 'Therapies & Menu', path: '/services' },
-    { label: 'About Aura Luxe', path: '/about' },
+    { label: 'About Tripod Wellness', path: '/about' },
     { label: 'Certified Therapists', path: '/therapists' },
     { label: 'Sanctuary Gallery', path: '/gallery' },
     { label: 'Wellness Journal', path: '/blog' },
@@ -23,7 +23,7 @@ export const SitemapPage: React.FC = () => {
 
   return (
     <div className="py-12 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto font-sans min-h-screen">
-      <SEO title="Sitemap | Aura Luxe Spa" description="Navigate all pages and services on Aura Luxe Spa." />
+      <SEO title="Sitemap | Tripod Wellness" description="Navigate all pages and services on Tripod Wellness." />
       <div className="bg-white rounded-2xl border border-gray-100 p-8 shadow-sm space-y-6">
         <div className="flex items-center gap-3">
           <Compass className="w-8 h-8 text-[#2CB5A0]" />

@@ -21,7 +21,7 @@ export const BookingPage: React.FC<BookingPageProps> = ({
   return (
     <div className="py-12 bg-[#FAFAFA] font-sans min-h-screen">
       <SEO
-        title="Reserve Men-to-Men Massage Appointment | Aura Luxe Spa"
+        title="Reserve Men-to-Men Massage Appointment | Tripod Wellness"
         description="Book your male therapist online. Live real-time schedule, instant email confirmation, and private suite experience."
       />
 

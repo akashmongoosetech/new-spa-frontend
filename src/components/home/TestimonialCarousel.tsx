@@ -35,9 +35,9 @@ export const TestimonialCarousel: React.FC<TestimonialCarouselProps> = ({
     {
       id: "tst-1",
       clientName: "Rahul Sharma",
-      role: "Management Consultant, Bandra Mumbai",
+      role: "Management Consultant, Indore",
       rating: 5,
-      comment: "Aura Luxe is in a league of its own. The ambiance is calming, the hygiene is immaculate, and Rajesh gave me the best Deep Tissue massage I've ever had in my life. The privacy and professionalism are unmatched.",
+      comment: "Tripod Wellness is in a league of its own. The ambiance is calming, the hygiene is immaculate, and Rajesh gave me the best Deep Tissue massage I've ever had in my life. The privacy and professionalism are unmatched.",
       serviceTitle: "Deep Tissue Muscle Recovery Therapy",
       date: "2 days ago",
       approved: true,
@@ -46,7 +46,7 @@ export const TestimonialCarousel: React.FC<TestimonialCarouselProps> = ({
     {
       id: "tst-2",
       clientName: "Akash Verma",
-      role: "Senior Software Architect, BKC Mumbai",
+      role: "Senior Software Architect, Indore",
       rating: 5,
       comment: "Sitting 10 hours a day at my desk left my lower back and neck in terrible tightness. Arjun's Herbal Oil therapy completely eliminated my stiffness. The private suite and steam room made it an executive sanctuary.",
       serviceTitle: "Kerala Authentic Herbal Oil Massage",
@@ -68,7 +68,7 @@ export const TestimonialCarousel: React.FC<TestimonialCarouselProps> = ({
     {
       id: "tst-4",
       clientName: "Rohit Patel",
-      role: "Founder & Entrepreneur, Powai Mumbai",
+      role: "Founder & Entrepreneur, Ujjain",
       rating: 5,
       comment: "Authentic Ayurvedic Abhyanga massage with genuine herbal oils. The male bodywork specialists are extremely respectful, soft-spoken, and masters of pressure point techniques.",
       serviceTitle: "Ayurvedic Abhyanga Massage",
@@ -162,7 +162,7 @@ export const TestimonialCarousel: React.FC<TestimonialCarouselProps> = ({
             transition={{ delay: 0.2 }}
             className="text-gray-400 text-sm sm:text-base leading-relaxed max-w-2xl mx-auto"
           >
-            Unedited reviews from Indore, Ujjain, Dewas executive leaders, corporate directors, and wellness connoisseurs who trust Aura Luxe as their private restorative sanctuary.
+            Unedited reviews from Indore, Ujjain, Dewas executive leaders, corporate directors, and wellness connoisseurs who trust Tripod Wellness as their private restorative sanctuary.
           </motion.p>
         </div>
 
@@ -326,7 +326,7 @@ export const TestimonialCarousel: React.FC<TestimonialCarouselProps> = ({
               className="px-8 py-3.5 rounded-2xl bg-linear-to-r from-[#2CB5A0] to-[#1A6E61] text-white font-bold text-sm shadow-xl hover:shadow-[#2CB5A0]/25 hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer inline-flex items-center gap-2"
             >
               <Sparkles className="w-4 h-4 text-[#E3C99B]" />
-              <span>Experience Aura Luxe Luxury Today</span>
+              <span>Experience Tripod Wellness Today</span>
             </button>
           </div>
         )}

@@ -212,7 +212,7 @@ export const ServiceDetailPage: React.FC = () => {
                     required
                     value={bookingData.customerPhone}
                     onChange={(e) => setBookingData(prev => ({ ...prev, customerPhone: e.target.value }))}
-                    placeholder="+91 98200 12345"
+                    placeholder="+91-9171606807"
                     className="w-full border border-gray-300 rounded-xl py-3 px-4 text-sm focus:border-[#2CB5A0] focus:outline-none"
                   />
                 </div>

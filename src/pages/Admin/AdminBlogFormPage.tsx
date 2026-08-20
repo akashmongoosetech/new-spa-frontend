@@ -12,7 +12,7 @@ export const AdminBlogFormPage: React.FC = () => {
   const [category, setCategory] = useState('Somatic Health');
   const [summary, setSummary] = useState('');
   const [content, setContent] = useState('');
-  const [author, setAuthor] = useState('Aura Luxe Editorial');
+  const [author, setAuthor] = useState('Tripod Wellness Editorial');
   const [imageUrl, setImageUrl] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -29,7 +29,7 @@ export const AdminBlogFormPage: React.FC = () => {
           setCategory(existing.category || 'Somatic Health');
           setSummary(existing.summary);
           setContent(existing.content);
-          setAuthor(existing.author || 'Aura Luxe Editorial');
+          setAuthor(existing.author || 'Tripod Wellness Editorial');
           setImageUrl(existing.imageUrl || '');
         }
       } catch (err) {

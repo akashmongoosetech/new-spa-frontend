@@ -1,17 +1,17 @@
 import { Service, Therapist, Coupon, Testimonial, BlogPost, BusinessSettings } from '../types';
 
 export const DEFAULT_SETTINGS: BusinessSettings = {
-  businessName: "Aura Luxe Spa & Wellness",
-  tagline: "Premier Indian Massage Therapy & Holistic Wellness Sanctuary",
-  phone: "+91 98200 12345",
-  whatsapp: "+91 98200 12345",
-  email: "concierge@auraluxespa.in",
-  address: "Plot 42, Bandra Reclamation, Bandra West, Mumbai, Maharashtra 400050",
-  city: "Mumbai, Maharashtra",
+  businessName: "Tripod Wellness",
+  tagline: "Premier Men's Massage & Wellness Sanctuary",
+  phone: "+91-9171606807",
+  whatsapp: "+91-9171606807",
+  email: "wellnesstripod@gmail.com",
+  address: "Indore, Ujjain, Dewas",
+  city: "Indore, Ujjain, Dewas",
   workingHours: "Mon - Sun: 09:00 AM - 10:00 PM IST",
   currencySymbol: "₹",
   currencyCode: "INR",
-  googleMapsUrl: "https://maps.google.com/?q=Bandra+West+Mumbai",
+  googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=Indore+Ujjain+Dewas",
   facebookUrl: "https://facebook.com/auraluxespa",
   instagramUrl: "https://instagram.com/auraluxespa",
   twitterUrl: "https://twitter.com/auraluxespa",
@@ -481,7 +481,7 @@ export const INITIAL_THERAPISTS: Therapist[] = [
     name: "Rajesh Sharma",
     title: "Senior Master Therapist & Certified Sports Specialist",
     experienceYears: 10,
-    bio: "Certified neuromuscular practitioner specializing in Deep Tissue, Sports recovery, and Volcanic Hot Stone therapy with over 10 years experience catering to high-profile gentlemen in Mumbai.",
+    bio: "Certified neuromuscular practitioner specializing in Deep Tissue, Sports recovery, and Volcanic Hot Stone therapy with over 10 years experience catering to high-profile gentlemen across Indore, Ujjain & Dewas.",
     specialties: ["Deep Tissue", "Sports Therapy", "Hot Stone", "Myofascial Release"],
     imageUrl: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=600&auto=format&fit=crop",
     rating: 5.0,
@@ -567,9 +567,9 @@ export const INITIAL_TESTIMONIALS: Testimonial[] = [
   {
     id: "tst-1",
     clientName: "Rahul Sharma",
-    role: "Management Consultant, Bandra Mumbai",
+    role: "Management Consultant, Indore",
     rating: 5,
-    comment: "Aura Luxe is in a league of its own. The ambiance is calming, the hygiene is immaculate, and Rajesh gave me the best Deep Tissue massage I've ever had in my life.",
+    comment: "Tripod Wellness is in a league of its own. The ambiance is calming, the hygiene is immaculate, and Rajesh gave me the best Deep Tissue massage I've ever had in my life.",
     serviceTitle: "Deep Tissue Muscle Recovery Therapy",
     date: "2 days ago",
     approved: true
@@ -577,7 +577,7 @@ export const INITIAL_TESTIMONIALS: Testimonial[] = [
   {
     id: "tst-2",
     clientName: "Akash Verma",
-    role: "Senior Software Architect, BKC Mumbai",
+    role: "Senior Software Architect, Indore",
     rating: 5,
     comment: "Sitting 10 hours a day at my desk left my lower back and neck in terrible pain. Arjun's Kerala Oil therapy completely eliminated my stiffness. Highly recommended!",
     serviceTitle: "Kerala Authentic Herbal Oil Massage",
@@ -597,7 +597,7 @@ export const INITIAL_TESTIMONIALS: Testimonial[] = [
   {
     id: "tst-4",
     clientName: "Rohit Patel",
-    role: "Entrepreneur, Powai Mumbai",
+    role: "Entrepreneur, Ujjain",
     rating: 5,
     comment: "Authentic Ayurvedic Abhyanga massage with genuine herbal oils. The therapists are extremely respectful, professional, and knowledgeable.",
     serviceTitle: "Ayurvedic Abhyanga Massage",
@@ -618,7 +618,7 @@ export const INITIAL_BLOGS: BlogPost[] = [
     summary: "Discover how traditional warm oil Abhyanga massage reduces stress hormones, improves joint longevity, and restores physical vitality.",
     content: "In today's fast-paced urban corporate environment, professionals frequently push physical and mental limits. Classical Abhyanga therapy is far more than a luxury indulgence; it is a critical health maintenance system. Classical Ayurvedic texts highlight how daily warm herbal oil friction nourishes body tissues, enhances lymphatic drainage, balances Vata dosha, and promotes deep REM sleep.",
     imageUrl: "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?q=80&w=800&auto=format&fit=crop",
-    tags: ["Ayurveda", "Abhyanga", "Stress Management", "Mumbai Wellness"],
+    tags: ["Ayurveda", "Abhyanga", "Stress Management", "Indore Wellness"],
     published: true
   },
   {
@@ -710,8 +710,8 @@ export const FAQ_LIST = [
   {
     id: "faq-1",
     category: "general",
-    question: "Is Aura Luxe strictly a professional Men-to-Men spa in Mumbai?",
-    answer: "Yes. Aura Luxe is an exclusive, licensed professional Men-to-Men massage therapy center located in Bandra West, Mumbai. All our therapists are certified male practitioners dedicated to providing elite therapeutic wellness in an ethical, comfortable, and highly professional environment."
+    question: "Is Tripod Wellness strictly a professional Men-to-Men spa in Indore?",
+    answer: "Yes. Tripod Wellness is an exclusive, licensed professional Men-to-Men massage therapy center serving Indore, Ujjain & Dewas. All our therapists are certified male practitioners dedicated to providing elite therapeutic wellness in an ethical, comfortable, and highly professional environment."
   },
   {
     id: "faq-2",

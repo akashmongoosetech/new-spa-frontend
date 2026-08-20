@@ -46,7 +46,7 @@ export const ContactPage: React.FC<ContactPageProps> = ({ settings }) => {
 
   return (
     <div className="py-12 bg-[#FAFAFA] font-sans min-h-screen">
-      <SEO title="Contact & Location | Aura Luxe Spa Bandra West" description="Get in touch with Aura Luxe Concierge. Phone, email, WhatsApp, and location directions." />
+      <SEO title="Contact & Location | Tripod Wellness" description="Get in touch with Tripod Wellness Concierge. Phone, email, WhatsApp, and location directions for Indore, Ujjain & Dewas." />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 space-y-12">
         <div className="text-center max-w-2xl mx-auto space-y-3">
@@ -73,7 +73,7 @@ export const ContactPage: React.FC<ContactPageProps> = ({ settings }) => {
                 <div className="flex items-start gap-3">
                   <MapPin className="w-5 h-5 text-[#2CB5A0] shrink-0 mt-0.5" />
                   <div>
-                    <span className="font-bold text-gray-900 block">Bandra West Sanctuary</span>
+                    <span className="font-bold text-gray-900 block">Indore • Ujjain • Dewas</span>
                     <span>{settings.address}</span>
                   </div>
                 </div>
@@ -120,7 +120,7 @@ export const ContactPage: React.FC<ContactPageProps> = ({ settings }) => {
             <div className="bg-slate-900 rounded-3xl overflow-hidden h-60 border border-gray-800 relative flex items-center justify-center p-6 text-center">
               <div className="space-y-2 text-white">
                 <MapPin className="w-8 h-8 text-[#2CB5A0] mx-auto animate-bounce" />
-                <h4 className="font-serif font-bold text-base">Bandra West Location Map</h4>
+                <h4 className="font-serif font-bold text-base">Indore, Ujjain & Dewas Location</h4>
                 <p className="text-xs text-gray-400">{settings.address}</p>
                 <a
                   href={settings.googleMapsUrl}

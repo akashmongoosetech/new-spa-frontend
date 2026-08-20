@@ -29,7 +29,7 @@ export const BlogPage: React.FC<BlogPageProps> = ({ blogs }) => {
 
   return (
     <div className="py-12 bg-[#FAFAFA] font-sans min-h-screen">
-      <SEO title="Men's Health & Wellness Articles | Aura Luxe Spa Blog" description="Read articles on deep tissue recovery, Swedish comparison guides, and executive health maintenance." />
+      <SEO title="Men's Health & Wellness Articles | Tripod Wellness Blog" description="Read articles on deep tissue recovery, Swedish comparison guides, and executive health maintenance." />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 space-y-10">
         <div className="text-center max-w-2xl mx-auto space-y-3">

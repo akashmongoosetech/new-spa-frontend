@@ -18,8 +18,8 @@ export const AboutPage: React.FC<AboutPageProps> = ({
   return (
     <div className="py-12 bg-[#FAFAFA] font-sans min-h-screen space-y-16">
       <SEO
-        title="About Us & Certified Male Therapists | Aura Luxe Spa Indore"
-        description="Learn about indore's premier licensed Men-to-Men massage therapy center in Bandra West. Certified male practitioners, hospital-grade hygiene, and Ayurvedic wellness."
+        title="About Us & Certified Male Therapists | Tripod Wellness Indore"
+        description="Learn about Indore's premier licensed Men-to-Men massage therapy center in Indore, Ujjain & Dewas. Certified male practitioners, hospital-grade hygiene, and Ayurvedic wellness."
       />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 space-y-16">
@@ -33,7 +33,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({
               indore's Premier Men-to-Men Sanctuary
             </h1>
             <p className="text-gray-600 text-sm leading-relaxed">
-              Aura Luxe was founded in Bandra West on a singular principle: modern gentlemen, executives, and fitness enthusiasts in Indore, Ujjain, Dewas deserve a dedicated, world-class wellness sanctuary tailored specifically to male physiology, postural stress, and mental decompression.
+              Tripod Wellness was founded on a singular principle: modern gentlemen, executives, and fitness enthusiasts in Indore, Ujjain, Dewas deserve a dedicated, world-class wellness sanctuary tailored specifically to male physiology, postural stress, and mental decompression.
             </p>
             <p className="text-gray-600 text-sm leading-relaxed">
               Our licensed male massage practitioners undergo extensive clinical training in classical Ayurvedic Abhyanga, Kerala oil therapy, deep tissue bodywork, and athletic recovery rituals.
@@ -55,7 +55,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({
             <div className="relative rounded-3xl overflow-hidden shadow-2xl border border-gray-100">
               <img
                 src="https://images.unsplash.com/photo-1540555700478-4be289fbecef?q=80&w=1200&auto=format&fit=crop"
-                alt="Aura Luxe Spa Environment"
+                alt="Tripod Wellness Spa Environment"
                 className="w-full h-100 object-cover"
               />
             </div>

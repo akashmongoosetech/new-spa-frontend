@@ -227,7 +227,7 @@ export const BookingConfirmationModal: React.FC<BookingConfirmationModalProps> =
               <div className="space-y-1">
                 <div className="flex items-center gap-2">
                   <span className="text-[10px] uppercase font-bold text-teal-400 tracking-wider">
-                    Aura Luxe Reservation
+                    Tripod Wellness Reservation
                   </span>
                   <button
                     onClick={handleCopyBookingNumber}

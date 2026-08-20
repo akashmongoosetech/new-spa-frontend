@@ -4,7 +4,7 @@ import { SEO } from '../../components/ui/SEO';
 export const RefundPolicyPage: React.FC = () => {
   return (
     <div className="py-12 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto font-sans min-h-screen">
-      <SEO title="Refund & Cancellation Policy | Aura Luxe Spa" description="Read our client-first cancellation and refund policies." />
+      <SEO title="Refund & Cancellation Policy | Tripod Wellness" description="Read our client-first cancellation and refund policies." />
       <div className="bg-white rounded-2xl border border-gray-100 p-8 shadow-sm space-y-6">
         <h1 className="text-3xl font-serif font-bold text-gray-900">Refund & Cancellation Policy</h1>
         <p className="text-sm text-gray-500">Last Updated: January 2026</p>

@@ -112,18 +112,18 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
           <div className="h-20 px-5 flex items-center justify-between border-b border-gray-800/80">
             {!isCollapsed && (
               <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-xl bg-linear-to-tr from-[#2CB5A0] to-emerald-400 flex items-center justify-center font-black text-black text-lg shadow-lg shadow-[#2CB5A0]/20">
-                  A
+                <div className="w-9 h-9 rounded-xl bg-white p-0.5 flex items-center justify-center shadow-lg shadow-[#2CB5A0]/20 overflow-hidden">
+                  <img src="/logo.png" alt="Tripod Wellness" className="w-full h-full object-contain rounded-lg" />
                 </div>
                 <div>
-                  <h1 className="font-bold text-white text-base tracking-wide leading-tight">AURA LUXE</h1>
+                  <h1 className="font-bold text-white text-base tracking-wide leading-tight">TRIPOD WELLNESS</h1>
                   <p className="text-[10px] text-[#2CB5A0] uppercase font-semibold tracking-wider">CRM Control Hub</p>
                 </div>
               </div>
             )}
             {isCollapsed && (
-              <div className="mx-auto w-10 h-10 rounded-xl bg-[#2CB5A0] flex items-center justify-center font-bold text-black text-xl">
-                A
+              <div className="mx-auto w-10 h-10 rounded-xl bg-white p-0.5 flex items-center justify-center overflow-hidden">
+                <img src="/logo.png" alt="Tripod Wellness" className="w-full h-full object-contain rounded-lg" />
               </div>
             )}
             <button

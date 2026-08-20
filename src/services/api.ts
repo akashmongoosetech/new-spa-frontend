@@ -190,17 +190,17 @@ function mapCoupon(c: any): Coupon {
 
 function mapBusinessSettings(s: any): BusinessSettings {
   const base: BusinessSettings = {
-    businessName: s.businessName || s.siteName || 'Aura Luxe Spa & Wellness',
-    tagline: s.tagline || 'Premier Indian Massage Therapy & Holistic Wellness Sanctuary',
-    phone: s.phone || '+91 98200 12345',
-    whatsapp: s.whatsapp || s.phone || '+91 98200 12345',
-    email: s.email || 'concierge@auraluxespa.in',
+    businessName: s.businessName || s.siteName || 'Tripod Wellness',
+    tagline: s.tagline || "Premier Men's Massage & Wellness Sanctuary",
+    phone: s.phone || '+91-9171606807',
+    whatsapp: s.whatsapp || s.phone || '+91-9171606807',
+    email: s.email || 'wellnesstripod@gmail.com',
     address: s.address || 'Indore, Ujjain, Dewas',
     city: s.city || 'Indore, Ujjain, Dewas',
     workingHours: s.workingHours || s.openingHours || 'Mon - Sun: 09:00 AM - 10:00 PM IST',
     currencySymbol: s.currencySymbol || '₹',
     currencyCode: s.currencyCode || 'INR',
-    googleMapsUrl: s.googleMapsUrl || 'https://maps.google.com/?q=Bandra+West+Mumbai',
+    googleMapsUrl: s.googleMapsUrl || 'https://www.google.com/maps/search/?api=1&query=Indore+Ujjain+Dewas',
     facebookUrl: s.facebookUrl || 'https://facebook.com/auraluxespa',
     instagramUrl: s.instagramUrl || 'https://instagram.com/auraluxespa',
     twitterUrl: s.twitterUrl || 'https://twitter.com/auraluxespa',
@@ -826,7 +826,7 @@ export const api = {
     const blobUrl = URL.createObjectURL(res.data as Blob);
     const a = document.createElement('a');
     a.href = blobUrl;
-    a.download = `aura_luxe_${type}_report.csv`;
+    a.download = `tripod_wellness_${type}_report.csv`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);

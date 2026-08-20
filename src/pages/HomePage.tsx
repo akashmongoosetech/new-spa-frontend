@@ -56,8 +56,8 @@ export const HomePage: React.FC<HomePageProps> = ({
 
   const faqs = [
     {
-      q: 'Is Aura Luxe strictly a professional Men-to-Men massage therapy spa?',
-      a: 'Yes. Aura Luxe is Indore\'s premier licensed Men-to-Men massage therapy center. All our therapists are certified male practitioners dedicated to providing elite therapeutic wellness in an ethical, comfortable, and highly professional sanctuary.'
+      q: 'Is Tripod Wellness strictly a professional Men-to-Men massage therapy spa?',
+      a: 'Yes. Tripod Wellness is Indore\'s premier licensed Men-to-Men massage therapy center. All our therapists are certified male practitioners dedicated to providing elite therapeutic wellness in an ethical, comfortable, and highly professional sanctuary.'
     },
     {
       q: 'How do I book an appointment with my preferred male therapist?',

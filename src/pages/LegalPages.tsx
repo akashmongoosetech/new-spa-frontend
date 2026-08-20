@@ -15,7 +15,7 @@ export const LegalPages: React.FC<LegalPagesProps> = ({ type }) => {
 
   return (
     <div className="py-12 bg-[#FAFAFA] font-sans min-h-screen">
-      <SEO title={`${titles[type]} | Aura Luxe Spa`} description="Read our executive privacy policy, terms of service, and cookie disclosures." />
+      <SEO title={`${titles[type]} | Tripod Wellness`} description="Read our executive privacy policy, terms of service, and cookie disclosures." />
 
       <div className="max-w-4xl mx-auto px-4 sm:px-6 space-y-8">
         <div className="text-center space-y-3">
@@ -32,7 +32,7 @@ export const LegalPages: React.FC<LegalPagesProps> = ({ type }) => {
           {type === 'privacy' && (
             <>
               <h2 className="text-base font-serif font-bold text-gray-900">1. Client Confidentiality & Anonymity</h2>
-              <p>Aura Luxe strictly safeguards all client data, contact details, and appointment histories. We do not sell, rent, or distribute client information to third parties.</p>
+              <p>Tripod Wellness strictly safeguards all client data, contact details, and appointment histories. We do not sell, rent, or distribute client information to third parties.</p>
 
               <h2 className="text-base font-serif font-bold text-gray-900">2. Information We Collect</h2>
               <p>When reserving a massage session, we collect your name, phone number, email address, and optional muscle focus notes for therapist preparation.</p>
@@ -45,7 +45,7 @@ export const LegalPages: React.FC<LegalPagesProps> = ({ type }) => {
           {type === 'terms' && (
             <>
               <h2 className="text-base font-serif font-bold text-gray-900">1. Code of Professional Conduct</h2>
-              <p>Aura Luxe operates as a licensed, strictly therapeutic massage therapy spa. Professional behavior is expected from all guests at all times.</p>
+              <p>Tripod Wellness operates as a licensed, strictly therapeutic massage therapy spa. Professional behavior is expected from all guests at all times.</p>
 
               <h2 className="text-base font-serif font-bold text-gray-900">2. Cancellation & Rescheduling</h2>
               <p>Appointments may be rescheduled or cancelled up to 4 hours prior to slot time. Late cancellations may incur a fee.</p>

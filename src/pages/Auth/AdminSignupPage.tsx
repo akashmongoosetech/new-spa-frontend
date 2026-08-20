@@ -87,7 +87,7 @@ export const AdminSignupPage: React.FC = () => {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             className="w-full bg-gray-950/80 border border-gray-800 focus:border-[#2CB5A0] rounded-xl py-3 px-4 text-sm text-white focus:outline-none"
-            placeholder="therapist@auraluxespa.com"
+            placeholder="therapist@example.com"
           />
         </div>
 

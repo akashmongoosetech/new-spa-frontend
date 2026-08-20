@@ -77,7 +77,7 @@ export const Footer: React.FC<FooterProps> = ({
                 <Sparkles className="w-3.5 h-3.5 text-[#E3C99B]" /> Exclusive Members Invitation
               </span>
               <h3 className="text-2xl sm:text-3xl font-serif font-bold text-white tracking-tight">
-                Subscribe for Private Aura Luxe Offers & Slots
+                Subscribe for Private Tripod Wellness Offers & Slots
               </h3>
               <p className="text-gray-400 text-sm max-w-xl leading-relaxed">
                 Receive confidential guest invitations to seasonal wellness rituals, prime weekend therapist availability, and holistic health updates.
@@ -87,12 +87,12 @@ export const Footer: React.FC<FooterProps> = ({
               {subscribedSuccess ? (
                 <div className="p-4 rounded-2xl bg-[#2CB5A0]/15 border border-[#2CB5A0]/40 text-[#81E3D4] flex items-center gap-3 text-sm font-medium">
                   <CheckCircle2 className="w-5 h-5 shrink-0 text-[#2CB5A0]" />
-                  <span>Your executive subscription is active! Welcome to Aura Luxe.</span>
+                  <span>Your executive subscription is active! Welcome to Tripod Wellness.</span>
                 </div>
               ) : (
                 <form onSubmit={handleSubscribe} className="flex flex-col sm:flex-row gap-3">
                   <label htmlFor="footer-newsletter-email" className="sr-only">
-                    Email address for the private Aura Luxe newsletter
+                    Email address for the private Tripod Wellness newsletter
                   </label>
                   <input
                     id="footer-newsletter-email"
@@ -128,12 +128,16 @@ export const Footer: React.FC<FooterProps> = ({
           {/* Col 1: Brand Info */}
           <div className="lg:col-span-4 space-y-5">
             <div className="flex items-center gap-3">
-              <div className="w-11 h-11 rounded-2xl bg-linear-to-br from-[#2CB5A0] to-[#1A6E61] flex items-center justify-center text-white font-serif font-bold text-2xl shadow-lg border border-teal-400/30">
-                A
+              <div className="w-11 h-11 rounded-2xl bg-white p-1 flex items-center justify-center shadow-lg border border-teal-400/30 overflow-hidden">
+                <img
+                  src={settings?.logoUrl || '/logo.png'}
+                  alt="Tripod Wellness"
+                  className="w-full h-full object-contain"
+                />
               </div>
               <div>
                 <span className="block font-serif font-extrabold text-2xl text-white tracking-wider leading-none">
-                  AURA LUXE
+                  TRIPOD WELLNESS
                 </span>
                 <span className="block text-[11px] font-semibold tracking-widest text-[#E3C99B] uppercase mt-1">
                   Men's Wellness & Spa Sanctuary
@@ -142,7 +146,7 @@ export const Footer: React.FC<FooterProps> = ({
             </div>
 
             <p className="text-xs sm:text-sm leading-relaxed text-gray-400">
-              Indore, Ujjain, Dewas benchmark licensed Men-to-Men massage therapy sanctuary situated in Bandra West. Dedicated to unmatched privacy, medical-grade hygiene, and executive stress recovery.
+              Indore, Ujjain, Dewas benchmark licensed Men-to-Men massage therapy sanctuary. Dedicated to unmatched privacy, medical-grade hygiene, and executive stress recovery.
             </p>
 
             <div className="space-y-2 pt-1 text-xs">
@@ -293,13 +297,13 @@ export const Footer: React.FC<FooterProps> = ({
               <div className="flex items-center gap-2.5">
                 <Phone className="w-4 h-4 text-[#2CB5A0] shrink-0" />
                 <a href={`tel:${settings?.phone}`} className="hover:text-white transition-colors">
-                  {settings?.phone || '+91 98200 12345'}
+                  {settings?.phone || '+91-9171606807'}
                 </a>
               </div>
               <div className="flex items-center gap-2.5">
                 <Mail className="w-4 h-4 text-[#2CB5A0] shrink-0" />
                 <a href={`mailto:${settings?.email}`} className="hover:text-white transition-colors truncate">
-                  {settings?.email || 'concierge@auraluxespa.in'}
+                  {settings?.email || 'wellnesstripod@gmail.com'}
                 </a>
               </div>
               <div className="flex items-center gap-2.5">
@@ -329,7 +333,7 @@ export const Footer: React.FC<FooterProps> = ({
         {/* Copyright & Legal Row */}
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-gray-400 gap-4">
           <div className="flex flex-col sm:flex-row items-center gap-2 text-center sm:text-left">
-            <span>© {new Date().getFullYear()} {settings?.businessName || 'Aura Luxe Spa'}. All Rights Reserved.</span>
+            <span>© {new Date().getFullYear()} {settings?.businessName || 'Tripod Wellness'}. All Rights Reserved.</span>
             <span className="hidden sm:inline text-gray-400">•</span>
             <span className="text-gray-400">Premier Licensed Men's Spa Sanctuary</span>
           </div>

@@ -23,10 +23,10 @@ export const PrintBookingModal: React.FC<PrintBookingModalProps> = ({ isOpen, on
         <div className="flex items-start justify-between border-b pb-4">
           <div>
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg bg-[#2CB5A0] flex items-center justify-center font-black text-black text-sm">
-                A
+              <div className="w-8 h-8 rounded-lg bg-white p-0.5 border border-gray-200 flex items-center justify-center overflow-hidden">
+                <img src="/logo.png" alt="Tripod Wellness" className="w-full h-full object-contain" />
               </div>
-              <h2 className="font-extrabold text-gray-900 text-lg tracking-wider">AURA LUXE SPA</h2>
+              <h2 className="font-extrabold text-gray-900 text-lg tracking-wider">TRIPOD WELLNESS</h2>
             </div>
             <p className="text-xs text-gray-500 mt-1">Premier Men-to-Men Massage & Wellness Suites</p>
             <p className="text-[11px] text-gray-400">Indore, Ujjain, Dewas • +91 91716 06807</p>

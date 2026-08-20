@@ -125,7 +125,7 @@ export const AuthModals: React.FC<AuthModalsProps> = ({
               value={signupEmail}
               onChange={(e) => setSignupEmail(e.target.value)}
               className="w-full px-3.5 py-2.5 rounded-xl border text-xs focus:ring-2 focus:ring-[#2CB5A0] outline-none"
-              placeholder="admin@auraluxespa.com"
+              placeholder="you@example.com"
             />
           </div>
           <div>
@@ -178,7 +178,7 @@ export const AuthModals: React.FC<AuthModalsProps> = ({
               value={forgotEmail}
               onChange={(e) => setForgotEmail(e.target.value)}
               className="w-full px-3.5 py-2.5 rounded-xl border text-xs focus:ring-2 focus:ring-[#2CB5A0] outline-none"
-              placeholder="admin@auraluxespa.com"
+              placeholder="you@example.com"
             />
           </div>
           <button

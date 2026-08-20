@@ -197,7 +197,7 @@ export const GalleryPage: React.FC<GalleryPageProps> = ({ photos, onOpenBooking 
   return (
     <div className="py-12 bg-[#0C1214] text-gray-100 min-h-screen font-sans">
       <SEO
-        title="Sanctuary Suite & Facility Gallery | Aura Luxe Spa"
+        title="Sanctuary Suite & Facility Gallery | Tripod Wellness"
         description="Take a high-resolution visual tour of our hospital-grade disinfected VIP therapy suites, hydrotherapy lounges, and professional massage equipment."
       />
 

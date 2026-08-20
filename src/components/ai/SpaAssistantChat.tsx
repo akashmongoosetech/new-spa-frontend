@@ -23,7 +23,7 @@ export const SpaAssistantChat: React.FC<SpaAssistantChatProps> = ({ onOpenBookin
     {
       id: 'msg-1',
       sender: 'assistant',
-      text: 'Welcome to **Aura Luxe Spa**! I am your AI Spa Concierge.\n\nHow may I assist you today?\n• **Services & Rates**: Learn about Swedish, Deep Tissue, Hot Stone, & VIP packages\n• **Health Protocols**: Sanitation, intake screening, & contraindication care\n• **Bookings**: Select therapists, apply discount codes, and reserve slots!'
+      text: 'Welcome to **Tripod Wellness**! I am your AI Spa Concierge.\n\nHow may I assist you today?\n• **Services & Rates**: Learn about Swedish, Deep Tissue, Hot Stone, & VIP packages\n• **Health Protocols**: Sanitation, intake screening, & contraindication care\n• **Bookings**: Select therapists, apply discount codes, and reserve slots!'
     }
   ]);
   const [inputPrompt, setInputPrompt] = useState('');

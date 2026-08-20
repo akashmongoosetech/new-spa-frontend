@@ -91,12 +91,16 @@ export const Header: React.FC<HeaderProps> = ({
             }}
             className="flex items-center gap-2.5 text-left group cursor-pointer"
           >
-            <div className="w-10 h-10 rounded-xl bg-linear-to-br from-[#2CB5A0] to-[#1a6e61] flex items-center justify-center text-white font-serif font-bold text-xl shadow-md group-hover:scale-105 transition-transform">
-              A
+            <div className="w-10 h-10 rounded-xl bg-white p-1 flex items-center justify-center shadow-md group-hover:scale-105 transition-transform overflow-hidden">
+              <img
+                src={settings.logoUrl || '/logo.png'}
+                alt="Tripod Wellness"
+                className="w-full h-full object-contain"
+              />
             </div>
             <div>
               <span className="block font-serif font-extrabold text-xl tracking-wider text-[#1A1A1A] group-hover:text-[#2CB5A0] transition-colors">
-                AURA LUXE
+                TRIPOD WELLNESS
               </span>
               <span className="block text-[10px] font-semibold tracking-widest text-[#C7A36A] uppercase -mt-0.5">
                 Men's Spa Sanctuary

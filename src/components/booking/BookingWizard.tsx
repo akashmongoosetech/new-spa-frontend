@@ -184,7 +184,7 @@ export const BookingWizard: React.FC<BookingWizardProps> = ({
           <div className="flex items-center justify-between mb-4">
             <div>
               <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#2CB5A0] bg-[#2CB5A0]/15 px-3 py-1 rounded-full border border-[#2CB5A0]/30">
-                Aura Luxe • Online Booking
+                Tripod Wellness • Online Booking
               </span>
               <h2 className="text-2xl font-serif font-bold text-white mt-1">
                 {step === 1 && '1. Choose Massage Ritual'}
@@ -609,7 +609,7 @@ export const BookingWizard: React.FC<BookingWizardProps> = ({
                     required
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
-                    placeholder="+91 98200 12345"
+                    placeholder="+91-9171606807"
                     className="w-full px-4 py-2.5 rounded-xl bg-[#182225] border border-white/15 text-white text-sm focus:outline-none focus:border-[#2CB5A0] placeholder-gray-500"
                   />
                 </div>

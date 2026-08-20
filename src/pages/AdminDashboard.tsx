@@ -250,7 +250,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
 
   return (
     <div className="min-h-screen bg-gray-50 text-gray-900 font-sans">
-      <SEO title="CRM Control Hub | Aura Luxe Spa Admin" />
+      <SEO title="CRM Control Hub | Tripod Wellness Admin" />
 
       {/* Tab Body */}
       <main className="max-w-7xl w-full mx-auto space-y-8">
@@ -260,13 +260,13 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
             <div className="p-8 rounded-3xl bg-linear-to-r from-[#1A1A1A] via-gray-900 to-black text-white relative overflow-hidden shadow-2xl flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
               <div className="space-y-2 relative z-10">
                 <span className="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-[#2CB5A0] text-black">
-                  Bandra West Indore Sanctuary
+                  Indore, Ujjain & Dewas Sanctuary
                 </span>
                 <h1 className="text-2xl font-black tracking-tight">
                   Welcome back, {currentUser?.name || 'Administrator'}!
                 </h1>
                 <p className="text-xs text-gray-400 max-w-lg">
-                  Real-time operational overview for Aura Luxe Spa Men-to-Men Massage & Executive Wellness Suites.
+                  Real-time operational overview for Tripod Wellness Men-to-Men Massage & Executive Wellness Suites.
                 </p>
               </div>
               <div className="flex items-center gap-3 relative z-10">

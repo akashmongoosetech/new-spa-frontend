@@ -210,7 +210,7 @@ export const SettingsModule: React.FC = () => {
                 <label className="block font-bold text-gray-700 mb-1">SMTP Host Server</label>
                 <input
                   type="text"
-                  value={settings.smtpHost || 'smtp.auraluxespa.com'}
+                  value={settings.smtpHost || 'smtp.gmail.com'}
                   onChange={(e) => setSettings({ ...settings, smtpHost: e.target.value })}
                   className="w-full px-3.5 py-2.5 rounded-xl border outline-none"
                 />
@@ -231,7 +231,7 @@ export const SettingsModule: React.FC = () => {
                 <label className="block font-bold text-gray-700 mb-1">Sender Name</label>
                 <input
                   type="text"
-                  value={settings.smtpSenderName || 'Aura Luxe Concierge'}
+                  value={settings.smtpSenderName || 'Tripod Wellness Concierge'}
                   onChange={(e) => setSettings({ ...settings, smtpSenderName: e.target.value })}
                   className="w-full px-3.5 py-2.5 rounded-xl border outline-none"
                 />
@@ -240,7 +240,7 @@ export const SettingsModule: React.FC = () => {
                 <label className="block font-bold text-gray-700 mb-1">Sender Email</label>
                 <input
                   type="email"
-                  value={settings.smtpSenderEmail || 'concierge@auraluxespa.com'}
+                  value={settings.smtpSenderEmail || 'wellnesstripod@gmail.com'}
                   onChange={(e) => setSettings({ ...settings, smtpSenderEmail: e.target.value })}
                   className="w-full px-3.5 py-2.5 rounded-xl border outline-none"
                 />

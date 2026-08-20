@@ -28,7 +28,7 @@ export const FAQPage: React.FC<FAQPageProps> = ({ faqs }) => {
 
   return (
     <div className="py-12 bg-[#FAFAFA] font-sans min-h-screen">
-      <SEO title="Frequently Asked Questions | Aura Luxe Spa" description="Find answers regarding our Men-to-Men massage therapies, therapist certifications, booking process, and hygiene standards." />
+      <SEO title="Frequently Asked Questions | Tripod Wellness" description="Find answers regarding our Men-to-Men massage therapies, therapist certifications, booking process, and hygiene standards." />
 
       <div className="max-w-4xl mx-auto px-4 sm:px-6 space-y-8">
         <div className="text-center space-y-3">

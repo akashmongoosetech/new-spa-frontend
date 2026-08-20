@@ -296,7 +296,7 @@ export const ContactManager: React.FC<ContactManagerProps> = ({ contacts, onRefr
                 required
                 value={replyText}
                 onChange={(e) => setReplyText(e.target.value)}
-                placeholder="Dear guest, thank you for reaching out to Aura Luxe Spa..."
+                placeholder="Dear guest, thank you for reaching out to Tripod Wellness..."
                 className="w-full p-3.5 rounded-xl border text-xs focus:ring-2 focus:ring-[#2CB5A0] outline-none"
               ></textarea>
               <div className="flex justify-between items-center pt-2">

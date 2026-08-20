@@ -1,5 +1,5 @@
 /**
- * SEO & Meta Tag Management Utility for Aura Luxe Spa
+ * SEO & Meta Tag Management Utility for Tripod Wellness
  * Handles dynamic HTML meta tags, Open Graph card images, Twitter meta tags,
  * canonical link injection, and Schema.org JSON-LD structured data.
  */
@@ -18,17 +18,17 @@ export interface SEOConfig {
 }
 
 const DEFAULT_SEO: Required<Omit<SEOConfig, 'jsonLd' | 'path'>> = {
-  title: "Aura Luxe Spa | Premier Men's Massage Therapy & Wellness Sanctuary Bandra",
-  description: "Licensed Men-to-Men massage therapy sanctuary in Indore. Deep Tissue, Swedish, Ayurvedic Abhyanga, and Hot Stone in private soundproof suites.",
-  keywords: "men to men massage Indore, Ujjain, Dewas, male massage therapist Bandra, deep tissue massage Indore, Ujjain, Dewas, Ayurvedic Abhyanga, male spa Indore, Ujjain, Dewas, male wellness sanctuary",
+  title: "Tripod Wellness | Premier Men's Massage Therapy & Wellness Sanctuary Indore",
+  description: "Licensed Men-to-Men massage therapy sanctuary in Indore, Ujjain & Dewas. Deep Tissue, Swedish, Ayurvedic Abhyanga, and Hot Stone in private soundproof suites.",
+  keywords: "men to men massage Indore, Ujjain, Dewas, male massage therapist Indore, Ujjain, Dewas, deep tissue massage Indore, Ujjain, Dewas, Ayurvedic Abhyanga, male spa Indore, Ujjain, Dewas, male wellness sanctuary",
   ogImage: "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?q=80&w=1200&auto=format&fit=crop",
-  favicon: 'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>✨</text></svg>',
-  canonicalUrl: "https://auraluxespa.in",
+  favicon: '/logo.png',
+  canonicalUrl: "https://tripod-wellness.netlify.app",
   type: "website",
   robots: "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1",
 };
 
-export const BASE_URL = "https://auraluxespa.in";
+export const BASE_URL = "https://tripod-wellness.netlify.app";
 
 /**
  * Dynamically sets or updates meta tags, Open Graph images, canonical links, and JSON-LD schema.
@@ -71,7 +71,7 @@ export const updatePageSEO = (config: SEOConfig = {}) => {
   setMeta('name', 'robots', robots);
 
   // Open Graph (Facebook / WhatsApp / LinkedIn / iMessage)
-  setMeta('property', 'og:site_name', 'Aura Luxe Spa & Wellness Sanctuary');
+  setMeta('property', 'og:site_name', 'Tripod Wellness');
   setMeta('property', 'og:title', title);
   setMeta('property', 'og:description', description);
   setMeta('property', 'og:type', type);
@@ -83,7 +83,7 @@ export const updatePageSEO = (config: SEOConfig = {}) => {
 
   // Twitter Cards
   setMeta('name', 'twitter:card', 'summary_large_image');
-  setMeta('name', 'twitter:site', '@AuraLuxeSpa');
+  setMeta('name', 'twitter:site', '@TripodWellness');
   setMeta('name', 'twitter:title', title);
   setMeta('name', 'twitter:description', description);
   setMeta('name', 'twitter:image', ogImage);
@@ -130,16 +130,16 @@ export const generateLocalBusinessSchema = (customData?: Record<string, any>): R
     "@context": "https://schema.org",
     "@type": ["DaySpa", "HealthAndBeautyBusiness", "LocalBusiness"],
     "@id": `${BASE_URL}/#spa-business`,
-    "name": "Aura Luxe Spa & Wellness Sanctuary",
-    "alternateName": "Aura Luxe Men's Wellness Sanctuary",
-    "description": "Licensed Men-to-Men luxury massage therapy sanctuary in Indore, Ujjain, Dewas. Offering deep tissue muscle recovery, Swedish relaxation, Ayurvedic Abhyanga, and volcanic hot stone therapies in private soundproof VIP suites.",
+    "name": "Tripod Wellness",
+    "alternateName": "Tripod Wellness Men's Massage & Wellness Sanctuary",
+    "description": "Licensed Men-to-Men luxury massage therapy sanctuary in Indore, Ujjain & Dewas. Offering deep tissue muscle recovery, Swedish relaxation, Ayurvedic Abhyanga, and volcanic hot stone therapies in private soundproof VIP suites.",
     "url": BASE_URL,
-    "telephone": "+919820012345",
-    "email": "concierge@auraluxespa.in",
+    "telephone": "+91-9171606807",
+    "email": "wellnesstripod@gmail.com",
     "priceRange": "₹₹₹",
     "currenciesAccepted": "INR",
     "paymentAccepted": "Cash, Credit Card, Debit Card, UPI, Net Banking",
-    "logo": "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?q=80&w=500&auto=format&fit=crop",
+    "logo": `${BASE_URL}/logo.png`,
     "image": [
       "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?q=80&w=1200&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1540555700478-4be289fbecef?q=80&w=1200&auto=format&fit=crop",
@@ -147,16 +147,14 @@ export const generateLocalBusinessSchema = (customData?: Record<string, any>): R
     ],
     "address": {
       "@type": "PostalAddress",
-      "streetAddress": "Plot 42, Bandra Reclamation, Bandra West",
-      "addressLocality": "Indore",
+      "addressLocality": "Indore, Ujjain, Dewas",
       "addressRegion": "Madhya Pradesh",
-      "postalCode": "400050",
       "addressCountry": "IN"
     },
     "geo": {
       "@type": "GeoCoordinates",
-      "latitude": 19.0596,
-      "longitude": 72.8295
+      "latitude": 22.7196,
+      "longitude": 75.8577
     },
     "openingHoursSpecification": [
       {
@@ -256,42 +254,42 @@ export const getSEOPresets = (pageName: string, params?: Record<string, any>): S
   switch (pageName) {
     case 'home':
       return {
-        title: "Aura Luxe Spa | Luxury Men's Massage Therapy Indore",
+        title: "Tripod Wellness | Luxury Men's Massage Therapy Indore",
         description: "Experience executive male wellness in private soundproof suites. Certified male therapists, deep tissue muscle recovery, Swedish relaxation, and hot stone therapy.",
         ogImage: "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?q=80&w=1200&auto=format&fit=crop",
         path: "/",
       };
     case 'services':
       return {
-        title: "Massage Therapies & Pricing Menu | Aura Luxe Spa Bandra",
+        title: "Massage Therapies & Pricing Menu | Tripod Wellness",
         description: "Explore our signature therapies including Deep Tissue Recovery, Swedish Relaxation, Ayurvedic Abhyanga, and Eucalyptus Steam. Transparent pricing and private suites.",
         ogImage: "https://images.unsplash.com/photo-1540555700478-4be289fbecef?q=80&w=1200&auto=format&fit=crop",
         path: "/services",
       };
     case 'booking':
       return {
-        title: "Book VIP Suite Session Online | Aura Luxe Spa Reserve",
-        description: "Select therapist, date, time slot, and treatment package in under 60 seconds. Instant booking confirmation for private VIP therapy suites in Bandra West.",
+        title: "Book VIP Suite Session Online | Tripod Wellness Reserve",
+        description: "Select therapist, date, time slot, and treatment package in under 60 seconds. Instant booking confirmation for private VIP therapy suites in Indore, Ujjain & Dewas.",
         ogImage: "https://images.unsplash.com/photo-1519823551278-64ac92734fb1?q=80&w=1200&auto=format&fit=crop",
         path: "/booking",
       };
     case 'gallery':
       return {
-        title: "Sanctuary Suites & Equipment Gallery | Aura Luxe Spa",
+        title: "Sanctuary Suites & Equipment Gallery | Tripod Wellness",
         description: "High-resolution photo tour of our VIP therapy suites, volcanic hot stone warmers, hydrotherapy tubs, and hospital-grade sanitized facilities.",
         ogImage: "https://images.unsplash.com/photo-1507652313519-d4e9174996dd?q=80&w=1200&auto=format&fit=crop",
         path: "/gallery",
       };
     case 'therapists':
       return {
-        title: "Certified Male Massage Therapists | Aura Luxe Spa Staff",
+        title: "Certified Male Massage Therapists | Tripod Wellness Staff",
         description: "Meet our licensed male massage specialists trained in deep tissue, sports kinesiology, and Ayurvedic bodywork.",
         ogImage: "https://images.unsplash.com/photo-1600334089648-b0d9d3028eb2?q=80&w=1200&auto=format&fit=crop",
         path: "/therapists",
       };
     case 'blog':
       return {
-        title: "Men's Health & Massage Therapy Blog | Aura Luxe Insights",
+        title: "Men's Health & Massage Therapy Blog | Tripod Wellness Insights",
         description: "Expert articles on posture correction, muscle tension recovery, hot stone therapy benefits, and stress relief for modern gentlemen.",
         ogImage: "https://images.unsplash.com/photo-1515377905703-c4788e51af15?q=80&w=1200&auto=format&fit=crop",
         path: "/blog",

@@ -36,7 +36,7 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({
   return (
     <div className="py-12 bg-[#FAFAFA] font-sans min-h-screen">
       <SEO
-        title="Massage Therapies & Pricing | Aura Luxe Spa"
+        title="Massage Therapies & Pricing | Tripod Wellness"
         description="Explore our complete menu of Men-to-Men massage therapies including Swedish, Deep Tissue, Hot Stone, and Executive VIP packages."
       />
 

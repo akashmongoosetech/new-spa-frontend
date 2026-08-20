@@ -28,7 +28,7 @@ export const TherapistsPage: React.FC = () => {
             Our Elite Male Therapy Staff
           </h1>
           <p className="text-gray-600 font-light text-base leading-relaxed">
-            Every therapist at Aura Luxe holds advanced state certifications, background verifications, and extensive training in muscular recovery and somatic relaxation.
+            Every therapist at Tripod Wellness holds advanced state certifications, background verifications, and extensive training in muscular recovery and somatic relaxation.
           </p>
         </div>
 

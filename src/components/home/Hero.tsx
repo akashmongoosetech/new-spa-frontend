@@ -26,7 +26,7 @@ export const Hero: React.FC<HeroProps> = ({
   setActiveTab
 }) => {
   const currencySymbol = settings?.currencySymbol || '₹';
-  const phoneNumber = settings?.phone || '+91 98200 12345';
+  const phoneNumber = settings?.phone || '+91-9171606807';
 
   return (
     <section className="relative min-h-[92vh] flex items-center justify-center overflow-hidden bg-[#0F1416] text-white pt-16 pb-24">
@@ -34,7 +34,7 @@ export const Hero: React.FC<HeroProps> = ({
       <div className="absolute inset-0 z-0 select-none">
         <img
           src="https://images.unsplash.com/photo-1540555700478-4be289fbecef?q=80&w=2000&auto=format&fit=crop"
-          alt="Aura Luxe Luxury Spa Sanctuary"
+          alt="Tripod Wellness Luxury Spa Sanctuary"
           className="w-full h-full object-cover object-center filter brightness-75 contrast-110 scale-105 transform transition-transform duration-1000"
           referrerPolicy="no-referrer"
         />
@@ -59,7 +59,7 @@ export const Hero: React.FC<HeroProps> = ({
           >
             <span className="flex h-2 w-2 rounded-full bg-[#2CB5A0] animate-pulse" />
             <Sparkles className="w-4 h-4 text-[#C7A36A]" />
-            <span>Aura Luxe • Premier Men's Wellness & Spa</span>
+            <span>Tripod Wellness • Premier Men's Wellness & Spa</span>
           </motion.div>
 
           {/* Headline */}
@@ -72,7 +72,7 @@ export const Hero: React.FC<HeroProps> = ({
             <h1 className="text-4xl sm:text-6xl lg:text-7xl font-serif font-extrabold leading-[1.1] tracking-tight text-white">
               Indulge in <br />
               <span className="text-transparent bg-clip-text bg-linear-to-r from-[#2CB5A0] via-[#81E3D4] to-[#E3C99B]">
-                Aura Luxe
+                Tripod Wellness
               </span>{' '}
               Serenity
             </h1>
@@ -98,7 +98,7 @@ export const Hero: React.FC<HeroProps> = ({
             </div>
             <div className="flex items-center gap-2">
               <CheckCircle2 className="w-4 h-4 text-[#2CB5A0]" />
-              <span>Bandra West Location</span>
+              <span>Indore, Ujjain & Dewas Locations</span>
             </div>
           </motion.div>
 
@@ -181,7 +181,7 @@ export const Hero: React.FC<HeroProps> = ({
                 <Sparkles className="w-3 h-3" /> Signature Choice
               </span>
               <span className="text-xs text-gray-400 font-medium flex items-center gap-1">
-                <MapPin className="w-3.5 h-3.5 text-[#2CB5A0]" /> Bandra West
+                <MapPin className="w-3.5 h-3.5 text-[#2CB5A0]" /> Indore • Ujjain • Dewas
               </span>
             </div>
 
