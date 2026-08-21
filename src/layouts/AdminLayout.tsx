@@ -3,6 +3,8 @@ import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { AdminSidebar, AdminTab } from '../components/admin/AdminSidebar';
 import { AdminHeader } from '../components/admin/AdminHeader';
 import { Toast, ToastMessage } from '../components/ui/Toast';
+import { Modal } from '../components/ui/Modal';
+import { ProfilePage } from '../pages/ProfilePage';
 import { AdminUser, BusinessSettings, NotificationItem } from '../types';
 import { api } from '../services/api';
 
@@ -15,6 +17,7 @@ export const AdminLayout: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
+  const [profileModalOpen, setProfileModalOpen] = useState(false);
 
   const [notifications, setNotifications] = useState<NotificationItem[]>([]);
   const [unreadContactsCount, setUnreadContactsCount] = useState(0);
@@ -24,6 +27,8 @@ export const AdminLayout: React.FC = () => {
     const saved = localStorage.getItem('aura_admin_user');
     return saved ? JSON.parse(saved) : null;
   });
+
+  const [settingsLoaded, setSettingsLoaded] = useState(false);
 
   // Global toast host for the admin console.
   useEffect(() => {
@@ -52,7 +57,10 @@ export const AdminLayout: React.FC = () => {
           setCurrentUser(me);
           localStorage.setItem('aura_admin_user', JSON.stringify(me));
         }
-        if (st) setSettings(st);
+        if (st) {
+          setSettings(st);
+          setSettingsLoaded(true);
+        }
       } catch (err: any) {
         if (err?.response?.status === 401) {
           localStorage.removeItem('aura_admin_user');
@@ -195,7 +203,7 @@ export const AdminLayout: React.FC = () => {
           onClearNotification={handleClearNotification}
           onQuickAction={handleQuickAction}
           onChangePasswordClick={() => navigate('/admin/change-password')}
-          onProfileClick={() => navigate('/profile')}
+          onProfileClick={() => setProfileModalOpen(true)}
           onLogout={handleLogout}
           searchQuery={searchQuery}
           setSearchQuery={setSearchQuery}
@@ -220,6 +228,19 @@ export const AdminLayout: React.FC = () => {
           />
         </main>
       </div>
+
+      {/* Profile Modal */}
+      <Modal
+        isOpen={profileModalOpen}
+        onClose={() => setProfileModalOpen(false)}
+        title="My Profile"
+        maxWidth="4xl"
+      >
+        <ProfilePage
+          modalMode
+          onClose={() => setProfileModalOpen(false)}
+        />
+      </Modal>
 
       <Toast toasts={toasts} onClose={closeToast} />
     </div>

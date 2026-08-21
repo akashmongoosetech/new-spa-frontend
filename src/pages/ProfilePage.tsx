@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import {
   User,
@@ -9,16 +9,25 @@ import {
   Trash2,
   Loader2,
   Shield,
+  X,
   Clock,
   CheckCircle2,
   AlertCircle,
   Key,
   Lock,
   LogOut,
+  AtSign,
+  Cake,
+  MapPin,
 } from 'lucide-react';
-import { AdminUser } from '../../types';
-import { api } from '../../services/api';
-import { showToast } from '../../utils/toastEvents';
+import { AdminUser } from '../types';
+import { api } from '../services/api';
+import { showToast } from '../utils/toastEvents';
+
+interface ProfileModalProps {
+  modalMode?: boolean;
+  onClose?: () => void;
+}
 
 const inputClass =
   'w-full border border-gray-300 rounded-xl p-3 text-sm focus:border-[#2CB5A0] focus:outline-none';
@@ -39,7 +48,11 @@ interface ProfileContext {
   searchQuery?: string;
 }
 
-export const ProfilePage: React.FC = () => {
+export const ProfilePage: React.FC<ProfileModalProps> = ({
+  modalMode = false,
+  onClose,
+  ...rest
+}) => {
   const context = useOutletContext<ProfileContext>() || {};
   const loaded = context.currentUser;
 
@@ -199,253 +212,268 @@ export const ProfilePage: React.FC = () => {
     }
   };
 
-  const formattedDate = (d?: string) =>
+const formattedDate = (d?: string) =>
     d ? new Date(d).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' }) : '—';
 
   return (
-    <div className="max-w-4xl space-y-6">
-      <div>
-        <h1 className="text-2xl font-serif font-bold text-gray-900">My Profile</h1>
-        <p className="text-xs text-gray-500 mt-1">Manage your personal details, contact information and profile picture</p>
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Left: avatar + account summary */}
-        <div className="space-y-6">
-          <div className="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm">
-            <div className="flex flex-col items-center gap-4">
-              {user.avatarUrl ? (
-                <img
-                  src={user.avatarUrl}
-                  alt="Profile"
-                  className="w-24 h-24 rounded-full object-cover ring-2 ring-[#2CB5A0] shadow-md"
-                />
-              ) : (
-                <div className="w-24 h-24 rounded-full bg-[#2CB5A0]/15 border-2 border-[#2CB5A0] flex items-center justify-center">
-                  <span className="text-2xl font-bold text-[#158c7c]">{getInitials(user.name)}</span>
-                </div>
-              )}
-              <div className="text-center">
-                <h3 className="font-bold text-gray-900">{user.name || 'Staff Member'}</h3>
-                <p className="text-xs text-[#2CB5A0] font-semibold capitalize">
-                  {(user.role || 'admin').replace(/_/g, ' ')}
-                </p>
-              </div>
-              <div className="flex items-center gap-2 w-full">
-                <button
-                  type="button"
-                  onClick={() => fileRef.current?.click()}
-                  disabled={uploading}
-                  className="flex-1 px-3 py-2.5 bg-[#2CB5A0] text-white rounded-xl text-xs font-bold flex items-center justify-center gap-2 disabled:opacity-50 cursor-pointer"
-                >
-                  {uploading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Camera className="w-4 h-4" />}
-                  {uploading ? 'Uploading...' : 'Upload Photo'}
-                </button>
-                {user.avatarUrl && (
-                  <button
-                    type="button"
-                    onClick={handleRemoveAvatar}
-                    disabled={uploading}
-                    className="px-3 py-2.5 bg-rose-50 text-rose-600 rounded-xl text-xs font-bold flex items-center justify-center gap-2 disabled:opacity-50 cursor-pointer"
-                    title="Remove photo"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </button>
-                )}
-              </div>
-              <input ref={fileRef} type="file" accept="image/*" hidden onChange={handleAvatarChange} />
-            </div>
-          </div>
-
-          <div className="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm space-y-3">
-            <h4 className="text-xs font-bold uppercase text-gray-500">Account Status</h4>
-            <div className="flex items-center justify-between text-sm">
-              <span className="text-gray-500">Status</span>
-              <span className={`font-bold ${active ? 'text-emerald-600' : 'text-rose-600'}`}>
-                {active ? 'Active' : 'Inactive'}
-              </span>
-            </div>
-            <div className="flex items-center justify-between text-sm">
-              <span className="text-gray-500">Role</span>
-              <span className="font-bold text-gray-800 capitalize">{(user.role || 'admin').replace(/_/g, ' ')}</span>
-            </div>
-            <div className="flex items-center justify-between text-sm">
-              <span className="text-gray-500 flex items-center gap-1.5">
-                <Clock className="w-3.5 h-3.5 text-gray-400" /> Member since
-              </span>
-              <span className="font-semibold text-gray-700">{formattedDate(user.createdAt)}</span>
-            </div>
-            <div className="flex items-center justify-between text-sm">
-              <span className="text-gray-500">Last login</span>
-              <span className="font-semibold text-gray-700">{formattedDate(user.lastLogin)}</span>
-            </div>
-          </div>
+    <>
+      {modalMode && (
+        <div className="flex items-center justify-between mb-6 pb-4 border-b border-gray-200">
+          <h1 className="text-2xl font-serif font-bold text-gray-900">My Profile</h1>
+          <button
+            onClick={onClose}
+            className="p-1 rounded-full text-gray-400 hover:text-gray-700 hover:bg-gray-100 transition-colors"
+            aria-label="Close profile"
+          >
+            <X className="w-5 h-5" />
+          </button>
+        </div>
+      )}
+      
+      <div className="max-w-4xl space-y-6">
+        <div>
+          <h1 className="text-2xl font-serif font-bold text-gray-900">{!modalMode && 'My Profile'}</h1>
+          <p className="text-xs text-gray-500 mt-1">Manage your personal details, contact information and profile picture</p>
         </div>
 
-        {/* Right: editable sections */}
-        <form onSubmit={handleSave} className="lg:col-span-2 space-y-6">
-          <div className="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm space-y-4">
-            <h4 className="text-xs font-bold uppercase text-gray-500">Personal Information</h4>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-xs font-bold uppercase text-gray-700 mb-1.5">First Name</label>
-                <input type="text" value={firstName} onChange={(e) => setFirstName(e.target.value)} className={inputClass} />
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Left: avatar + account summary */}
+          <div className="space-y-6">
+            <div className="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm">
+              <div className="flex flex-col items-center gap-4">
+                {user.avatarUrl ? (
+                  <img
+                    src={user.avatarUrl}
+                    alt="Profile"
+                    className="w-24 h-24 rounded-full object-cover ring-2 ring-[#2CB5A0] shadow-md"
+                  />
+                ) : (
+                  <div className="w-24 h-24 rounded-full bg-[#2CB5A0]/15 border-2 border-[#2CB5A0] flex items-center justify-center">
+                    <span className="text-2xl font-bold text-[#158c7c]">{getInitials(user.name)}</span>
+                  </div>
+                )}
+                <div className="text-center">
+                  <h3 className="font-bold text-gray-900">{user.name || 'Staff Member'}</h3>
+                  <p className="text-xs text-[#2CB5A0] font-semibold capitalize">
+                    {(user.role || 'admin').replace(/_/g, ' ')}
+                  </p>
+                </div>
+                <div className="flex items-center gap-2 w-full">
+                  <button
+                    type="button"
+                    onClick={() => fileRef.current?.click()}
+                    disabled={uploading}
+                    className="flex-1 px-3 py-2.5 bg-[#2CB5A0] text-white rounded-xl text-xs font-bold flex items-center justify-center gap-2 disabled:opacity-50 cursor-pointer"
+                  >
+                    {uploading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Camera className="w-4 h-4" />}
+                    {uploading ? 'Uploading...' : 'Upload Photo'}
+                  </button>
+                  {user.avatarUrl && (
+                    <button
+                      type="button"
+                      onClick={handleRemoveAvatar}
+                      disabled={uploading}
+                      className="px-3 py-2.5 bg-rose-50 text-rose-600 rounded-xl text-xs font-bold flex items-center justify-center gap-2 disabled:opacity-50 cursor-pointer"
+                      title="Remove photo"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  )}
+                </div>
+                <input ref={fileRef} type="file" accept="image/*" hidden onChange={handleAvatarChange} />
               </div>
-              <div>
-                <label className="block text-xs font-bold uppercase text-gray-700 mb-1.5">Last Name</label>
-                <input type="text" value={lastName} onChange={(e) => setLastName(e.target.value)} className={inputClass} />
+            </div>
+
+            <div className="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm space-y-3">
+              <h4 className="text-xs font-bold uppercase text-gray-500">Account Status</h4>
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-gray-500">Status</span>
+                <span className={`font-bold ${active ? 'text-emerald-600' : 'text-rose-600'}`}>
+                  {active ? 'Active' : 'Inactive'}
+                </span>
               </div>
-              <div>
-                <label className="block text-xs font-bold uppercase text-gray-700 mb-1.5">
-                  Full Name <span className="text-rose-500">*</span>
-                </label>
-                <input type="text" value={name} onChange={(e) => setName(e.target.value)} className={inputClass} />
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-gray-500">Role</span>
+                <span className="font-bold text-gray-800 capitalize">{(user.role || 'admin').replace(/_/g, ' ')}</span>
               </div>
-              <div>
-                <label className="block text-xs font-bold uppercase text-gray-700 mb-1.5 flex items-center gap-1">
-                  <AtSign className="w-3.5 h-3.5 text-gray-400" /> Username
-                </label>
-                <input
-                  type="text"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                  placeholder="Optional — 3-30 characters"
-                  className={inputClass}
-                />
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-gray-500 flex items-center gap-1.5">
+                  <Clock className="w-3.5 h-3.5 text-gray-400" /> Member since
+                </span>
+                <span className="font-semibold text-gray-700">{formattedDate(user.createdAt)}</span>
               </div>
-              <div>
-                <label className="block text-xs font-bold uppercase text-gray-700 mb-1.5">Date of Birth</label>
-                <div className="relative">
-                  <Cake className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-gray-500">Last login</span>
+                <span className="font-semibold text-gray-700">{formattedDate(user.lastLogin)}</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Right: editable sections */}
+          <form onSubmit={handleSave} className="lg:col-span-2 space-y-6">
+            <div className="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm space-y-4">
+              <h4 className="text-xs font-bold uppercase text-gray-500">Personal Information</h4>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-bold uppercase text-gray-700 mb-1.5">First Name</label>
+                  <input type="text" value={firstName} onChange={(e) => setFirstName(e.target.value)} className={inputClass} />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold uppercase text-gray-700 mb-1.5">Last Name</label>
+                  <input type="text" value={lastName} onChange={(e) => setLastName(e.target.value)} className={inputClass} />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold uppercase text-gray-700 mb-1.5">
+                    Full Name <span className="text-rose-500">*</span>
+                  </label>
+                  <input type="text" value={name} onChange={(e) => setName(e.target.value)} className={inputClass} />
+                </div>
+                <div>
+                  <label className="flex items-center gap-1 text-xs font-bold uppercase text-gray-700 mb-1.5">
+                    <AtSign className="w-3.5 h-3.5 text-gray-400" /> Username
+                  </label>
                   <input
-                    type="date"
-                    value={dob}
-                    max={new Date().toISOString().slice(0, 10)}
-                    onChange={(e) => setDob(e.target.value)}
-                    className={`${inputClass} pl-9`}
+                    type="text"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    placeholder="Optional — 3-30 characters"
+                    className={inputClass}
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold uppercase text-gray-700 mb-1.5">Date of Birth</label>
+                  <div className="relative">
+                    <Cake className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                    <input
+                      type="date"
+                      value={dob}
+                      max={new Date().toISOString().slice(0, 10)}
+                      onChange={(e) => setDob(e.target.value)}
+                      className={`${inputClass} pl-9`}
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-xs font-bold uppercase text-gray-700 mb-1.5">Gender</label>
+                  <select value={gender} onChange={(e) => setGender(e.target.value)} className={inputClass}>
+                    <option value="">Prefer not to say</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm space-y-4">
+              <h4 className="text-xs font-bold uppercase text-gray-500 flex items-center gap-2">
+                <Mail className="w-4 h-4 text-[#2CB5A0]" /> Contact
+              </h4>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="sm:col-span-2">
+                  <label className="block text-xs font-bold uppercase text-gray-700 mb-1.5">
+                    Email Address <span className="text-rose-500">*</span>
+                  </label>
+                  <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} className={inputClass} />
+                  {emailChanged && (
+                    <div className="mt-3 flex items-start gap-2 p-3 bg-amber-50 border border-amber-200 rounded-xl">
+                      <AlertCircle className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />
+                      <div className="flex-1">
+                        <p className="text-[11px] font-bold text-amber-800 uppercase">Email change requires confirmation</p>
+                        <input
+                          type="password"
+                          value={currentPassword}
+                          onChange={(e) => setCurrentPassword(e.target.value)}
+                          placeholder="Enter your current password"
+                          className={`${inputClass} mt-2 bg-white`}
+                        />
+                      </div>
+                    </div>
+                  )}
+                </div>
+                <div>
+                  <label className="flex items-center gap-1.5 text-xs font-bold uppercase text-gray-700 mb-1.5">
+                    <Phone className="w-3.5 h-3.5 text-gray-400" /> Mobile Number
+                  </label>
+                  <input type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} className={inputClass} />
+                </div>
+                <div>
+                  <label className="flex items-center gap-1 text-xs font-bold uppercase text-gray-700 mb-1.5">
+                    <MapPin className="w-3.5 h-3.5 text-gray-400" /> Address
+                  </label>
+                  <input type="text" value={address} onChange={(e) => setAddress(e.target.value)} className={inputClass} />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold uppercase text-gray-700 mb-1.5">City</label>
+                  <input type="text" value={city} onChange={(e) => setCity(e.target.value)} className={inputClass} />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold uppercase text-gray-700 mb-1.5">State</label>
+                  <input type="text" value={state} onChange={(e) => setState(e.target.value)} className={inputClass} />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold uppercase text-gray-700 mb-1.5">Country</label>
+                  <input type="text" value={country} onChange={(e) => setCountry(e.target.value)} className={inputClass} />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold uppercase text-gray-700 mb-1.5">Pincode</label>
+                  <input type="text" value={pincode} onChange={(e) => setPincode(e.target.value)} className={inputClass} />
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm space-y-4">
+              <h4 className="text-xs font-bold uppercase text-gray-500 flex items-center gap-2">
+                <Key className="w-4 h-4 text-[#2CB5A0]" /> Change Password
+              </h4>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-bold uppercase text-gray-700 mb-1.5">Current Password</label>
+                  <input
+                    type="password"
+                    value={currentPassword}
+                    onChange={(e) => setCurrentPassword(e.target.value)}
+                    className={inputClass}
+                    placeholder="Enter your current password"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold uppercase text-gray-700 mb-1.5">New Password</label>
+                  <input
+                    type="password"
+                    value={newPassword}
+                    onChange={(e) => setNewPassword(e.target.value)}
+                    className={inputClass}
+                    placeholder="Enter new password"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold uppercase text-gray-700 mb-1.5">Confirm New Password</label>
+                  <input
+                    type="password"
+                    value={confirmNewPassword}
+                    onChange={(e) => setConfirmNewPassword(e.target.value)}
+                    className={inputClass}
+                    placeholder="Confirm new password"
                   />
                 </div>
               </div>
-              <div>
-                <label className="block text-xs font-bold uppercase text-gray-700 mb-1.5">Gender</label>
-                <select value={gender} onChange={(e) => setGender(e.target.value)} className={inputClass}>
-                  <option value="">Prefer not to say</option>
-                  <option value="Male">Male</option>
-                  <option value="Female">Female</option>
-                  <option value="Other">Other</option>
-                </select>
-              </div>
             </div>
-          </div>
 
-          <div className="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm space-y-4">
-            <h4 className="text-xs font-bold uppercase text-gray-500 flex items-center gap-2">
-              <Mail className="w-4 h-4 text-[#2CB5A0]" /> Contact
-            </h4>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="sm:col-span-2">
-                <label className="block text-xs font-bold uppercase text-gray-700 mb-1.5">
-                  Email Address <span className="text-rose-500">*</span>
-                </label>
-                <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} className={inputClass} />
-                {emailChanged && (
-                  <div className="mt-3 flex items-start gap-2 p-3 bg-amber-50 border border-amber-200 rounded-xl">
-                    <AlertCircle className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />
-                    <div className="flex-1">
-                      <p className="text-[11px] font-bold text-amber-800 uppercase">Email change requires confirmation</p>
-                      <input
-                        type="password"
-                        value={currentPassword}
-                        onChange={(e) => setCurrentPassword(e.target.value)}
-                        placeholder="Enter your current password"
-                        className={`${inputClass} mt-2 bg-white`}
-                      />
-                    </div>
-                  </div>
-                )}
-              </div>
-              <div>
-                <label className="block text-xs font-bold uppercase text-gray-700 mb-1.5 flex items-center gap-1">
-                  <Phone className="w-3.5 h-3.5 text-gray-400" /> Mobile Number
-                </label>
-                <input type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} className={inputClass} />
-              </div>
-              <div>
-                <label className="block text-xs font-bold uppercase text-gray-700 mb-1.5 flex items-center gap-1">
-                  <MapPin className="w-3.5 h-3.5 text-gray-400" /> Address
-                </label>
-                <input type="text" value={address} onChange={(e) => setAddress(e.target.value)} className={inputClass} />
-              </div>
-              <div>
-                <label className="block text-xs font-bold uppercase text-gray-700 mb-1.5">City</label>
-                <input type="text" value={city} onChange={(e) => setCity(e.target.value)} className={inputClass} />
-              </div>
-              <div>
-                <label className="block text-xs font-bold uppercase text-gray-700 mb-1.5">State</label>
-                <input type="text" value={state} onChange={(e) => setState(e.target.value)} className={inputClass} />
-              </div>
-              <div>
-                <label className="block text-xs font-bold uppercase text-gray-700 mb-1.5">Country</label>
-                <input type="text" value={country} onChange={(e) => setCountry(e.target.value)} className={inputClass} />
-              </div>
-              <div>
-                <label className="block text-xs font-bold uppercase text-gray-700 mb-1.5">Pincode</label>
-                <input type="text" value={pincode} onChange={(e) => setPincode(e.target.value)} className={inputClass} />
-              </div>
+            <div className="flex items-center justify-end gap-3">
+              <button
+                type="submit"
+                disabled={saving || changingPassword}
+                className="px-6 py-3 bg-[#2CB5A0] text-white rounded-xl text-xs font-bold flex items-center gap-2 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+              >
+                {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+                {saving ? 'Saving...' : 'Save Changes'}
+              </button>
             </div>
-          </div>
-
-          <div className="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm space-y-4">
-            <h4 className="text-xs font-bold uppercase text-gray-500 flex items-center gap-2">
-              <Key className="w-4 h-4 text-[#2CB5A0]" /> Change Password
-            </h4>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-xs font-bold uppercase text-gray-700 mb-1.5">Current Password</label>
-                <input
-                  type="password"
-                  value={currentPassword}
-                  onChange={(e) => setCurrentPassword(e.target.value)}
-                  className={inputClass}
-                  placeholder="Enter your current password"
-                />
-              </div>
-              <div>
-                <label className="block text-xs font-bold uppercase text-gray-700 mb-1.5">New Password</label>
-                <input
-                  type="password"
-                  value={newPassword}
-                  onChange={(e) => setNewPassword(e.target.value)}
-                  className={inputClass}
-                  placeholder="Enter new password"
-                />
-              </div>
-              <div>
-                <label className="block text-xs font-bold uppercase text-gray-700 mb-1.5">Confirm New Password</label>
-                <input
-                  type="password"
-                  value={confirmNewPassword}
-                  onChange={(e) => setConfirmNewPassword(e.target.value)}
-                  className={inputClass}
-                  placeholder="Confirm new password"
-                />
-              </div>
-            </div>
-          </div>
-
-          <div className="flex items-center justify-end gap-3">
-            <button
-              type="submit"
-              disabled={saving || changingPassword}
-              className="px-6 py-3 bg-[#2CB5A0] text-white rounded-xl text-xs font-bold flex items-center gap-2 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
-            >
-              {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
-              {saving ? 'Saving...' : 'Save Changes'}
-            </button>
-          </div>
-        </form>
+          </form>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

@@ -13,7 +13,6 @@ const ForgotPasswordPage = lazy(() => import('../pages/Auth/ForgotPasswordPage')
 const ResetPasswordPage = lazy(() => import('../pages/Auth/ResetPasswordPage'));
 const NotFound = lazy(() => import('../pages/NotFound'));
 const Unauthorized = lazy(() => import('../pages/Unauthorized'));
-const ProfilePage = lazy(() => import('../pages/ProfilePage'));
 
 export const AppRoutes: React.FC = () => {
   return (
@@ -24,17 +23,7 @@ export const AppRoutes: React.FC = () => {
         {renderPublicRoutes()}
 
         {/* Protected User/Manager/Admin Routes */}
-        <Route
-          path="profile"
-          element={
-            <ProtectedRoute>
-              <Suspense fallback={<LoadingSpinner fullScreen label="Loading your profile..." />}>
-                <ProfilePage />
-              </Suspense>
-            </ProtectedRoute>
-          }
-        />
-
+        
         {/* Auth Routes */}
         <Route
           element={
