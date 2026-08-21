@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import {
   User,
@@ -8,17 +8,20 @@ import {
   Camera,
   Trash2,
   Loader2,
-  MapPin,
-  Cake,
   Shield,
   Clock,
   CheckCircle2,
   AlertCircle,
-  AtSign,
+  Key,
+  Lock,
+  LogOut,
 } from 'lucide-react';
-import { AdminUser, BusinessSettings } from '../../types';
+import { AdminUser } from '../../types';
 import { api } from '../../services/api';
 import { showToast } from '../../utils/toastEvents';
+
+const inputClass =
+  'w-full border border-gray-300 rounded-xl p-3 text-sm focus:border-[#2CB5A0] focus:outline-none';
 
 const getInitials = (name?: string) =>
   (name || 'A')
@@ -29,17 +32,14 @@ const getInitials = (name?: string) =>
     .join('')
     .toUpperCase();
 
-const inputClass =
-  'w-full border border-gray-300 rounded-xl p-3 text-sm focus:border-[#2CB5A0] focus:outline-none';
-
 interface ProfileContext {
   currentUser?: AdminUser | null;
   onUpdateCurrentUser?: (u: AdminUser) => void;
-  settings?: BusinessSettings;
+  settings?: any;
   searchQuery?: string;
 }
 
-export const AdminProfilePage: React.FC = () => {
+export const ProfilePage: React.FC = () => {
   const context = useOutletContext<ProfileContext>() || {};
   const loaded = context.currentUser;
 
@@ -61,9 +61,13 @@ export const AdminProfilePage: React.FC = () => {
   const [pincode, setPincode] = useState('');
   const [dob, setDob] = useState('');
   const [gender, setGender] = useState('');
+
   const [currentPassword, setCurrentPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmNewPassword, setConfirmNewPassword] = useState('');
 
   const [saving, setSaving] = useState(false);
+  const [changingPassword, setChangingPassword] = useState(false);
   const [uploading, setUploading] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
 
@@ -85,7 +89,6 @@ export const AdminProfilePage: React.FC = () => {
     setPincode(u.pincode || '');
     setDob(u.dob || '');
     setGender(u.gender || '');
-    setCurrentPassword('');
   }, [loaded]);
 
   if (!user) {
@@ -98,7 +101,7 @@ export const AdminProfilePage: React.FC = () => {
 
   const emailChanged = email.trim() !== (user.email || '');
 
-  const validate = (): string | null => {
+  const validateProfile = (): string | null => {
     if (!name.trim()) return 'Full name cannot be empty.';
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) return 'Enter a valid email address.';
     if (username.trim() && !/^[a-zA-Z0-9._-]{3,30}$/.test(username.trim())) {
@@ -109,9 +112,19 @@ export const AdminProfilePage: React.FC = () => {
     return null;
   };
 
+  const validatePassword = (): string | null => {
+    if (!currentPassword) return 'Current password is required.';
+    if (String(newPassword).length < 6) return 'New password must be at least 6 characters.';
+    if (newPassword !== confirmNewPassword) return 'New passwords do not match.';
+    const hasLetter = /[a-zA-Z]/.test(newPassword);
+    const hasNumber = /\d/.test(newPassword);
+    if (!hasLetter || !hasNumber) return 'Password must contain at least one letter and one number.';
+    return null;
+  };
+
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
-    const err = validate();
+    const err = validateProfile();
     if (err) {
       showToast({ type: 'error', title: 'Check the form', message: err });
       return;
@@ -137,6 +150,8 @@ export const AdminProfilePage: React.FC = () => {
       context.onUpdateCurrentUser?.(updated);
       setUser(updated);
       setCurrentPassword('');
+      setNewPassword('');
+      setConfirmNewPassword('');
       showToast({ type: 'success', title: 'Profile updated', message: 'Your profile was saved successfully.' });
     } catch (err: any) {
       showToast({ type: 'error', title: 'Update failed', message: err?.message || 'Could not save your profile.' });
@@ -243,9 +258,7 @@ export const AdminProfilePage: React.FC = () => {
           </div>
 
           <div className="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm space-y-3">
-            <h4 className="text-xs font-bold uppercase text-gray-500 flex items-center gap-2">
-              <Shield className="w-4 h-4 text-[#2CB5A0]" /> Account
-            </h4>
+            <h4 className="text-xs font-bold uppercase text-gray-500">Account Status</h4>
             <div className="flex items-center justify-between text-sm">
               <span className="text-gray-500">Status</span>
               <span className={`font-bold ${active ? 'text-emerald-600' : 'text-rose-600'}`}>
@@ -301,9 +314,7 @@ export const AdminProfilePage: React.FC = () => {
                 />
               </div>
               <div>
-                <label className="block text-xs font-bold uppercase text-gray-700 mb-1.5">
-                  Date of Birth
-                </label>
+                <label className="block text-xs font-bold uppercase text-gray-700 mb-1.5">Date of Birth</label>
                 <div className="relative">
                   <Cake className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
                   <input
@@ -384,10 +395,48 @@ export const AdminProfilePage: React.FC = () => {
             </div>
           </div>
 
+          <div className="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm space-y-4">
+            <h4 className="text-xs font-bold uppercase text-gray-500 flex items-center gap-2">
+              <Key className="w-4 h-4 text-[#2CB5A0]" /> Change Password
+            </h4>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs font-bold uppercase text-gray-700 mb-1.5">Current Password</label>
+                <input
+                  type="password"
+                  value={currentPassword}
+                  onChange={(e) => setCurrentPassword(e.target.value)}
+                  className={inputClass}
+                  placeholder="Enter your current password"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-bold uppercase text-gray-700 mb-1.5">New Password</label>
+                <input
+                  type="password"
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                  className={inputClass}
+                  placeholder="Enter new password"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-bold uppercase text-gray-700 mb-1.5">Confirm New Password</label>
+                <input
+                  type="password"
+                  value={confirmNewPassword}
+                  onChange={(e) => setConfirmNewPassword(e.target.value)}
+                  className={inputClass}
+                  placeholder="Confirm new password"
+                />
+              </div>
+            </div>
+          </div>
+
           <div className="flex items-center justify-end gap-3">
             <button
               type="submit"
-              disabled={saving}
+              disabled={saving || changingPassword}
               className="px-6 py-3 bg-[#2CB5A0] text-white rounded-xl text-xs font-bold flex items-center gap-2 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
             >
               {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
@@ -400,4 +449,4 @@ export const AdminProfilePage: React.FC = () => {
   );
 };
 
-export default AdminProfilePage;
+export default ProfilePage;

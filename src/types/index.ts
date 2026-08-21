@@ -229,7 +229,18 @@ export interface AdminUser {
   status: 'active' | 'inactive';
   avatarUrl?: string;
   phone?: string;
+  firstName?: string;
+  lastName?: string;
+  username?: string;
+  address?: string;
+  city?: string;
+  state?: string;
+  country?: string;
+  pincode?: string;
+  dob?: string;
+  gender?: string;
   createdAt: string;
+  updatedAt?: string;
   lastLogin?: string;
   lastLoginIp?: string;
 }

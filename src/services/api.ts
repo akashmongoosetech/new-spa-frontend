@@ -284,7 +284,19 @@ function mapAdminUser(u: any): AdminUser {
     role: mapRoleToFrontend(u.role),
     status: u.active === false || u.active === 0 ? 'inactive' : 'active',
     avatarUrl: u.avatar_url,
+    phone: u.phone || '',
+    firstName: u.first_name || '',
+    lastName: u.last_name || '',
+    username: u.username || '',
+    address: u.address || '',
+    city: u.city || '',
+    state: u.state || '',
+    country: u.country || '',
+    pincode: u.pincode || '',
+    dob: u.dob || '',
+    gender: u.gender || '',
     createdAt: u.created_at,
+    updatedAt: u.updated_at || undefined,
     lastLogin: u.last_login,
     lastLoginIp: u.lastLoginIp
   };
@@ -746,13 +758,52 @@ export const api = {
   },
 
   // Backend resolves the user from the JWT — no userId needed.
-  async changePassword(currentPassword: string, newPassword: string): Promise<{ success: boolean; message: string }> {
+  async changePassword(currentPassword: string, newPassword: string, confirmNewPassword?: string): Promise<{ success: boolean; message: string; requireRelogin?: boolean }> {
     try {
-      const res = await http.post<{ success: boolean; message: string }>('/admin/change-password', { currentPassword, newPassword });
+      const res = await http.post<{ success: boolean; message: string; requireRelogin?: boolean }>('/admin/change-password', {
+        currentPassword,
+        newPassword,
+        confirmNewPassword: confirmNewPassword || newPassword,
+      });
       return res.data;
     } catch (error) {
       throw new Error(getErrorMessage(error, 'Failed to change password'));
     }
+  },
+
+  // Self-service profile (all staff roles)
+  async updateProfile(data: Partial<AdminUser> & { currentPassword?: string }): Promise<AdminUser> {
+    const res = await http.put<AdminUser>('/admin/profile', {
+      name: data.name,
+      firstName: (data as any).firstName,
+      lastName: (data as any).lastName,
+      username: (data as any).username,
+      phone: data.phone,
+      address: (data as any).address,
+      city: (data as any).city,
+      state: (data as any).state,
+      country: (data as any).country,
+      pincode: (data as any).pincode,
+      dob: (data as any).dob,
+      gender: (data as any).gender,
+      email: data.email,
+      currentPassword: data.currentPassword,
+    });
+    return mapAdminUser(res.data);
+  },
+
+  async uploadAvatar(file: File): Promise<AdminUser> {
+    const fd = new FormData();
+    fd.append('file', file);
+    const res = await http.post<AdminUser>('/admin/profile-picture', fd, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+    return mapAdminUser(res.data);
+  },
+
+  async removeAvatar(): Promise<AdminUser> {
+    const res = await http.delete<AdminUser>('/admin/profile-picture');
+    return mapAdminUser(res.data);
   },
 
   // Admin User Management

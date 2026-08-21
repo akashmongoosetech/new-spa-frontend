@@ -1,8 +1,14 @@
 import React, { useState } from 'react';
-import { Lock, Save, CheckCircle2, AlertCircle } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { Lock, Save, CheckCircle2, AlertCircle, Loader2, LogOut } from 'lucide-react';
 import { api } from '../../services/api';
+import { showToast } from '../../utils/toastEvents';
+
+const inputClass =
+  'w-full border border-gray-300 rounded-xl p-3 text-sm focus:border-[#2CB5A0] focus:outline-none';
 
 export const AdminChangePasswordPage: React.FC = () => {
+  const navigate = useNavigate();
   const [current, setCurrent] = useState('');
   const [next, setNext] = useState('');
   const [confirm, setConfirm] = useState('');
@@ -13,21 +19,39 @@ export const AdminChangePasswordPage: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
-    if (next.length < 6) {
-      setError('New password must be at least 6 characters.');
+    if (next.length < 8) {
+      setError('New password must be at least 8 characters.');
+      return;
+    }
+    if (!/[a-zA-Z]/.test(next) || !/\d/.test(next)) {
+      setError('New password must contain at least one letter and one number.');
       return;
     }
     if (next !== confirm) {
       setError('New passwords do not match.');
       return;
     }
+    if (current === next) {
+      setError('New password must be different from your current password.');
+      return;
+    }
     setLoading(true);
     try {
-      await api.changePassword(current, next);
+      const res = await api.changePassword(current, next, confirm);
       setSuccess(true);
+      setError('');
       setCurrent('');
       setNext('');
       setConfirm('');
+      // Sessions are invalidated after a password change — sign in again.
+      localStorage.removeItem('aura_admin_user');
+      localStorage.removeItem('aura_admin_token');
+      showToast({
+        type: 'success',
+        title: 'Password changed',
+        message: res.message || 'Please sign in again with your new password.',
+      });
+      setTimeout(() => navigate('/admin-login'), 1500);
     } catch (err: any) {
       setError(err?.message || 'Failed to update password. Please verify your current password.');
     } finally {
@@ -39,14 +63,17 @@ export const AdminChangePasswordPage: React.FC = () => {
     <div className="max-w-2xl space-y-6">
       <div>
         <h1 className="text-2xl font-serif font-bold text-gray-900">Change Admin Password</h1>
-        <p className="text-xs text-gray-500 mt-1">Update your sanctuary console access password</p>
+        <p className="text-xs text-gray-500 mt-1">
+          Your password must be at least 8 characters and include a letter and a number. You will be asked to sign in
+          again after the change.
+        </p>
       </div>
 
       <div className="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm space-y-6">
         {success && (
           <div className="p-4 bg-emerald-50 border border-emerald-200 rounded-xl text-emerald-800 text-xs font-medium flex items-center gap-2">
             <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-            <span>Password updated successfully!</span>
+            <span>Password updated successfully! Redirecting to sign in...</span>
           </div>
         )}
 
@@ -65,7 +92,7 @@ export const AdminChangePasswordPage: React.FC = () => {
               required
               value={current}
               onChange={(e) => setCurrent(e.target.value)}
-              className="w-full border border-gray-300 rounded-xl p-3 text-sm focus:border-[#2CB5A0] focus:outline-none"
+              className={inputClass}
             />
           </div>
 
@@ -76,7 +103,7 @@ export const AdminChangePasswordPage: React.FC = () => {
               required
               value={next}
               onChange={(e) => setNext(e.target.value)}
-              className="w-full border border-gray-300 rounded-xl p-3 text-sm focus:border-[#2CB5A0] focus:outline-none"
+              className={inputClass}
             />
           </div>
 
@@ -87,17 +114,17 @@ export const AdminChangePasswordPage: React.FC = () => {
               required
               value={confirm}
               onChange={(e) => setConfirm(e.target.value)}
-              className="w-full border border-gray-300 rounded-xl p-3 text-sm focus:border-[#2CB5A0] focus:outline-none"
+              className={inputClass}
             />
           </div>
 
           <button
             type="submit"
-            disabled={loading}
-            className="px-6 py-3 bg-[#2CB5A0] text-white rounded-xl text-xs font-bold flex items-center gap-2 shadow-sm mt-4 disabled:opacity-50"
+            disabled={loading || success}
+            className="px-6 py-3 bg-[#2CB5A0] text-white rounded-xl text-xs font-bold flex items-center gap-2 shadow-sm mt-4 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
           >
-            <Save className="w-4 h-4" />
-            {loading ? 'Saving...' : 'Save New Password'}
+            {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : success ? <LogOut className="w-4 h-4" /> : <Save className="w-4 h-4" />}
+            {loading ? 'Saving...' : success ? 'Redirecting...' : 'Save New Password'}
           </button>
         </form>
       </div>

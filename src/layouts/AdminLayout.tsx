@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { AdminSidebar, AdminTab } from '../components/admin/AdminSidebar';
 import { AdminHeader } from '../components/admin/AdminHeader';
+import { Toast, ToastMessage } from '../components/ui/Toast';
 import { AdminUser, BusinessSettings, NotificationItem } from '../types';
 import { api } from '../services/api';
 
@@ -13,6 +14,7 @@ export const AdminLayout: React.FC = () => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [toasts, setToasts] = useState<ToastMessage[]>([]);
 
   const [notifications, setNotifications] = useState<NotificationItem[]>([]);
   const [unreadContactsCount, setUnreadContactsCount] = useState(0);
@@ -22,6 +24,19 @@ export const AdminLayout: React.FC = () => {
     const saved = localStorage.getItem('aura_admin_user');
     return saved ? JSON.parse(saved) : null;
   });
+
+  // Global toast host for the admin console.
+  useEffect(() => {
+    const removeToast = (id: string) => setToasts((prev) => prev.filter((t) => t.id !== id));
+    const handleCustomToast = (e: Event) => {
+      const detail = (e as CustomEvent).detail as Partial<ToastMessage> | undefined;
+      if (!detail) return;
+      const id = Date.now().toString() + Math.random().toString(36).substring(2, 5);
+      setToasts((prev) => [...prev, { id, type: detail.type || 'info', title: detail.title || 'Notice', ...detail }]);
+    };
+    window.addEventListener('aura-toast', handleCustomToast);
+    return () => window.removeEventListener('aura-toast', handleCustomToast);
+  }, []);
 
   // Validate the session against the backend and load real settings.
   useEffect(() => {
@@ -105,6 +120,13 @@ export const AdminLayout: React.FC = () => {
     navigate('/admin-login');
   };
 
+  const handleUpdateCurrentUser = (u: AdminUser) => {
+    setCurrentUser(u);
+    localStorage.setItem('aura_admin_user', JSON.stringify(u));
+  };
+
+  const closeToast = (id: string) => setToasts((prev) => prev.filter((t) => t.id !== id));
+
   const handleQuickAction = (action: 'add_booking' | 'add_therapist' | 'add_service') => {
     setMobileMenuOpen(false);
     if (action === 'add_booking') navigate('/admin/bookings');
@@ -173,6 +195,7 @@ export const AdminLayout: React.FC = () => {
           onClearNotification={handleClearNotification}
           onQuickAction={handleQuickAction}
           onChangePasswordClick={() => navigate('/admin/change-password')}
+          onProfileClick={() => navigate('/profile')}
           onLogout={handleLogout}
           searchQuery={searchQuery}
           setSearchQuery={setSearchQuery}
@@ -192,10 +215,13 @@ export const AdminLayout: React.FC = () => {
               onUpdateSettings: setSettings,
               currentUser,
               searchQuery,
+              onUpdateCurrentUser: handleUpdateCurrentUser,
             }}
           />
         </main>
       </div>
+
+      <Toast toasts={toasts} onClose={closeToast} />
     </div>
   );
 };

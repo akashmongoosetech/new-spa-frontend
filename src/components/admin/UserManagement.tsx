@@ -34,6 +34,7 @@ export const UserManagement: React.FC<UserManagementProps> = ({ currentUser, sea
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [phone, setPhone] = useState('');
   const [role, setRole] = useState<AdminUser['role']>('admin');
   const [status, setStatus] = useState<'active' | 'inactive'>('active');
 
@@ -69,6 +70,7 @@ export const UserManagement: React.FC<UserManagementProps> = ({ currentUser, sea
     setName('');
     setEmail('');
     setPassword('admin123');
+    setPhone('');
     setRole('admin');
     setStatus('active');
     setShowUserModal(true);
@@ -79,6 +81,7 @@ export const UserManagement: React.FC<UserManagementProps> = ({ currentUser, sea
     setName(u.name);
     setEmail(u.email);
     setPassword('');
+    setPhone(u.phone || '');
     setRole(u.role);
     setStatus(u.status);
     setShowUserModal(true);
@@ -89,9 +92,9 @@ export const UserManagement: React.FC<UserManagementProps> = ({ currentUser, sea
     setSaving(true);
     try {
       if (editingUser) {
-        await api.updateAdminUser(editingUser.id, { name, email, role, status, password: password || undefined });
+        await api.updateAdminUser(editingUser.id, { name, email, role, status, phone, password: password || undefined });
       } else {
-        await api.createAdminUser({ name, email, password, role, status });
+        await api.createAdminUser({ name, email, password, role, status, phone });
       }
       setShowUserModal(false);
       fetchData();
@@ -180,10 +183,25 @@ export const UserManagement: React.FC<UserManagementProps> = ({ currentUser, sea
               filteredUsers.map((u) => (
                 <tr key={u.id} className="hover:bg-gray-50/80 transition-colors">
                   <td className="py-4 px-6 flex items-center gap-3">
-                    <img src={u.avatarUrl} alt={u.name} className="w-8 h-8 rounded-full object-cover ring-2 ring-[#2CB5A0]" />
+                    {u.avatarUrl ? (
+                      <img src={u.avatarUrl} alt={u.name} className="w-8 h-8 rounded-full object-cover ring-2 ring-[#2CB5A0]" />
+                    ) : (
+                      <div className="w-8 h-8 rounded-full bg-[#2CB5A0] ring-2 ring-[#2CB5A0]/40 flex items-center justify-center shrink-0">
+                        <span className="text-[10px] font-bold text-white">
+                          {(u.name || 'A')
+                            .trim()
+                            .split(/\s+/)
+                            .slice(0, 2)
+                            .map((p) => p[0])
+                            .join('')
+                            .toUpperCase()}
+                        </span>
+                      </div>
+                    )}
                     <div>
                       <p className="font-bold text-gray-900">{u.name}</p>
                       <p className="text-[10px] text-gray-400">ID: {u.id}</p>
+                      {u.phone && <p className="text-[10px] text-gray-400">Phone: {u.phone}</p>}
                     </div>
                   </td>
                   <td className="py-4 px-6 font-mono text-gray-700">{u.email}</td>
@@ -303,6 +321,17 @@ export const UserManagement: React.FC<UserManagementProps> = ({ currentUser, sea
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              className="w-full px-3.5 py-2.5 rounded-xl border font-semibold outline-none focus:ring-2 focus:ring-[#2CB5A0]"
+            />
+          </div>
+
+          <div>
+            <label className="block font-bold text-gray-700 mb-1">Phone Number</label>
+            <input
+              type="text"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              placeholder="Optional"
               className="w-full px-3.5 py-2.5 rounded-xl border font-semibold outline-none focus:ring-2 focus:ring-[#2CB5A0]"
             />
           </div>

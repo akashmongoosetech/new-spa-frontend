@@ -5,6 +5,7 @@ import {
   Plus,
   LogOut,
   Key,
+  User,
   CheckCircle2,
   AlertCircle,
   ExternalLink,
@@ -14,6 +15,15 @@ import {
 } from 'lucide-react';
 import { AdminUser, NotificationItem } from '../../types';
 
+const getInitials = (name?: string) =>
+  (name || 'A')
+    .trim()
+    .split(/\s+/)
+    .slice(0, 2)
+    .map((p) => p[0])
+    .join('')
+    .toUpperCase();
+
 interface AdminHeaderProps {
   currentUser: AdminUser | null;
   notifications?: NotificationItem[];
@@ -22,6 +32,7 @@ interface AdminHeaderProps {
   onClearNotification?: (id: string) => void;
   onQuickAction?: (action: 'add_booking' | 'add_therapist' | 'add_service') => void;
   onChangePasswordClick?: () => void;
+  onProfileClick?: () => void;
   onLogout: () => void;
   searchQuery: string;
   setSearchQuery: (q: string) => void;
@@ -41,6 +52,7 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({
   onClearNotification = (_id: string) => {},
   onQuickAction = (_action: 'add_booking' | 'add_therapist' | 'add_service') => {},
   onChangePasswordClick = () => {},
+  onProfileClick = () => {},
   onLogout,
   searchQuery,
   setSearchQuery,
@@ -220,14 +232,17 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({
             onClick={() => setShowProfileMenu(!showProfileMenu)}
             className="flex items-center gap-2.5 p-1.5 rounded-2xl border border-gray-200 hover:bg-gray-50 transition-colors cursor-pointer"
           >
-            <img
-              src={
-                currentUser?.avatarUrl ||
-                'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=200'
-              }
-              alt="User Avatar"
-              className="w-9 h-9 rounded-full object-cover ring-2 ring-[#2CB5A0]"
-            />
+            {currentUser?.avatarUrl ? (
+              <img
+                src={currentUser.avatarUrl}
+                alt="User Avatar"
+                className="w-9 h-9 rounded-full object-cover ring-2 ring-[#2CB5A0]"
+              />
+            ) : (
+              <div className="w-9 h-9 rounded-full bg-[#2CB5A0] ring-2 ring-[#2CB5A0]/40 flex items-center justify-center">
+                <span className="text-xs font-bold text-white">{getInitials(currentUser?.name)}</span>
+              </div>
+            )}
             <div className="text-left hidden md:block pr-1">
               <p className="font-bold text-xs text-gray-900 leading-tight">{currentUser?.name || 'Administrator'}</p>
               <p className="text-[10px] text-gray-500 capitalize">{currentUser?.role || 'super_admin'}</p>
@@ -240,6 +255,15 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({
                 <p className="font-bold text-xs text-gray-900">{currentUser?.name}</p>
                 <p className="text-[11px] text-gray-500">{currentUser?.email}</p>
               </div>
+              <button
+                onClick={() => {
+                  setShowProfileMenu(false);
+                  onProfileClick();
+                }}
+                className="w-full text-left px-3 py-2 rounded-xl hover:bg-gray-50 text-xs font-medium text-gray-700 flex items-center gap-2 cursor-pointer"
+              >
+                <User className="w-4 h-4 text-gray-500" /> My Profile
+              </button>
               <button
                 onClick={() => {
                   setShowProfileMenu(false);

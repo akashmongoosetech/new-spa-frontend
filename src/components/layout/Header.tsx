@@ -34,9 +34,9 @@ export const Header: React.FC<HeaderProps> = ({
   const navItems = [
     { id: 'home', label: 'Home' },
     { id: 'services', label: 'Therapies', hasMega: true },
-    { id: 'about', label: 'About Us' },
+    { id: 'about', label: 'About' },
     { id: 'gallery', label: 'Gallery' },
-    { id: 'blog', label: 'Wellness Blog' },
+    { id: 'blog', label: 'Blog' },
     { id: 'contact', label: 'Contact' },
     { id: 'faq', label: 'FAQ' },
   ];

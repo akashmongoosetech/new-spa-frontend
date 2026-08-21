@@ -140,11 +140,25 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
           {/* User Badge */}
           {currentUser && !isCollapsed && (
             <div className="p-4 mx-3 my-3 rounded-2xl bg-linear-to-r from-gray-900 to-gray-800/90 border border-gray-800 flex items-center gap-3">
+              {currentUser?.avatarUrl ? (
               <img
-                src={currentUser.avatarUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=200'}
+                src={currentUser.avatarUrl}
                 alt={currentUser.name}
                 className="w-10 h-10 rounded-full object-cover ring-2 ring-[#2CB5A0]"
               />
+            ) : (
+              <div className="w-10 h-10 rounded-full bg-[#2CB5A0] ring-2 ring-[#2CB5A0]/40 flex items-center justify-center shrink-0">
+                <span className="text-sm font-bold text-white">
+                  {(currentUser.name || 'A')
+                    .trim()
+                    .split(/\s+/)
+                    .slice(0, 2)
+                    .map((p) => p[0])
+                    .join('')
+                    .toUpperCase()}
+                </span>
+              </div>
+            )}
               <div className="overflow-hidden">
                 <h4 className="font-semibold text-white text-xs truncate">{currentUser.name}</h4>
                 <span className="inline-block px-2 py-0.5 mt-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider bg-[#2CB5A0]/20 text-[#2CB5A0]">
