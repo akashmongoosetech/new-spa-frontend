@@ -193,7 +193,7 @@ export const BookingWizard: React.FC<BookingWizardProps> = ({
                 {step === 4 && '4. Details & Payment Method'}
               </h2>
             </div>
-            {onClose && (
+            {/* {onClose && (
               <button
                 type="button"
                 onClick={onClose}
@@ -202,7 +202,7 @@ export const BookingWizard: React.FC<BookingWizardProps> = ({
               >
                 <X className="w-5 h-5" />
               </button>
-            )}
+            )} */}
           </div>
 
           {/* Steps Progress Pills */}

@@ -203,7 +203,7 @@ export const AdminLayout: React.FC = () => {
           onClearNotification={handleClearNotification}
           onQuickAction={handleQuickAction}
           onChangePasswordClick={() => navigate('/admin/change-password')}
-          onProfileClick={() => setProfileModalOpen(true)}
+          onProfileClick={() => navigate('/profile')}
           onLogout={handleLogout}
           searchQuery={searchQuery}
           setSearchQuery={setSearchQuery}

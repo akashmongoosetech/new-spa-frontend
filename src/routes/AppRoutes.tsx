@@ -1,11 +1,10 @@
 import React, { lazy, Suspense } from 'react';
-import { BrowserRouter, Routes, Route, Outlet } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { renderPublicRoutes } from './PublicRoutes';
 import { renderAdminRoutes } from './AdminRoutes';
 import { AuthLayout } from '../layouts/AuthLayout';
 import { LoadingSpinner } from '../components/ui/LoadingSpinner';
 import { RouteMetadataManager } from '../components/ui/RouteMetadataManager';
-import { ProtectedRoute } from './ProtectedRoute';
 
 const AdminLoginPage = lazy(() => import('../pages/Auth/AdminLoginPage'));
 const AdminSignupPage = lazy(() => import('../pages/Auth/AdminSignupPage'));
@@ -13,6 +12,7 @@ const ForgotPasswordPage = lazy(() => import('../pages/Auth/ForgotPasswordPage')
 const ResetPasswordPage = lazy(() => import('../pages/Auth/ResetPasswordPage'));
 const NotFound = lazy(() => import('../pages/NotFound'));
 const Unauthorized = lazy(() => import('../pages/Unauthorized'));
+const ProfilePage = lazy(() => import('../pages/ProfilePage'));
 
 export const AppRoutes: React.FC = () => {
   return (
@@ -23,7 +23,16 @@ export const AppRoutes: React.FC = () => {
         {renderPublicRoutes()}
 
         {/* Protected User/Manager/Admin Routes */}
-        
+        <Route
+          element={
+            <Suspense fallback={<LoadingSpinner fullScreen label="Securing session..." />}>
+              <AuthLayout />
+            </Suspense>
+          }
+        >
+          <Route path="profile" element={<ProfilePage />} />
+        </Route>
+
         {/* Auth Routes */}
         <Route
           element={
