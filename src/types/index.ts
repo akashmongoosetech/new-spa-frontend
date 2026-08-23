@@ -77,6 +77,9 @@ export interface FAQ {
   question: string;
   answer: string;
   category: string;
+  order: number;
+  active: number;
+  isPublished: number;
 }
 
 export interface Coupon {

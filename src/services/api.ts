@@ -614,8 +614,9 @@ export const api = {
   },
 
   // FAQs
-  async getFaqs(): Promise<any[]> {
-    const { data } = await http.get<any[]>('/faqs');
+  async getFaqs(published?: 'all' | 'true' | 'false'): Promise<any[]> {
+    const params = published ? { published } : {};
+    const { data } = await http.get<any[]>('/faqs', { params });
     return data;
   },
 
@@ -631,6 +632,11 @@ export const api = {
 
   async deleteFaq(id: string): Promise<{ success: boolean }> {
     const res = await http.delete<{ success: boolean }>(`/faqs/${id}`);
+    return res.data;
+  },
+
+  async toggleFaqStatus(id: string): Promise<any> {
+    const res = await http.patch<any>(`/faqs/${id}/toggle`);
     return res.data;
   },
 
