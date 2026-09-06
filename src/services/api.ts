@@ -150,13 +150,26 @@ function mapBlogPost(b: any): BlogPost {
     slug: b.slug,
     category: b.category,
     author: b.author,
+    therapistName: b.therapist_name || b.therapistName,
+    therapistAvatarUrl: b.therapist_avatar_url || b.therapistAvatarUrl,
     date: b.date || b.created_at,
     readTime: b.read_time || `${Math.max(1, Math.ceil((b.content || '').split(' ').length / 200))} min read`,
     summary: b.excerpt || b.summary,
     content: b.content,
     imageUrl: b.image_url || b.cover_image,
     tags: b.tags || [],
-    published: b.published !== false && b.published !== 0
+    published: b.published !== false && b.published !== 0,
+    status: b.status,
+    featureOnHomePage: b.feature_on_home_page === 1 || b.featureOnHomePage === true,
+    seo: b.seo ? {
+      metaTitle: b.seo.meta_title || b.seo.metaTitle,
+      metaDescription: b.seo.meta_description || b.seo.metaDescription,
+      keywords: b.seo.keywords,
+    } : undefined,
+    safeExcerpt: b.safe_excerpt,
+    excerptHtml: b.excerpt_html,
+    createdAt: b.created_at,
+    updatedAt: b.updated_at,
   };
 }
 
@@ -557,6 +570,31 @@ export const api = {
     return data.map(mapBlogPost);
   },
 
+  async getPublicBlogs(): Promise<BlogPost[]> {
+    const { data } = await http.get<BlogPost[]>('/blogs/public');
+    return data.map(mapBlogPost);
+  },
+
+  async getFeaturedBlogs(): Promise<BlogPost[]> {
+    const { data } = await http.get<BlogPost[]>('/blogs/featured');
+    return data.map(mapBlogPost);
+  },
+
+  async getBlogBySlug(slug: string): Promise<BlogPost | null> {
+    try {
+      const { data } = await http.get<BlogPost>(`/blogs/slug/${slug}`);
+      return mapBlogPost(data);
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.status === 404) return null;
+      throw error;
+    }
+  },
+
+  async getBlogById(id: string): Promise<BlogPost> {
+    const { data } = await http.get<BlogPost>(`/blogs/${id}`);
+    return mapBlogPost(data);
+  },
+
   async createBlog(data: Partial<BlogPost>): Promise<BlogPost> {
     const res = await http.post<BlogPost>('/blogs', {
       title: data.title,
@@ -564,8 +602,16 @@ export const api = {
       content: data.content,
       category: data.category,
       author: data.author,
+      therapistName: data.therapistName,
+      therapistAvatarUrl: data.therapistAvatarUrl,
       imageUrl: data.imageUrl,
-      tags: data.tags
+      coverImage: data.imageUrl,
+      tags: data.tags,
+      readTime: data.readTime,
+      seo: data.seo,
+      status: data.status,
+      featureOnHomePage: data.featureOnHomePage,
+      slug: data.slug,
     });
     return mapBlogPost(res.data);
   },
@@ -577,8 +623,16 @@ export const api = {
       content: data.content,
       category: data.category,
       author: data.author,
+      therapistName: data.therapistName,
+      therapistAvatarUrl: data.therapistAvatarUrl,
       imageUrl: data.imageUrl,
-      tags: data.tags
+      coverImage: data.imageUrl,
+      tags: data.tags,
+      readTime: data.readTime,
+      seo: data.seo,
+      status: data.status,
+      featureOnHomePage: data.featureOnHomePage,
+      slug: data.slug,
     });
     return mapBlogPost(res.data);
   },
@@ -586,6 +640,21 @@ export const api = {
   async deleteBlog(id: string): Promise<{ success: boolean }> {
     const res = await http.delete<{ success: boolean }>(`/blogs/${id}`);
     return res.data;
+  },
+
+  async toggleBlogPublish(id: string): Promise<BlogPost> {
+    const res = await http.patch<BlogPost>(`/blogs/${id}/publish`);
+    return mapBlogPost(res.data);
+  },
+
+  async toggleBlogFeature(id: string): Promise<BlogPost> {
+    const res = await http.patch<BlogPost>(`/blogs/${id}/feature`);
+    return mapBlogPost(res.data);
+  },
+
+  async toggleBlogStatus(id: string): Promise<BlogPost> {
+    const res = await http.patch<BlogPost>(`/blogs/${id}/status`);
+    return mapBlogPost(res.data);
   },
 
   // Gallery

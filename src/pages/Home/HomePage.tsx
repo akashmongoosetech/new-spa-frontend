@@ -21,7 +21,7 @@ export const HomePageWrapper: React.FC = () => {
       try {
         const [t, b] = await Promise.all([
           api.getTestimonials().catch(() => []),
-          api.getBlogs().catch(() => []),
+          api.getFeaturedBlogs().catch(() => []),
         ]);
         if (Array.isArray(t)) setTestimonials(t);
         if (Array.isArray(b)) setBlogs(b);

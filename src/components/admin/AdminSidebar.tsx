@@ -32,7 +32,8 @@ export type AdminTab =
   | 'settings'
   | 'reports'
   | 'audit'
-  | 'faqs';
+  | 'faqs'
+  | 'blogs';
 
 interface AdminSidebarProps {
   activeTab: AdminTab;
@@ -71,7 +72,7 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
     if (tab === 'applications') return role === 'super_admin';
     if (role === 'super_admin' || role === 'admin') return true;
     if (role === 'manager') {
-      return ['overview', 'bookings', 'contacts', 'therapists', 'services', 'schedule', 'reports', 'faqs'].includes(tab);
+      return ['overview', 'bookings', 'contacts', 'therapists', 'services', 'schedule', 'reports', 'faqs', 'blogs'].includes(tab);
     }
     if (role === 'receptionist') {
       return ['overview', 'bookings', 'contacts', 'schedule'].includes(tab);
@@ -88,6 +89,7 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
     { id: 'schedule', label: 'Schedule & Calendar', icon: Clock },
     { id: 'reports', label: 'Reports & Export', icon: FileText },
     { id: 'faqs', label: 'FAQ Management', icon: HelpCircle },
+    { id: 'blogs', label: 'Blog Management', icon: FileText },
     { id: 'users', label: 'Staff & RBAC', icon: Shield },
     { id: 'applications', label: 'Staff Applications', icon: UserPlus },
     { id: 'settings', label: 'System Settings', icon: Settings },

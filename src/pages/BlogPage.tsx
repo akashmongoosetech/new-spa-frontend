@@ -27,6 +27,16 @@ export const BlogPage: React.FC<BlogPageProps> = ({ blogs }) => {
     return matchesCat && matchesSearch;
   });
 
+  // Use safeExcerpt for card preview (plain text, safe for line-clamp)
+  const getCardExcerpt = (blog: BlogPost) => {
+    return blog.safeExcerpt || blog.summary || '';
+  };
+
+  // Use excerptHtml for modal preview (rich text)
+  const getModalExcerpt = (blog: BlogPost) => {
+    return blog.excerptHtml || blog.summary || '';
+  };
+
   return (
     <div className="py-12 bg-[#FAFAFA] font-sans min-h-screen">
       <SEO title="Men's Health & Wellness Articles | Tripod Wellness Blog" description="Read articles on deep tissue recovery, Swedish comparison guides, and executive health maintenance." />
@@ -86,9 +96,10 @@ export const BlogPage: React.FC<BlogPageProps> = ({ blogs }) => {
                   <h2 className="text-lg font-serif font-bold text-gray-900 leading-snug hover:text-[#2CB5A0] transition-colors">
                     {blog.title}
                   </h2>
-                  <p className="text-xs text-gray-600 line-clamp-3 leading-relaxed">
-                    {blog.summary}
-                  </p>
+                  <div 
+                    className="text-xs text-gray-600 line-clamp-3 leading-relaxed"
+                    dangerouslySetInnerHTML={{ __html: getCardExcerpt(blog) }}
+                  />
                 </div>
               </div>
 
@@ -118,7 +129,18 @@ export const BlogPage: React.FC<BlogPageProps> = ({ blogs }) => {
               <span>{readingBlog.readTime}</span>
             </div>
             <img src={readingBlog.imageUrl} alt={readingBlog.title} className="w-full h-60 object-cover rounded-2xl" />
-            <p className="text-xs text-gray-700 leading-relaxed whitespace-pre-line">{readingBlog.content}</p>
+            <div 
+              className="prose prose-sm max-w-none text-gray-700"
+              dangerouslySetInnerHTML={{ __html: getModalExcerpt(readingBlog) }}
+            />
+            <div className="pt-4 text-center">
+              <button
+                onClick={() => setReadingBlog(null)}
+                className="inline-flex items-center gap-2 text-sm font-bold text-[#2CB5A0] hover:underline cursor-pointer"
+              >
+                Read Full Article →
+              </button>
+            </div>
           </div>
         )}
       </Modal>

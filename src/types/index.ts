@@ -111,6 +111,8 @@ export interface BlogPost {
   slug: string;
   category: string;
   author: string;
+  therapistName?: string;
+  therapistAvatarUrl?: string;
   date: string;
   readTime: string;
   summary: string;
@@ -118,6 +120,17 @@ export interface BlogPost {
   imageUrl: string;
   tags: string[];
   published: boolean;
+  status?: 'active' | 'inactive';
+  featureOnHomePage?: boolean;
+  seo?: {
+    metaTitle?: string;
+    metaDescription?: string;
+    keywords?: string[];
+  };
+  safeExcerpt?: string;
+  excerptHtml?: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface ContactMessage {

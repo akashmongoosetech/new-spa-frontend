@@ -52,6 +52,7 @@ const TAB_PATH: Record<AdminTab, string> = {
   schedule: '/admin/calendar',
   reports: '/admin/reports',
   faqs: '/admin/faqs',
+  blogs: '/admin/blogs',
   users: '/admin/users',
   applications: '/admin/applications',
   settings: '/admin/settings',

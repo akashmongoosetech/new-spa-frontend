@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link, useOutletContext } from 'react-router-dom';
-import { Clock, User, Tag, ArrowLeft, Calendar } from 'lucide-react';
+import { Clock, User, Tag, ArrowLeft, Calendar, Image as ImageIcon, MapPin } from 'lucide-react';
 import { mockSettings } from '../../data/mockData';
 import { api } from '../../services/api';
 import { SEO } from '../../components/ui/SEO';
@@ -15,39 +15,54 @@ export const BlogDetailPage: React.FC = () => {
   }>() || {};
 
   const settings = context.settings || mockSettings;
-  const [blogs, setBlogs] = useState<any[]>([]);
-  const [loaded, setLoaded] = useState(false);
+  const [blog, setBlog] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     (async () => {
       try {
-        const b = await api.getBlogs();
-        if (Array.isArray(b)) setBlogs(b);
-      } catch (err) {
-        // keep empty state
-      } finally {
-        setLoaded(true);
+        const data = await api.getBlogBySlug(slug!);
+        if (data) {
+          setBlog(data);
+        } else {
+          setError('Article not found');
+        }
+        setLoading(false);
+      } catch (err: any) {
+        setError(err?.message || 'Failed to load article');
+        setLoading(false);
       }
     })();
-  }, []);
+  }, [slug]);
 
-  const blog = blogs.find(
-    (b) => b.slug === slug || b.id === slug
-  );
-
-  if (!loaded) {
+  if (loading) {
     return <LoadingSpinner fullScreen label="Loading article..." />;
   }
 
-  if (!blog) {
+  if (error || !blog) {
     return <NotFound />;
   }
+
+  // Format date nicely
+  const formatDate = (dateStr: string) => {
+    try {
+      return new Date(dateStr).toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+      });
+    } catch {
+      return dateStr;
+    }
+  };
 
   return (
     <div className="py-12 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto font-sans min-h-screen">
       <SEO
-        title={`${blog.title} | ${settings.businessName} Blog`}
-        description={blog.summary}
+        title={blog.seo?.metaTitle || `${blog.title} | ${settings.businessName} Blog`}
+        description={blog.seo?.metaDescription || blog.summary}
+        keywords={blog.seo?.keywords?.join(', ')}
       />
 
       <Link
@@ -70,36 +85,44 @@ export const BlogDetailPage: React.FC = () => {
           </h1>
 
           <div className="flex flex-wrap items-center gap-4 text-xs text-gray-500 border-b pb-6">
-            <div className="flex items-center gap-1.5 font-medium text-gray-800">
-              <User className="w-4 h-4 text-[#2CB5A0]" />
-              <span>{blog.author}</span>
-            </div>
+            {(blog.therapistName || blog.author) && (
+              <div className="flex items-center gap-1.5 font-medium text-gray-800">
+                <User className="w-4 h-4 text-[#2CB5A0]" />
+                <span>{blog.therapistName || blog.author}</span>
+              </div>
+            )}
             <div className="flex items-center gap-1.5">
               <Clock className="w-4 h-4 text-gray-400" />
               <span>{blog.readTime}</span>
             </div>
             <div className="flex items-center gap-1.5">
               <Calendar className="w-4 h-4 text-gray-400" />
-              <span>{blog.date}</span>
+              <span>{formatDate(blog.date)}</span>
             </div>
           </div>
         </div>
 
-        <div className="rounded-2xl overflow-hidden shadow-xl aspect-video">
-          <img
-            src={blog.imageUrl}
-            alt={blog.title}
-            className="w-full h-full object-cover"
-          />
-        </div>
+        {blog.imageUrl && (
+          <div className="rounded-2xl overflow-hidden shadow-xl aspect-video">
+            <img
+              src={blog.imageUrl}
+              alt={blog.title}
+              className="w-full h-full object-cover"
+            />
+          </div>
+        )}
 
         <div className="prose prose-lg max-w-none text-gray-700 font-light leading-relaxed space-y-6">
-          <p className="text-xl text-gray-800 font-normal leading-relaxed border-l-4 border-[#2CB5A0] pl-4 italic">
-            {blog.summary}
-          </p>
-          <div className="whitespace-pre-line text-base text-gray-700 leading-relaxed">
-            {blog.content}
-          </div>
+          {blog.excerptHtml && (
+            <div 
+              className="text-xl text-gray-800 font-normal leading-relaxed border-l-4 border-[#2CB5A0] pl-4 italic"
+              dangerouslySetInnerHTML={{ __html: blog.excerptHtml }}
+            />
+          )}
+          <div 
+            className="article-content text-base text-gray-700 leading-relaxed"
+            dangerouslySetInnerHTML={{ __html: blog.content }}
+          />
         </div>
 
         {blog.tags && blog.tags.length > 0 && (
@@ -111,6 +134,20 @@ export const BlogDetailPage: React.FC = () => {
                   #{t}
                 </span>
               ))}
+            </div>
+          </div>
+        )}
+
+        {blog.therapistName && blog.therapistAvatarUrl && (
+          <div className="bg-gray-50 rounded-2xl p-6 flex items-start gap-4">
+            <img
+              src={blog.therapistAvatarUrl}
+              alt={blog.therapistName}
+              className="w-16 h-16 rounded-full object-cover ring-2 ring-[#2CB5A0]/20"
+            />
+            <div className="space-y-1">
+              <h4 className="font-semibold text-gray-900">{blog.therapistName}</h4>
+              <p className="text-xs text-gray-500">Licensed Therapist</p>
             </div>
           </div>
         )}
