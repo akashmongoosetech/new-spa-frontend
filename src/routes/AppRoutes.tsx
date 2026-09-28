@@ -2,6 +2,7 @@ import React, { lazy, Suspense } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { renderPublicRoutes } from './PublicRoutes';
 import { renderAdminRoutes } from './AdminRoutes';
+import { ProtectedRoute } from './ProtectedRoute';
 import { AuthLayout } from '../layouts/AuthLayout';
 import { LoadingSpinner } from '../components/ui/LoadingSpinner';
 import { RouteMetadataManager } from '../components/ui/RouteMetadataManager';
@@ -22,15 +23,22 @@ export const AppRoutes: React.FC = () => {
         {/* Public Routes */}
         {renderPublicRoutes()}
 
-        {/* Protected User/Manager/Admin Routes */}
+        {/* Protected User/Manager/Admin Routes — full-width console layout */}
         <Route
           element={
             <Suspense fallback={<LoadingSpinner fullScreen label="Securing session..." />}>
-              <AuthLayout />
+              <AuthLayout wide />
             </Suspense>
           }
         >
-          <Route path="profile" element={<ProfilePage />} />
+          <Route
+            path="profile"
+            element={
+              <ProtectedRoute>
+                <ProfilePage />
+              </ProtectedRoute>
+            }
+          />
         </Route>
 
         {/* Auth Routes */}

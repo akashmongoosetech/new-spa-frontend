@@ -28,7 +28,7 @@ export const AdminProfilePage: React.FC = () => {
   }
 
   return (
-    <div className="mx-auto w-full max-w-5xl space-y-6">
+    <div className="w-full space-y-6">
       <div>
         <h1 className="text-xl font-serif font-bold text-gray-900 sm:text-2xl">My Profile</h1>
         <p className="mt-1 text-xs text-gray-500">
@@ -45,7 +45,7 @@ export const AdminProfilePage: React.FC = () => {
         onRemoveAvatar={form.handleRemoveAvatar}
       />
 
-      <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-[280px_minmax(0,1fr)]">
+      <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-[320px_minmax(0,1fr)] xl:grid-cols-[340px_minmax(0,1fr)]">
         <aside className="lg:sticky lg:top-6">
           <AccountCard user={user} active={active} />
         </aside>

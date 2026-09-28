@@ -12,9 +12,9 @@ export const ProfileEmptyState: React.FC<{ loading: boolean; tone?: ProfileTone 
   if (loading) {
     const pulse = dark ? 'bg-white/10' : 'bg-gray-200/70';
     return (
-      <div className="max-w-5xl space-y-6" aria-label="Loading profile" aria-busy="true">
+      <div className="w-full space-y-6" aria-label="Loading profile" aria-busy="true">
         <div className={`h-44 animate-pulse rounded-2xl sm:h-52 ${pulse}`} />
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-[280px_1fr]">
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-[320px_1fr]">
           <div className={`h-56 animate-pulse rounded-2xl ${pulse}`} />
           <div className="space-y-6">
             <div className={`h-64 animate-pulse rounded-2xl ${pulse}`} />

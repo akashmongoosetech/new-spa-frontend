@@ -92,7 +92,7 @@ export const ProfilePage: React.FC<ProfileModalProps> = ({ modalMode = false, on
   };
 
   return (
-    <div className="mx-auto w-full max-w-5xl space-y-6">
+    <div className="w-full space-y-6">
       {modalMode ? (
         <div
           className={`flex items-center justify-between border-b pb-4 ${
@@ -134,7 +134,7 @@ export const ProfilePage: React.FC<ProfileModalProps> = ({ modalMode = false, on
         onRemoveAvatar={form.handleRemoveAvatar}
       />
 
-      <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-[280px_minmax(0,1fr)]">
+      <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-[320px_minmax(0,1fr)] xl:grid-cols-[340px_minmax(0,1fr)]">
         <aside className="space-y-6 lg:sticky lg:top-6">
           <AccountCard user={user} active={active} tone={tone} />
           {!modalMode ? (

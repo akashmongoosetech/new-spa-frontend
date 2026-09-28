@@ -2,7 +2,7 @@ import React from 'react';
 import { Outlet, Link } from 'react-router-dom';
 import { ArrowLeft, Shield } from 'lucide-react';
 
-export const AuthLayout: React.FC = () => {
+export const AuthLayout: React.FC<{ wide?: boolean }> = ({ wide = false }) => {
   return (
     <div className="min-h-screen bg-[#0F172A] text-white flex flex-col justify-between p-4 sm:p-6 lg:p-8 font-sans antialiased">
       {/* Top Bar */}
@@ -17,15 +17,17 @@ export const AuthLayout: React.FC = () => {
         </div>
       </div>
 
-      {/* Center Auth Content */}
-      <div className="w-full max-w-md mx-auto my-8">
-        <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-white p-1 shadow-xl shadow-[#2CB5A0]/10 mb-4 overflow-hidden">
-            <img src="/logo.png" alt="Tripod Wellness" className="w-full h-full object-contain rounded-[10px]" />
+      {/* Center Auth Content — narrow for sign-in forms, full-width for console pages */}
+      <div className={`w-full mx-auto my-8 ${wide ? 'max-w-6xl' : 'max-w-md'}`}>
+        {!wide ? (
+          <div className="text-center mb-8">
+            <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-white p-1 shadow-xl shadow-[#2CB5A0]/10 mb-4 overflow-hidden">
+              <img src="/logo.png" alt="Tripod Wellness" className="w-full h-full object-contain rounded-[10px]" />
+            </div>
+            <h1 className="text-2xl font-serif font-bold text-white tracking-wide">TRIPOD WELLNESS</h1>
+            <p className="text-xs font-medium text-gray-400 tracking-widest uppercase mt-1">Management Console</p>
           </div>
-          <h1 className="text-2xl font-serif font-bold text-white tracking-wide">TRIPOD WELLNESS</h1>
-          <p className="text-xs font-medium text-gray-400 tracking-widest uppercase mt-1">Management Console</p>
-        </div>
+        ) : null}
 
         <Outlet />
       </div>
