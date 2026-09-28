@@ -67,6 +67,8 @@ export function useProfileForm(context: ProfileFormContext) {
 
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [avatarUrlInput, setAvatarUrlInput] = useState('');
+  const [savingUrl, setSavingUrl] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
 
   // Populate the form from the freshest user object, then fall back to storage.
@@ -187,6 +189,35 @@ export function useProfileForm(context: ProfileFormContext) {
     }
   };
 
+  const handleSaveAvatarUrl = async () => {
+    const value = avatarUrlInput.trim();
+    if (!value) {
+      showToast({ type: 'error', title: 'Enter a URL', message: 'Paste an https image link first.' });
+      return;
+    }
+    setSavingUrl(true);
+    try {
+      const updated = await api.setAvatarUrl(value);
+      context.onUpdateCurrentUser?.(updated);
+      try {
+        localStorage.setItem('aura_admin_user', JSON.stringify(updated));
+      } catch {
+        /* ignore */
+      }
+      setUser(updated);
+      setAvatarUrlInput('');
+      showToast({ type: 'success', title: 'Profile picture updated' });
+    } catch (err: unknown) {
+      showToast({
+        type: 'error',
+        title: 'Invalid image link',
+        message: err instanceof Error ? err.message : 'Could not use that image URL.',
+      });
+    } finally {
+      setSavingUrl(false);
+    }
+  };
+
   const handleRemoveAvatar = async () => {
     setUploading(true);
     try {
@@ -233,10 +264,14 @@ export function useProfileForm(context: ProfileFormContext) {
     },
     saving,
     uploading,
+    avatarUrlInput,
+    setAvatarUrlInput,
+    savingUrl,
     fileRef,
     validateProfile,
     handleSave,
     handleAvatarChange,
+    handleSaveAvatarUrl,
     handleRemoveAvatar,
   };
 }

@@ -1,5 +1,5 @@
-import React from 'react';
-import { Camera, Loader2, Mail, Phone, Trash2 } from 'lucide-react';
+import React, { useState } from 'react';
+import { Camera, Check, Link2, Loader2, Mail, Phone, Trash2, X } from 'lucide-react';
 import { AdminUser } from '../../types';
 import { formatRole, getInitials } from './useProfileForm';
 import type { ProfileTone } from './profileTheme';
@@ -10,6 +10,10 @@ interface ProfileCoverProps {
   active: boolean;
   uploading: boolean;
   tone?: ProfileTone;
+  avatarUrlInput: string;
+  onAvatarUrlInputChange: (v: string) => void;
+  savingUrl: boolean;
+  onSaveAvatarUrl: () => void;
   fileRef: React.RefObject<HTMLInputElement | null>;
   onAvatarChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onRemoveAvatar: () => void;
@@ -39,11 +43,19 @@ export const ProfileCover: React.FC<ProfileCoverProps> = ({
   active,
   uploading,
   tone = 'light',
+  avatarUrlInput,
+  onAvatarUrlInputChange,
+  savingUrl,
+  onSaveAvatarUrl,
   fileRef,
   onAvatarChange,
   onRemoveAvatar,
 }) => {
   const dark = tone === 'dark';
+  const [showUrlForm, setShowUrlForm] = useState(false);
+  const [previewOk, setPreviewOk] = useState(true);
+  const previewUrl = avatarUrlInput.trim();
+  const showPreview = /^https:\/\//i.test(previewUrl) && previewOk;
   const pill = dark
     ? rolePill[user.role] || 'border-white/20 bg-white/10 text-gray-200'
     : rolePillLight[user.role] || 'border-gray-200 bg-gray-100 text-gray-700';
@@ -161,6 +173,92 @@ export const ProfileCover: React.FC<ProfileCoverProps> = ({
         </div>
       </div>
       <input ref={fileRef} type="file" accept="image/*" hidden onChange={onAvatarChange} />
+
+      <div className={`px-4 pb-5 sm:px-6 ${dark ? 'border-white/10' : 'border-gray-100'} border-t`}>
+        <button
+          type="button"
+          aria-expanded={showUrlForm}
+          onClick={() => setShowUrlForm((v) => !v)}
+          className={`mt-3 inline-flex min-h-[36px] items-center gap-1.5 text-xs font-bold transition-colors ${
+            dark ? 'text-[#6FD3C4] hover:text-white' : 'text-[#158c7c] hover:text-[#0f6b5e]'
+          }`}
+        >
+          <Link2 className="h-3.5 w-3.5" />
+          {showUrlForm ? 'Hide image link' : 'Use image link instead'}
+        </button>
+
+        {showUrlForm ? (
+          <div className="mt-2 flex flex-col gap-2">
+            <div className="flex flex-col gap-2 sm:flex-row">
+              <label htmlFor="pf-avatar-url" className="sr-only">
+                Profile picture image URL
+              </label>
+              <input
+                id="pf-avatar-url"
+                type="url"
+                inputMode="url"
+                autoComplete="url"
+                placeholder="https://example.com/photo.jpg"
+                value={avatarUrlInput}
+                onChange={(e) => {
+                  onAvatarUrlInputChange(e.target.value);
+                  setPreviewOk(true);
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault();
+                    onSaveAvatarUrl();
+                  }
+                }}
+                className={`min-h-[44px] flex-1 rounded-xl border p-3 text-sm focus:outline-none focus:ring-1 focus:ring-[#2CB5A0] ${
+                  dark
+                    ? 'border-white/10 bg-black/40 text-white placeholder:text-gray-500 focus:border-[#2CB5A0]'
+                    : 'border-gray-300 bg-white text-gray-900 placeholder:text-gray-400 focus:border-[#2CB5A0]'
+                }`}
+              />
+              <div className="flex gap-2">
+                <button
+                  type="button"
+                  onClick={onSaveAvatarUrl}
+                  disabled={savingUrl || !previewUrl}
+                  className="inline-flex min-h-[44px] items-center justify-center gap-1.5 rounded-xl bg-[#2CB5A0] px-4 py-2.5 text-xs font-bold text-white transition-colors hover:bg-[#259b89] disabled:opacity-50"
+                >
+                  {savingUrl ? <Loader2 className="h-4 w-4 animate-spin" /> : <Check className="h-4 w-4" />}
+                  {savingUrl ? 'Saving…' : 'Save'}
+                </button>
+                <button
+                  type="button"
+                  aria-label="Clear image link"
+                  onClick={() => {
+                    onAvatarUrlInputChange('');
+                    setPreviewOk(true);
+                  }}
+                  className={`inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-xl transition-colors ${
+                    dark ? 'bg-white/5 text-gray-300 hover:bg-white/10' : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
+                  }`}
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              </div>
+            </div>
+            <div className="flex items-center gap-3">
+              {showPreview ? (
+                <img
+                  src={previewUrl}
+                  alt="Image link preview"
+                  onError={() => setPreviewOk(false)}
+                  className="h-12 w-12 rounded-full object-cover ring-1 ring-[#C7A36A]"
+                />
+              ) : null}
+              <p className={`text-[11px] ${dark ? 'text-gray-500' : 'text-gray-400'}`}>
+                {previewUrl && !previewOk
+                  ? 'That link could not be loaded as an image.'
+                  : 'Paste an https link ending in .jpg, .png, .webp or .gif.'}
+              </p>
+            </div>
+          </div>
+        ) : null}
+      </div>
     </section>
   );
 };

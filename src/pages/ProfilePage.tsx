@@ -129,6 +129,10 @@ export const ProfilePage: React.FC<ProfileModalProps> = ({ modalMode = false, on
         active={active}
         uploading={uploading}
         tone={tone}
+        avatarUrlInput={form.avatarUrlInput}
+        onAvatarUrlInputChange={form.setAvatarUrlInput}
+        savingUrl={form.savingUrl}
+        onSaveAvatarUrl={form.handleSaveAvatarUrl}
         fileRef={fileRef}
         onAvatarChange={form.handleAvatarChange}
         onRemoveAvatar={form.handleRemoveAvatar}

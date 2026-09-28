@@ -920,6 +920,21 @@ export const api = {
     return mapAdminUser(res.data);
   },
 
+  // Avatar from a remote https image URL (all roles — backend validates).
+  async setAvatarUrl(avatarUrl: string): Promise<AdminUser> {
+    const value = String(avatarUrl || '').trim();
+    if (!/^https:\/\//i.test(value)) throw new Error('Image URL must start with https://');
+    if (!/\.(jpe?g|png|webp|gif)(\?.*)?$/i.test(value.split('?')[0])) {
+      throw new Error('Image URL must end in .jpg, .png, .webp or .gif');
+    }
+    try {
+      const res = await http.put<AdminUser>('/admin/profile-picture/url', { avatarUrl: value });
+      return mapAdminUser(res.data);
+    } catch (error) {
+      throw new Error(getErrorMessage(error, 'Could not set profile picture from URL'));
+    }
+  },
+
   // Admin User Management
   async getAdminUsers(): Promise<AdminUser[]> {
     const { data } = await http.get<AdminUser[]>('/admin/users');

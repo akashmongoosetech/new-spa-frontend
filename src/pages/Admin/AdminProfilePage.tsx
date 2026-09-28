@@ -40,6 +40,11 @@ export const AdminProfilePage: React.FC = () => {
         user={user}
         active={active}
         uploading={uploading}
+        tone="light"
+        avatarUrlInput={form.avatarUrlInput}
+        onAvatarUrlInputChange={form.setAvatarUrlInput}
+        savingUrl={form.savingUrl}
+        onSaveAvatarUrl={form.handleSaveAvatarUrl}
         fileRef={fileRef}
         onAvatarChange={form.handleAvatarChange}
         onRemoveAvatar={form.handleRemoveAvatar}
