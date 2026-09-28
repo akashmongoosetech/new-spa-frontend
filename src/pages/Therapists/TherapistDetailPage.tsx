@@ -93,7 +93,7 @@ export const TherapistDetailPage: React.FC = () => {
             <div className="space-y-3 pt-4 border-t">
               <h3 className="font-serif font-bold text-gray-900 text-lg">Specialties & Techniques</h3>
               <div className="flex flex-wrap gap-2">
-                {therapist.specialties.map((spec, i) => (
+                {(therapist.specialties || []).map((spec: string, i: number) => (
                   <span
                     key={i}
                     className="px-3 py-1.5 bg-[#2CB5A0]/10 text-[#2CB5A0] rounded-lg text-xs font-semibold flex items-center gap-1.5"

@@ -19,6 +19,7 @@ export const BookingLookupModal: React.FC<BookingLookupModalProps> = ({
   services = [],
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
+  const [emailQuery, setEmailQuery] = useState('');
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
   const [foundBooking, setFoundBooking] = useState<Booking | null>(null);
@@ -33,7 +34,13 @@ export const BookingLookupModal: React.FC<BookingLookupModalProps> = ({
     setFoundBooking(null);
 
     try {
-      const result = await api.lookupBooking(searchQuery);
+      const isRef = /^AL-/i.test(searchQuery.trim());
+      if (isRef && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailQuery.trim())) {
+        setErrorMsg('For a booking reference, also enter the email used at booking.');
+        setLoading(false);
+        return;
+      }
+      const result = await api.lookupBooking(searchQuery.trim(), isRef ? emailQuery.trim() : undefined);
       if (!result) {
         setErrorMsg('No appointment found matching that Booking Reference or Email address.');
       } else {
@@ -71,11 +78,23 @@ export const BookingLookupModal: React.FC<BookingLookupModalProps> = ({
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="e.g. AURA-74921 or client@example.com"
+                  placeholder="e.g. AL-20240101-001 or client@example.com"
                   className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 text-sm font-medium focus:outline-none focus:border-[#2CB5A0] focus:ring-1 focus:ring-[#2CB5A0]"
                 />
                 <Search className="w-4 h-4 text-gray-400 absolute left-3.5 top-3.5" />
               </div>
+            </div>
+            <div>
+              <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">
+                Email (required for booking references):
+              </label>
+              <input
+                type="email"
+                value={emailQuery}
+                onChange={(e) => setEmailQuery(e.target.value)}
+                placeholder="Email used at booking"
+                className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm font-medium focus:outline-none focus:border-[#2CB5A0] focus:ring-1 focus:ring-[#2CB5A0]"
+              />
             </div>
 
             {errorMsg && (

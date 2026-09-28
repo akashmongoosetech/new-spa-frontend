@@ -57,8 +57,13 @@ export const ProfilePage: React.FC<ProfileModalProps> = ({
   const loaded = context.currentUser;
 
   const [user, setUser] = useState<AdminUser | null>(() => {
-    const stored = localStorage.getItem('aura_admin_user');
-    return stored ? JSON.parse(stored) : null;
+    try {
+      const stored = localStorage.getItem('aura_admin_user');
+      return stored ? JSON.parse(stored) : null;
+    } catch {
+      localStorage.removeItem('aura_admin_user');
+      return null;
+    }
   });
 
   const [firstName, setFirstName] = useState('');

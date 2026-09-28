@@ -13,7 +13,7 @@ export const AdminSeoPage: React.FC = () => {
   useEffect(() => {
     (async () => {
       try {
-        const s = await api.getSettings();
+        const s = await api.getFullSettings();
         setMetaTitle(s.metaTitle || '');
         setMetaDescription(s.metaDescription || '');
         setKeywords(s.keywords || '');

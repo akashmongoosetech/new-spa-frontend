@@ -161,12 +161,26 @@ export const Layout: React.FC<LayoutProps> = ({
 
   const activeTab = propActiveTab || getActiveTabFromPath(location.pathname);
 
+  const TAB_ROUTES: Record<string, string> = {
+    home: '/',
+    services: '/services',
+    about: '/about',
+    gallery: '/gallery',
+    therapists: '/therapists',
+    booking: '/booking',
+    contact: '/contact',
+    blog: '/blog',
+    faq: '/faq',
+    privacy: '/privacy-policy',
+    terms: '/terms-and-conditions',
+    admin: '/admin/dashboard',
+  };
+
   const handleNavigateTab = (tab: string) => {
     if (propSetActiveTab) {
       propSetActiveTab(tab);
     } else {
-      if (tab === 'home') navigate('/');
-      else navigate(`/${tab}`);
+      navigate(TAB_ROUTES[tab] ?? (tab === 'home' ? '/' : `/${tab}`));
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };

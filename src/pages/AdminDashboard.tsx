@@ -182,10 +182,12 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
     window.addEventListener('aura-new-booking', handleCustomNewBooking);
 
     // Poll server every 6 seconds for any new incoming bookings (paused if tab is hidden)
+    let failures = 0;
     const pollInterval = setInterval(async () => {
       if (document.hidden) return; // Pause network polling when tab is inactive
       try {
         const latestBookings = await api.getBookings();
+        failures = 0;
         if (Array.isArray(latestBookings)) {
           latestBookings.forEach((b) => {
             if (!knownBookingIdsRef.current.has(b.id)) {
@@ -194,9 +196,10 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
           });
         }
       } catch (e) {
-        // silent catch during polling
+        failures += 1;
+        if (failures >= 3) clearInterval(pollInterval);
       }
-    }, 6000);
+    }, 30000);
 
     return () => {
       window.removeEventListener('aura-new-booking', handleCustomNewBooking);

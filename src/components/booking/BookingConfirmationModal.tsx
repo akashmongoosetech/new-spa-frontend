@@ -86,17 +86,24 @@ export const BookingConfirmationModal: React.FC<BookingConfirmationModalProps> =
     window.print();
   };
 
-  // Cancel Handler
+  // Cancel Handler (admin session uses privileged endpoint, guests use self-service)
   const handleConfirmCancel = async () => {
     if (!booking) return;
     setCancelLoading(true);
     setFeedbackMessage(null);
     try {
-      const updated = await api.updateBooking(booking.id, {
-        status: 'cancelled',
-        bookingNumber: booking.bookingNumber,
-        notes: `${booking.additionalNotes || ''} [Cancelled by Client: ${cancelReason}. ${cancelNotes}]`.trim(),
-      });
+      const isAdmin = Boolean(localStorage.getItem('aura_admin_token'));
+      const updated = isAdmin
+        ? await api.updateBooking(booking.id, {
+            status: 'cancelled',
+            bookingNumber: booking.bookingNumber,
+            notes: `${booking.additionalNotes || ''} [Cancelled by Client: ${cancelReason}. ${cancelNotes}]`.trim(),
+          })
+        : await api.publicCancelBooking(
+            booking.bookingNumber,
+            booking.email || '',
+            `Cancelled by Client: ${cancelReason}. ${cancelNotes}`.trim()
+          );
 
       setFeedbackMessage({
         type: 'success',
@@ -117,7 +124,28 @@ export const BookingConfirmationModal: React.FC<BookingConfirmationModalProps> =
     }
   };
 
-  // Reschedule Handler
+  // Live availability for the reschedule picker (guests and staff alike).
+  const [liveSlots, setLiveSlots] = useState<string[] | null>(null);
+  const [slotsLoading, setSlotsLoading] = useState(false);
+
+  React.useEffect(() => {
+    if (viewState !== 'reschedule' || !booking) return;
+    let cancelled = false;
+    (async () => {
+      setSlotsLoading(true);
+      try {
+        const res = await api.getAvailability(newDate, newTherapistId || 'any');
+        if (!cancelled) setLiveSlots(res.slots.map((s) => s.time));
+      } catch {
+        if (!cancelled) setLiveSlots(null);
+      } finally {
+        if (!cancelled) setSlotsLoading(false);
+      }
+    })();
+    return () => { cancelled = true; };
+  }, [viewState, newDate, newTherapistId, booking]);
+
+  // Reschedule Handler (admin session uses privileged endpoint, guests use self-service)
   const handleConfirmReschedule = async () => {
     if (!booking) return;
     if (!newDate || !newTimeSlot) {
@@ -129,14 +157,23 @@ export const BookingConfirmationModal: React.FC<BookingConfirmationModalProps> =
     setFeedbackMessage(null);
 
     try {
-      const updated = await api.updateBooking(booking.id, {
-        date: newDate,
-        timeSlot: newTimeSlot,
-        therapistId: newTherapistId,
-        therapistName: therapistDisplayName,
-        status: 'confirmed',
-        bookingNumber: booking.bookingNumber,
-      });
+      const isAdmin = Boolean(localStorage.getItem('aura_admin_token'));
+      const updated = isAdmin
+        ? await api.updateBooking(booking.id, {
+            date: newDate,
+            timeSlot: newTimeSlot,
+            therapistId: newTherapistId,
+            therapistName: therapistDisplayName,
+            status: 'confirmed',
+            bookingNumber: booking.bookingNumber,
+          })
+        : await api.publicRescheduleBooking(
+            booking.bookingNumber,
+            booking.email || '',
+            newDate,
+            newTimeSlot,
+            newTherapistId
+          );
 
       setFeedbackMessage({
         type: 'success',
@@ -505,31 +542,37 @@ export const BookingConfirmationModal: React.FC<BookingConfirmationModalProps> =
                 />
               </div>
 
-              {/* Time Slot Picker */}
+              {/* Time Slot Picker (live availability; falls back to standard slots offline) */}
               <div>
                 <label className="font-bold text-gray-800 mb-1 flex items-center gap-1">
                   <Clock className="w-4 h-4 text-[#2CB5A0]" />
                   <span>Select Preferred Time Slot:</span>
                 </label>
-                <div className="grid grid-cols-3 sm:grid-cols-4 gap-2 pt-1">
-                  {timeSlotOptions.map((slot) => {
-                    const isSelected = newTimeSlot === slot;
-                    return (
-                      <button
-                        key={slot}
-                        type="button"
-                        onClick={() => setNewTimeSlot(slot)}
-                        className={`p-2 rounded-xl text-xs font-semibold text-center border transition-all cursor-pointer ${
-                          isSelected
-                            ? 'bg-[#1A1A1A] text-white border-[#1A1A1A] shadow-xs'
-                            : 'bg-gray-50 text-gray-700 border-gray-200 hover:border-teal-300'
-                        }`}
-                      >
-                        {slot}
-                      </button>
-                    );
-                  })}
-                </div>
+                {slotsLoading ? (
+                  <p className="text-xs text-gray-500 py-2">Checking live availability…</p>
+                ) : liveSlots && liveSlots.length === 0 ? (
+                  <p className="text-xs text-rose-600 font-semibold py-2">No slots free on this date — try another day.</p>
+                ) : (
+                  <div className="grid grid-cols-3 sm:grid-cols-4 gap-2 pt-1">
+                    {(liveSlots ?? timeSlotOptions).map((slot) => {
+                      const isSelected = newTimeSlot === slot;
+                      return (
+                        <button
+                          key={slot}
+                          type="button"
+                          onClick={() => setNewTimeSlot(slot)}
+                          className={`p-2 rounded-xl text-xs font-semibold text-center border transition-all cursor-pointer ${
+                            isSelected
+                              ? 'bg-[#1A1A1A] text-white border-[#1A1A1A] shadow-xs'
+                              : 'bg-gray-50 text-gray-700 border-gray-200 hover:border-teal-300'
+                          }`}
+                        >
+                          {slot}
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
               </div>
 
               {/* Therapist Choice (Optional) */}

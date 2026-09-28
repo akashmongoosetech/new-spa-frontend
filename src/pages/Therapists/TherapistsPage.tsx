@@ -64,7 +64,7 @@ export const TherapistsPage: React.FC = () => {
                   </p>
 
                   <div className="flex flex-wrap gap-1.5">
-                    {therapist.specialties.map((spec, i) => (
+                    {(therapist.specialties || []).map((spec: string, i: number) => (
                       <span key={i} className="px-2.5 py-1 bg-gray-100 text-gray-700 rounded-md text-[11px] font-medium">
                         {spec}
                       </span>

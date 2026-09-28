@@ -53,11 +53,12 @@ export const SpaAssistantChat: React.FC<SpaAssistantChatProps> = ({ onOpenBookin
     setLoading(true);
 
     try {
-      const response = await api.sendAiChat(queryText, newMessages);
+      const history = newMessages.slice(1, -1).slice(-6).map((m) => ({ sender: m.sender, text: m.text.slice(0, 1000) }));
+      const response = await api.sendAiChat(queryText.slice(0, 1000), history);
       const assistantMsg: ChatMessage = {
         id: `ast-${Date.now()}`,
         sender: 'assistant',
-        text: response.reply
+        text: String(response.reply || '').slice(0, 2000)
       };
       setMessages((prev) => [...prev, assistantMsg]);
     } catch (err) {
@@ -66,7 +67,7 @@ export const SpaAssistantChat: React.FC<SpaAssistantChatProps> = ({ onOpenBookin
         {
           id: `ast-err-${Date.now()}`,
           sender: 'assistant',
-          text: 'Our **Swedish Relaxation (₹140)** and **Deep Tissue Recovery (₹180)** are top recommendations! You can book anytime using the **Book Appointment** button.'
+          text: 'I can help with services, timings, or booking. Please visit the **Services** page for current rates or tap **Book Appointment**.'
         }
       ]);
     } finally {
@@ -176,7 +177,7 @@ export const SpaAssistantChat: React.FC<SpaAssistantChatProps> = ({ onOpenBookin
                     }`}
                   >
                     <div className="markdown-body space-y-1.5 prose-xs">
-                      <Markdown>{msg.text}</Markdown>
+                      <Markdown allowedElements={['p', 'strong', 'em', 'ul', 'ol', 'li', 'br', 'code']} skipHtml>{msg.text}</Markdown>
                     </div>
                   </div>
                 </div>

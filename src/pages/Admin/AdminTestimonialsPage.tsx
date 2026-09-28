@@ -13,7 +13,7 @@ export const AdminTestimonialsPage: React.FC = () => {
   useEffect(() => {
     (async () => {
       try {
-        const t = await api.getTestimonials();
+        const t = await api.getAllTestimonials();
         if (Array.isArray(t)) setItems(t);
       } catch (err) {
         // keep empty state
@@ -26,7 +26,7 @@ export const AdminTestimonialsPage: React.FC = () => {
     if (!name || !comment) return;
     try {
       await api.createTestimonial({ name, comment, rating, role });
-      const t = await api.getTestimonials();
+      const t = await api.getAllTestimonials();
       if (Array.isArray(t)) setItems(t);
       setName('');
       setRole('');
@@ -106,10 +106,25 @@ export const AdminTestimonialsPage: React.FC = () => {
               </div>
               <div className="flex items-center gap-2">
                 <div className="flex text-amber-400">
-                  {[...Array(t.rating)].map((_, i) => (
+                  {[...Array(Math.min(5, Math.max(0, Number(t.rating) || 0)))].map((_, i) => (
                     <Star key={i} className="w-4 h-4 fill-amber-400" />
                   ))}
                 </div>
+                <button
+                  onClick={async () => {
+                    try {
+                      await api.updateTestimonial(t.id, { approved: !(t.approved === true || t.approved === 1) });
+                      const fresh = await api.getAllTestimonials();
+                      if (Array.isArray(fresh)) setItems(fresh);
+                    } catch (err: any) {
+                      showToast({ type: 'error', title: 'Update Failed', message: err?.message || 'Failed to update.' });
+                    }
+                  }}
+                  className="px-2 py-1 text-[11px] font-bold rounded-lg border border-gray-200 text-gray-600 hover:border-[#2CB5A0] cursor-pointer"
+                  title="Toggle approval"
+                >
+                  {t.approved ? 'Approved' : 'Pending'}
+                </button>
                 <button
                   onClick={() => handleDelete(t.id)}
                   className="p-1.5 text-gray-400 hover:text-rose-600 cursor-pointer"

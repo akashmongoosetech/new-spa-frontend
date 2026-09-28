@@ -236,9 +236,13 @@ export const TipTapEditor: React.FC<TipTapEditorProps> = ({
           <div className="w-px h-6 bg-gray-300 mx-1" />
 
           <button
+            type="button"
             onClick={() => {
-              const url = window.prompt('Enter URL:', 'https://');
-              if (url) editor.chain().focus().extendMarkRange('link').setLink({ href: url }).run();
+              const url = window.prompt('Enter URL (https://…):', 'https://');
+              if (!url) return;
+              const trimmed = url.trim();
+              if (!/^(https?:\/\/|mailto:|tel:)/i.test(trimmed)) return;
+              editor.chain().focus().extendMarkRange('link').setLink({ href: trimmed }).run();
             }}
             disabled={disabled || !editor.can().chain().focus().setLink({ href: '#' }).run()}
             className={`px-2 py-1 text-xs rounded ${editor.isActive('link') ? 'bg-[#2CB5A0] text-white' : 'text-gray-600 hover:bg-gray-100'}`}

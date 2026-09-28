@@ -18,11 +18,14 @@ export const broadcastNewBooking = (booking: any) => {
   const event = new CustomEvent('aura-new-booking', { detail: { booking } });
   window.dispatchEvent(event);
 
-  // Store in localStorage so other open tabs receive storage event
+  // Store only a minimal reference cross-tab — never full PII.
   try {
     localStorage.setItem(
       'aura_latest_booking',
-      JSON.stringify({ booking, timestamp: Date.now() })
+      JSON.stringify({
+        bookingNumber: booking?.bookingNumber || '',
+        timestamp: Date.now(),
+      })
     );
   } catch (err) {
     // Ignore storage quota errors
@@ -38,9 +41,11 @@ export const playNotificationSound = (type: 'success' | 'admin_alert' | 'info' =
     if (!AudioContextClass) return;
 
     const ctx = new AudioContextClass();
+    const closeCtx = () => { try { ctx.close(); } catch { /* ignore */ } };
     if (ctx.state === 'suspended') {
       ctx.resume();
     }
+    window.setTimeout(closeCtx, 1000);
 
     const osc = ctx.createOscillator();
     const gain = ctx.createGain();

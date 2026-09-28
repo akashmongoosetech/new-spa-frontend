@@ -69,7 +69,7 @@ export const UserManagement: React.FC<UserManagementProps> = ({ currentUser, sea
     setEditingUser(null);
     setName('');
     setEmail('');
-    setPassword('admin123');
+    setPassword('');
     setPhone('');
     setRole('admin');
     setStatus('active');

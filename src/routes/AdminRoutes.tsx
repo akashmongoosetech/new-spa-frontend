@@ -28,6 +28,11 @@ const AdminProfilePage = lazy(() => import('../pages/Admin/AdminProfilePage'));
 const AdminChangePasswordPage = lazy(() => import('../pages/Admin/AdminChangePasswordPage'));
 const AdminActivityLogsPage = lazy(() => import('../pages/Admin/AdminActivityLogsPage'));
 
+const ALL_STAFF = ['Super Admin', 'Admin', 'Manager', 'Receptionist'];
+const MANAGER_UP = ['Super Admin', 'Admin', 'Manager'];
+const ADMIN_ONLY = ['Super Admin', 'Admin'];
+const SUPER_ONLY = ['Super Admin'];
+
 export const renderAdminRoutes = () => (
   <Route
     path="admin"
@@ -39,34 +44,34 @@ export const renderAdminRoutes = () => (
       </ProtectedRoute>
     }
   >
-    <Route index element={<AdminDashboardPage />} />
-    <Route path="dashboard" element={<AdminDashboardPage />} />
-    <Route path="bookings" element={<AdminBookingsPage />} />
-    <Route path="contacts" element={<AdminContactsPage />} />
-    <Route path="services" element={<AdminServicesPage />} />
-    <Route path="services/add" element={<AdminServiceFormPage />} />
-    <Route path="services/edit/:id" element={<AdminServiceFormPage />} />
-    <Route path="therapists" element={<AdminTherapistsPage />} />
-    <Route path="therapists/add" element={<AdminTherapistFormPage />} />
-    <Route path="therapists/edit/:id" element={<AdminTherapistFormPage />} />
-    <Route path="calendar" element={<AdminCalendarPage />} />
-    <Route path="reports" element={<AdminDashboardPage initialTab="reports" />} />
-    <Route path="blogs" element={<AdminBlogsPage />} />
-    <Route path="blogs/add" element={<AdminBlogFormPage />} />
-    <Route path="blogs/edit/:id" element={<AdminBlogFormPage />} />
-    <Route path="gallery" element={<AdminGalleryPage />} />
-    <Route path="testimonials" element={<AdminTestimonialsPage />} />
-    <Route path="faqs" element={<AdminFaqsPage />} />
-    <Route path="coupons" element={<AdminCouponsPage />} />
-    <Route path="email-logs" element={<AdminEmailLogsPage />} />
-    <Route path="users" element={<AdminUsersPage />} />
-    <Route path="applications" element={<AdminApplicationsPage />} />
-    <Route path="settings" element={<AdminSettingsPage />} />
-    <Route path="seo" element={<AdminSeoPage />} />
-    <Route path="email-templates" element={<AdminEmailTemplatesPage />} />
-    <Route path="profile" element={<AdminProfilePage />} />
-    <Route path="change-password" element={<AdminChangePasswordPage />} />
-    <Route path="activity-logs" element={<AdminActivityLogsPage />} />
+    <Route index element={<ProtectedRoute roles={ALL_STAFF}><AdminDashboardPage /></ProtectedRoute>} />
+    <Route path="dashboard" element={<ProtectedRoute roles={ALL_STAFF}><AdminDashboardPage /></ProtectedRoute>} />
+    <Route path="bookings" element={<ProtectedRoute roles={ALL_STAFF}><AdminBookingsPage /></ProtectedRoute>} />
+    <Route path="contacts" element={<ProtectedRoute roles={ALL_STAFF}><AdminContactsPage /></ProtectedRoute>} />
+    <Route path="services" element={<ProtectedRoute roles={MANAGER_UP}><AdminServicesPage /></ProtectedRoute>} />
+    <Route path="services/add" element={<ProtectedRoute roles={MANAGER_UP}><AdminServiceFormPage /></ProtectedRoute>} />
+    <Route path="services/edit/:id" element={<ProtectedRoute roles={MANAGER_UP}><AdminServiceFormPage /></ProtectedRoute>} />
+    <Route path="therapists" element={<ProtectedRoute roles={MANAGER_UP}><AdminTherapistsPage /></ProtectedRoute>} />
+    <Route path="therapists/add" element={<ProtectedRoute roles={MANAGER_UP}><AdminTherapistFormPage /></ProtectedRoute>} />
+    <Route path="therapists/edit/:id" element={<ProtectedRoute roles={MANAGER_UP}><AdminTherapistFormPage /></ProtectedRoute>} />
+    <Route path="calendar" element={<ProtectedRoute roles={ALL_STAFF}><AdminCalendarPage /></ProtectedRoute>} />
+    <Route path="reports" element={<ProtectedRoute roles={MANAGER_UP}><AdminDashboardPage initialTab="reports" /></ProtectedRoute>} />
+    <Route path="blogs" element={<ProtectedRoute roles={MANAGER_UP}><AdminBlogsPage /></ProtectedRoute>} />
+    <Route path="blogs/add" element={<ProtectedRoute roles={MANAGER_UP}><AdminBlogFormPage /></ProtectedRoute>} />
+    <Route path="blogs/edit/:id" element={<ProtectedRoute roles={MANAGER_UP}><AdminBlogFormPage /></ProtectedRoute>} />
+    <Route path="gallery" element={<ProtectedRoute roles={ADMIN_ONLY}><AdminGalleryPage /></ProtectedRoute>} />
+    <Route path="testimonials" element={<ProtectedRoute roles={ADMIN_ONLY}><AdminTestimonialsPage /></ProtectedRoute>} />
+    <Route path="faqs" element={<ProtectedRoute roles={MANAGER_UP}><AdminFaqsPage /></ProtectedRoute>} />
+    <Route path="coupons" element={<ProtectedRoute roles={MANAGER_UP}><AdminCouponsPage /></ProtectedRoute>} />
+    <Route path="email-logs" element={<ProtectedRoute roles={ADMIN_ONLY}><AdminEmailLogsPage /></ProtectedRoute>} />
+    <Route path="users" element={<ProtectedRoute roles={ADMIN_ONLY}><AdminUsersPage /></ProtectedRoute>} />
+    <Route path="applications" element={<ProtectedRoute roles={SUPER_ONLY}><AdminApplicationsPage /></ProtectedRoute>} />
+    <Route path="settings" element={<ProtectedRoute roles={ADMIN_ONLY}><AdminSettingsPage /></ProtectedRoute>} />
+    <Route path="seo" element={<ProtectedRoute roles={ADMIN_ONLY}><AdminSeoPage /></ProtectedRoute>} />
+    <Route path="email-templates" element={<ProtectedRoute roles={ADMIN_ONLY}><AdminEmailTemplatesPage /></ProtectedRoute>} />
+    <Route path="profile" element={<ProtectedRoute roles={ALL_STAFF}><AdminProfilePage /></ProtectedRoute>} />
+    <Route path="change-password" element={<ProtectedRoute roles={ALL_STAFF}><AdminChangePasswordPage /></ProtectedRoute>} />
+    <Route path="activity-logs" element={<ProtectedRoute roles={ADMIN_ONLY}><AdminActivityLogsPage /></ProtectedRoute>} />
   </Route>
 );
 

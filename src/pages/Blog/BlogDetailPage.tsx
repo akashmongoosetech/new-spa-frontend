@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import DOMPurify from 'dompurify';
 import { useParams, Link, useOutletContext } from 'react-router-dom';
 import { Clock, User, Tag, ArrowLeft, Calendar, Image as ImageIcon, MapPin } from 'lucide-react';
 import { mockSettings } from '../../data/mockData';
@@ -114,14 +115,14 @@ export const BlogDetailPage: React.FC = () => {
 
         <div className="prose prose-lg max-w-none text-gray-700 font-light leading-relaxed space-y-6">
           {blog.excerptHtml && (
-            <div 
+            <div
               className="text-xl text-gray-800 font-normal leading-relaxed border-l-4 border-[#2CB5A0] pl-4 italic"
-              dangerouslySetInnerHTML={{ __html: blog.excerptHtml }}
+              dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(blog.excerptHtml || '') }}
             />
           )}
-          <div 
+          <div
             className="article-content text-base text-gray-700 leading-relaxed"
-            dangerouslySetInnerHTML={{ __html: blog.content }}
+            dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(blog.content || '') }}
           />
         </div>
 
@@ -129,7 +130,7 @@ export const BlogDetailPage: React.FC = () => {
           <div className="flex items-center gap-2 pt-6 border-t">
             <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">Tags:</span>
             <div className="flex flex-wrap gap-2">
-              {blog.tags.map((t, i) => (
+              {blog.tags.map((t: string, i: number) => (
                 <span key={i} className="px-3 py-1 bg-gray-100 text-gray-600 rounded-lg text-xs">
                   #{t}
                 </span>

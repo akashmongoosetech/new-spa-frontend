@@ -14,7 +14,7 @@ export const AdminEmailTemplatesPage: React.FC = () => {
   useEffect(() => {
     (async () => {
       try {
-        const s = await api.getSettings();
+        const s = await api.getFullSettings();
         if (s.bookingEmailTemplate) setBookingBody(s.bookingEmailTemplate);
         if (s.contactEmailTemplate) setContactBody(s.contactEmailTemplate);
       } catch (err) {

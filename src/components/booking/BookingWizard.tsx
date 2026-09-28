@@ -91,6 +91,11 @@ export const BookingWizard: React.FC<BookingWizardProps> = ({
     setValidatingCoupon(true);
     try {
       const res = await api.validateCoupon(couponCode, subtotal);
+      if (!res.valid || !res.coupon) {
+        setAppliedCoupon(null);
+        setCouponError(res.message || 'Invalid promotional code');
+        return;
+      }
       setAppliedCoupon({ code: res.coupon.code, discount: res.discount });
       setCouponError('');
     } catch (err: any) {

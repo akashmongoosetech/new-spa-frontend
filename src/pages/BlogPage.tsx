@@ -1,8 +1,13 @@
 import React, { useState } from 'react';
+import DOMPurify from 'dompurify';
 import { Search, Clock, User, Tag, BookOpen, ArrowRight } from 'lucide-react';
 import { BlogPost, BusinessSettings } from '../types';
 import { Modal } from '../components/ui/Modal';
 import { SEO } from '../components/ui/SEO';
+
+function clean(html: string): string {
+  return DOMPurify.sanitize(html || '', { ALLOWED_URI_REGEXP: /^(?:(?:https?|mailto|tel):|[^a-z]|[a-z+.-]+(?:[^a-z+.\-:]|$))/i });
+}
 
 interface BlogPageProps {
   blogs: BlogPost[];
@@ -29,12 +34,12 @@ export const BlogPage: React.FC<BlogPageProps> = ({ blogs }) => {
 
   // Use safeExcerpt for card preview (plain text, safe for line-clamp)
   const getCardExcerpt = (blog: BlogPost) => {
-    return blog.safeExcerpt || blog.summary || '';
+    return clean(blog.safeExcerpt || blog.summary || '');
   };
 
-  // Use excerptHtml for modal preview (rich text)
+  // Use excerptHtml for modal preview (rich text, sanitized)
   const getModalExcerpt = (blog: BlogPost) => {
-    return blog.excerptHtml || blog.summary || '';
+    return clean(blog.excerptHtml || blog.summary || '');
   };
 
   return (

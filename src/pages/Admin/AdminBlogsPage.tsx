@@ -18,7 +18,7 @@ export const AdminBlogsPage: React.FC = () => {
   const fetchBlogs = async () => {
     setLoading(true);
     try {
-      const data = await api.getBlogs();
+      const data = await api.getAllBlogs();
       if (Array.isArray(data)) {
         setBlogs(data);
         setTotalPages(Math.ceil(data.length / itemsPerPage));
@@ -206,7 +206,7 @@ export const AdminBlogsPage: React.FC = () => {
                       )}
                     </td>
                     <td className="p-4 text-gray-600">{b.readTime}</td>
-                    <td className="p-4 text-gray-500 text-[10px]">{new Date(b.date || b.createdAt).toLocaleDateString()}</td>
+                    <td className="p-4 text-gray-500 text-[10px]">{new Date(b.date || b.createdAt || Date.now()).toLocaleDateString()}</td>
                     <td className="p-4 text-right space-x-2">
                       <Link
                         to={`/blog/${b.slug}`}

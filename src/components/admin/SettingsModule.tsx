@@ -27,7 +27,7 @@ export const SettingsModule: React.FC = () => {
 
   const fetchSettings = async () => {
     try {
-      const data = await api.getSettings();
+      const data = await api.getFullSettings();
       setSettings(data);
     } catch (err) {
       console.error(err);

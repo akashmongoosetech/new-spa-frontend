@@ -46,18 +46,22 @@ export const ServiceDetailPage: React.FC = () => {
     if (!service) return;
     setBookingStatus('submitting');
     try {
+      const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(bookingData.customerEmail.trim());
+      if (!bookingData.customerName.trim() || !emailOk || bookingData.customerPhone.replace(/\D/g, '').length < 7) {
+        throw new Error('Enter a valid name, email and phone number');
+      }
+      if (!bookingData.selectedDate || bookingData.selectedDate < new Date().toISOString().slice(0, 10)) {
+        throw new Error('Choose a valid future date');
+      }
       const result = await createBooking({
         serviceId: service.id,
-        serviceTitle: service.title,
         therapistId: bookingData.selectedTherapist || 'any',
-        therapistName: bookingData.selectedTherapist || 'Any Available Therapist',
         date: bookingData.selectedDate,
         timeSlot: bookingData.selectedTime,
-        customerName: bookingData.customerName,
-        email: bookingData.customerEmail,
-        phone: bookingData.customerPhone,
+        customerName: bookingData.customerName.trim(),
+        email: bookingData.customerEmail.trim(),
+        phone: bookingData.customerPhone.trim(),
         notes: '',
-        totalPaid: service.price,
         paymentMethod: 'pay_at_venue'
       });
       setBookingStatus('idle');
@@ -122,7 +126,7 @@ export const ServiceDetailPage: React.FC = () => {
             <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm space-y-4">
               <h2 className="text-xl font-serif font-bold text-gray-900">Key Therapeutic Benefits</h2>
               <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                {service.benefits.map((b, i) => (
+                {service.benefits.map((b: string, i: number) => (
                   <li key={i} className="flex items-start gap-2.5 text-sm text-gray-700">
                     <CheckCircle2 className="w-5 h-5 text-[#2CB5A0] shrink-0 mt-0.5" />
                     <span>{b}</span>
@@ -136,7 +140,7 @@ export const ServiceDetailPage: React.FC = () => {
             <div className="space-y-4">
               <h2 className="text-xl font-serif font-bold text-gray-900">Frequently Asked Questions</h2>
               <div className="space-y-3">
-                {service.faq.map((item, idx) => (
+                {service.faq.map((item: { question: string; answer?: string }, idx: number) => (
                   <div key={idx} className="bg-white p-5 rounded-xl border border-gray-100">
                     <h3 className="font-semibold text-gray-900 text-sm mb-1">{item.question}</h3>
                     <p className="text-gray-600 text-sm font-light leading-relaxed">{item.answer}</p>

@@ -22,7 +22,7 @@ const API_BASE = import.meta.env.VITE_API_URL || '/api';
 const TOKEN_KEY = 'aura_admin_token';
 const USER_KEY = 'aura_admin_user';
 
-const http = axios.create({ baseURL: API_BASE, withCredentials: true });
+const http = axios.create({ baseURL: API_BASE, withCredentials: true, timeout: 20000 });
 
 // Attach the stored JWT (if any) to every request.
 http.interceptors.request.use((config) => {
@@ -371,13 +371,13 @@ export const api = {
     return res.data;
   },
 
-  // Availability Slots — backend returns a plain string array, normalize it.
+  // Availability Slots — backend returns 24h "HH:MM" strings, normalize with correct period.
   async getAvailability(date: string, therapistId?: string): Promise<{ date: string; slots: { time: string; period: string; available: boolean }[] }> {
     const params = { date, therapistId: therapistId || 'any' };
     const { data } = await http.get('/availability', { params });
     const raw: string[] = Array.isArray(data) ? data : [];
-    const slots = raw.map((time) => {
-      const hour = parseInt(time, 10);
+    const slots = raw.filter((t) => /^\d{1,2}:\d{2}$/.test(String(t))).map((time) => {
+      const hour = Number(String(time).split(':')[0]);
       const period = hour < 12 ? 'morning' : hour < 17 ? 'afternoon' : hour < 21 ? 'evening' : 'night';
       return { time, period, available: true };
     });
@@ -385,13 +385,17 @@ export const api = {
   },
 
   // Coupons
-  async validateCoupon(code: string, amount: number): Promise<{ valid: boolean; discount: number; coupon: Coupon }> {
+  async validateCoupon(code: string, amount: number): Promise<{ valid: boolean; discount: number; coupon: Coupon | null; message?: string }> {
     try {
       const { data } = await http.post('/coupons/validate', { code, amount });
+      if (!data || data.valid !== true || !data.coupon) {
+        return { valid: false, discount: 0, coupon: null, message: data?.message || 'Invalid coupon' };
+      }
       return {
-        valid: data.valid,
+        valid: true,
         discount: data.discountAmount ?? data.discount ?? 0,
-        coupon: mapCoupon(data.coupon)
+        coupon: mapCoupon(data.coupon),
+        message: data.message
       };
     } catch (error) {
       throw new Error(getErrorMessage(error, 'Invalid coupon'));
@@ -443,15 +447,28 @@ export const api = {
     return data.map(mapBooking);
   },
 
-  // Public self-service lookup (no auth required).
-  async lookupBooking(query: string): Promise<Booking | null> {
+  // Public self-service lookup (no auth required). Booking refs require email too.
+  async lookupBooking(query: string, email?: string): Promise<Booking | null> {
     try {
-      const { data } = await http.get('/bookings/lookup', { params: { q: query } });
+      const params: Record<string, string> = { q: query };
+      if (email) params.email = email;
+      const { data } = await http.get('/bookings/lookup', { params });
       return mapBooking(data);
     } catch (error) {
       if (axios.isAxiosError(error) && error.response?.status === 404) return null;
       throw new Error(getErrorMessage(error, 'Error looking up appointment'));
     }
+  },
+
+  // Public self-service cancel/reschedule (bookingNumber + email ownership, no session).
+  async publicCancelBooking(bookingNumber: string, email: string, reason?: string): Promise<Booking> {
+    const { data } = await http.post('/bookings/public-cancel', { bookingNumber, email, reason });
+    return mapBooking(data);
+  },
+
+  async publicRescheduleBooking(bookingNumber: string, email: string, date: string, timeSlot: string, therapistId?: string): Promise<Booking> {
+    const { data } = await http.post('/bookings/public-reschedule', { bookingNumber, email, date, timeSlot, therapistId });
+    return mapBooking(data);
   },
 
   async updateBooking(id: string, data: Partial<Booking> & { bookingNumber?: string; notes?: string }): Promise<Booking> {
@@ -560,14 +577,27 @@ export const api = {
   },
 
   // Testimonials & Blogs
-  async getTestimonials(): Promise<Testimonial[]> {
-    const { data } = await http.get<Testimonial[]>('/testimonials');
-    return data.map(mapTestimonial);
+  async getTestimonials(admin = false): Promise<Testimonial[]> {
+    const { data } = await http.get<Testimonial[]>('/testimonials', { params: admin ? { all: '1' } : {} });
+    return (Array.isArray(data) ? data : []).map(mapTestimonial);
   },
 
-  async getBlogs(): Promise<BlogPost[]> {
-    const { data } = await http.get<BlogPost[]>('/blogs');
-    return data.map(mapBlogPost);
+  async getAllTestimonials(): Promise<Testimonial[]> {
+    return this.getTestimonials(true);
+  },
+
+  async updateTestimonial(id: string, data: Partial<Testimonial>): Promise<Testimonial> {
+    const res = await http.put<Testimonial>(`/testimonials/${id}`, data);
+    return mapTestimonial(res.data);
+  },
+
+  async getBlogs(admin = false): Promise<BlogPost[]> {
+    const { data } = await http.get<BlogPost[]>('/blogs', { params: admin ? { all: '1' } : {} });
+    return (Array.isArray(data) ? data : []).map(mapBlogPost);
+  },
+
+  async getAllBlogs(): Promise<BlogPost[]> {
+    return this.getBlogs(true);
   },
 
   async getPublicBlogs(): Promise<BlogPost[]> {
@@ -720,10 +750,19 @@ export const api = {
     return res.data;
   },
 
-  // Business Settings
+  // Business Settings (public safe subset; full view for admins)
   async getSettings(): Promise<BusinessSettings> {
     const { data } = await http.get<BusinessSettings>('/settings');
     return mapBusinessSettings(data);
+  },
+
+  async getFullSettings(): Promise<BusinessSettings> {
+    try {
+      const { data } = await http.get<BusinessSettings>('/settings/full');
+      return mapBusinessSettings(data);
+    } catch {
+      return this.getSettings();
+    }
   },
 
   async updateSettings(data: Partial<BusinessSettings>): Promise<BusinessSettings> {
@@ -959,8 +998,8 @@ export const api = {
     URL.revokeObjectURL(blobUrl);
   },
 
-  getExportReportUrl(type: 'bookings' | 'contacts' | 'therapists' | 'services' | 'subscribers'): string {
-    return `${API_BASE}/admin/reports/export?type=${type}`;
+  getExportReportUrl(): string {
+    throw new Error('Use downloadExportReport() — direct links lack auth and will return 401');
   },
 
   // AI Spa Assistant
@@ -975,6 +1014,9 @@ export const api = {
 
   // File upload (admin-only endpoint)
   async uploadFile(file: File): Promise<{ url: string; filename: string; originalname: string; mimetype: string; size: number }> {
+    const okTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+    if (!okTypes.includes(file.type)) throw new Error('Only JPEG, PNG, WebP or GIF images are allowed');
+    if (file.size > 5 * 1024 * 1024) throw new Error('Image must be under 5MB');
     const formData = new FormData();
     formData.append('file', file);
     const res = await http.post('/upload', formData, {

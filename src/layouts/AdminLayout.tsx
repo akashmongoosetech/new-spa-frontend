@@ -24,8 +24,13 @@ export const AdminLayout: React.FC = () => {
   const [pendingBookingsCount, setPendingBookingsCount] = useState(0);
 
   const [currentUser, setCurrentUser] = useState<AdminUser | null>(() => {
-    const saved = localStorage.getItem('aura_admin_user');
-    return saved ? JSON.parse(saved) : null;
+    try {
+      const saved = localStorage.getItem('aura_admin_user');
+      return saved ? JSON.parse(saved) : null;
+    } catch {
+      localStorage.removeItem('aura_admin_user');
+      return null;
+    }
   });
 
   const [settingsLoaded, setSettingsLoaded] = useState(false);
