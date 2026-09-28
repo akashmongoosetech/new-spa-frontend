@@ -20,8 +20,12 @@ export const ProtectedRoute: React.FC<{ children?: React.ReactNode; roles?: stri
   if (roles && roles.length > 0) {
     try {
       const user = JSON.parse(localStorage.getItem('aura_admin_user') || 'null');
+      // Frontend stores roles as super_admin|admin|manager|receptionist while
+      // route configs may use backend canonical names ('Super Admin', ...).
+      // Normalize both sides so either convention matches.
+      const norm = (r: string) => String(r || '').trim().toLowerCase().replace(/\s+/g, '_');
       const role = user?.role;
-      if (!role || !roles.includes(role)) {
+      if (!role || !roles.map(norm).includes(norm(role))) {
         return <Navigate to="/unauthorized" replace />;
       }
     } catch {
