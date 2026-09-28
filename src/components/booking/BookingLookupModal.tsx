@@ -64,7 +64,7 @@ export const BookingLookupModal: React.FC<BookingLookupModalProps> = ({
               Find Your Appointment
             </h4>
             <p className="text-gray-600">
-              Enter your <strong>Booking Reference ID</strong> (e.g., <code>AURA-12345</code>) or the <strong>Email address</strong> used when reserving.
+              Enter your <strong>Booking Reference ID</strong> (e.g., <code>AL-20240101-001</code>) or the <strong>Email address</strong> used when reserving.
             </p>
           </div>
 

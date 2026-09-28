@@ -167,7 +167,7 @@ export const Footer: React.FC<FooterProps> = ({
               </span>
               <div className="flex items-center gap-2.5">
                 <a
-                  href={settings?.instagramUrl || 'https://instagram.com/auraluxespa'}
+                  href={settings?.instagramUrl || 'https://instagram.com/tripodwellness'}
                   target="_blank"
                   rel="noreferrer"
                   aria-label="Instagram"
@@ -176,7 +176,7 @@ export const Footer: React.FC<FooterProps> = ({
                   <Instagram className="w-4 h-4 group-hover:scale-110 transition-transform" />
                 </a>
                 <a
-                  href={settings?.facebookUrl || 'https://facebook.com/auraluxespa'}
+                  href={settings?.facebookUrl || 'https://facebook.com/tripodwellness'}
                   target="_blank"
                   rel="noreferrer"
                   aria-label="Facebook"
@@ -185,7 +185,7 @@ export const Footer: React.FC<FooterProps> = ({
                   <Facebook className="w-4 h-4 group-hover:scale-110 transition-transform" />
                 </a>
                 <a
-                  href={settings?.twitterUrl || 'https://twitter.com/auraluxespa'}
+                  href={settings?.twitterUrl || 'https://twitter.com/tripodwellness'}
                   target="_blank"
                   rel="noreferrer"
                   aria-label="Twitter"

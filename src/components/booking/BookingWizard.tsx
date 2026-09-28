@@ -665,7 +665,7 @@ export const BookingWizard: React.FC<BookingWizardProps> = ({
               <div className="bg-[#141C1E] rounded-2xl p-4 border border-white/10">
                 <label className="block text-xs font-bold text-gray-300 mb-2 flex items-center gap-1.5">
                   <Tag className="w-3.5 h-3.5 text-[#2CB5A0]" />
-                  <span>Have a Promotional Code? (Try AURA500)</span>
+                  <span>Have a Promotional Code?</span>
                 </label>
                 <div className="flex gap-2">
                   <input

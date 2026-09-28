@@ -105,7 +105,7 @@ export const SpaAssistantChat: React.FC<SpaAssistantChatProps> = ({ onOpenBookin
           className="relative px-5 py-3.5 rounded-full bg-linear-to-r from-[#2CB5A0] to-[#1a6e61] text-white shadow-2xl flex items-center gap-2.5 font-sans font-bold text-sm cursor-pointer border border-teal-300/30"
         >
           <Sparkles className="w-5 h-5 text-amber-300 animate-spin-slow" />
-          <span className="hidden sm:inline">Aura AI Spa Assistant</span>
+          <span className="hidden sm:inline">Tripod AI Spa Assistant</span>
           <span className="sm:hidden">AI Concierge</span>
           <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping absolute top-1 right-1" />
         </motion.button>
@@ -121,7 +121,7 @@ export const SpaAssistantChat: React.FC<SpaAssistantChatProps> = ({ onOpenBookin
             transition={{ type: 'spring', damping: 25, stiffness: 300 }}
             className="fixed bottom-20 right-4 sm:right-6 z-50 w-[92vw] sm:w-105 h-140 max-h-[calc(100dvh-6rem)] bg-white rounded-3xl shadow-2xl border border-teal-100 flex flex-col overflow-hidden font-sans"
             role="dialog"
-            aria-label="Aura Spa Concierge chat"
+            aria-label="Tripod Wellness Concierge chat"
           >
             {/* Header */}
             <div className="bg-[#1A1A1A] text-white p-4 flex items-center justify-between border-b border-gray-800">
@@ -131,7 +131,7 @@ export const SpaAssistantChat: React.FC<SpaAssistantChatProps> = ({ onOpenBookin
                 </div>
                 <div>
                   <h3 className="font-serif font-bold text-sm tracking-wide flex items-center gap-1.5">
-                    Aura Spa Concierge <Sparkles className="w-3.5 h-3.5 text-amber-300" />
+                    Tripod Wellness Concierge <Sparkles className="w-3.5 h-3.5 text-amber-300" />
                   </h3>
                   <p className="text-[10px] text-teal-300">Powered by Gemini AI Intelligence</p>
                 </div>
@@ -185,7 +185,7 @@ export const SpaAssistantChat: React.FC<SpaAssistantChatProps> = ({ onOpenBookin
               {loading && (
                 <div className="flex gap-2 items-center text-xs text-teal-700 bg-teal-50/80 p-3 rounded-2xl border border-teal-100 max-w-[80%]">
                   <Bot className="w-4 h-4 text-[#2CB5A0] animate-bounce shrink-0" />
-                  <span className="font-medium">Aura AI is evaluating spa protocols...</span>
+                  <span className="font-medium">Tripod AI is evaluating spa protocols...</span>
                 </div>
               )}
               <div ref={chatEndRef} />

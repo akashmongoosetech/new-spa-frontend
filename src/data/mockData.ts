@@ -12,9 +12,9 @@ export const DEFAULT_SETTINGS: BusinessSettings = {
   currencySymbol: "₹",
   currencyCode: "INR",
   googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=Indore+Ujjain+Dewas",
-  facebookUrl: "https://facebook.com/auraluxespa",
-  instagramUrl: "https://instagram.com/auraluxespa",
-  twitterUrl: "https://twitter.com/auraluxespa",
+  facebookUrl: "https://facebook.com/tripodwellness",
+  instagramUrl: "https://instagram.com/tripodwellness",
+  twitterUrl: "https://twitter.com/tripodwellness",
   smtpConfigured: true,
   maxBookingsPerSlot: 3,
   slotIntervalMinutes: 60,
@@ -543,7 +543,7 @@ export const INITIAL_COUPONS: Coupon[] = [
   },
   {
     id: "cp-2",
-    code: "AURA10",
+    code: "TRIPOD10",
     discountType: "percentage",
     discountValue: 10,
     minBookingAmount: 1500,
@@ -654,7 +654,7 @@ export const INITIAL_BLOGS: BlogPost[] = [
 export const INITIAL_BOOKINGS = [
   {
     id: "bk-101",
-    bookingNumber: "AURA-84920",
+    bookingNumber: "AL-20240101-001",
     firstName: "Aman",
     lastName: "Gupta",
     email: "aman.gupta@example.com",
@@ -671,7 +671,7 @@ export const INITIAL_BOOKINGS = [
     price: 2499,
     discountAmount: 250,
     totalPaid: 2249,
-    couponCode: "AURA10",
+    couponCode: "TRIPOD10",
     additionalNotes: "Focused pressure on right shoulder blade.",
     paymentMethod: "upi",
     paymentStatus: "completed",
@@ -680,7 +680,7 @@ export const INITIAL_BOOKINGS = [
   },
   {
     id: "bk-102",
-    bookingNumber: "AURA-84921",
+    bookingNumber: "AL-20240101-002",
     firstName: "Karan",
     lastName: "Mehta",
     email: "karan.m@example.com",
