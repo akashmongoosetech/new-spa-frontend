@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, useOutletContext } from 'react-router-dom';
-import { Key, Loader2, Lock, LogOut, Save, X } from 'lucide-react';
+import { Key, Loader2, Lock, LogOut, Save, Sparkles, X } from 'lucide-react';
 import { AdminUser } from '../types';
 import { api } from '../services/api';
 import { showToast } from '../utils/toastEvents';
@@ -10,9 +10,9 @@ import {
   PersonalFormCard,
   ProfileCover,
   ProfileEmptyState,
-  inputClass,
   useProfileForm,
 } from '../components/profile';
+import { cardClass, inputClassFor, sectionTitleClass } from '../components/profile/profileTheme';
 
 interface ProfileModalProps {
   modalMode?: boolean;
@@ -29,6 +29,10 @@ interface ProfileContext {
 export const ProfilePage: React.FC<ProfileModalProps> = ({ modalMode = false, onClose }) => {
   const context = useOutletContext<ProfileContext>() || {};
   const navigate = useNavigate();
+  // Inside the light admin modal keep the light tone, otherwise match the
+  // dark sanctuary auth layout.
+  const tone = modalMode ? 'light' : 'dark';
+  const dark = tone === 'dark';
   const form = useProfileForm(context);
   const { user, loading, active, saving, uploading, fileRef } = form;
 
@@ -39,7 +43,7 @@ export const ProfilePage: React.FC<ProfileModalProps> = ({ modalMode = false, on
   const [changingPassword, setChangingPassword] = useState(false);
 
   if (!user) {
-    return <ProfileEmptyState loading={loading} />;
+    return <ProfileEmptyState loading={loading} tone={tone} />;
   }
 
   const validatePassword = (): string | null => {
@@ -90,8 +94,12 @@ export const ProfilePage: React.FC<ProfileModalProps> = ({ modalMode = false, on
   return (
     <div className="mx-auto w-full max-w-5xl space-y-6">
       {modalMode ? (
-        <div className="flex items-center justify-between border-b border-gray-200 pb-4">
-          <h1 className="text-xl font-serif font-bold text-gray-900 sm:text-2xl">My Profile</h1>
+        <div
+          className={`flex items-center justify-between border-b pb-4 ${
+            dark ? 'border-white/10' : 'border-gray-200'
+          }`}
+        >
+          <h1 className="font-serif text-xl font-bold sm:text-2xl">My Profile</h1>
           <button
             type="button"
             onClick={onClose}
@@ -102,9 +110,15 @@ export const ProfilePage: React.FC<ProfileModalProps> = ({ modalMode = false, on
           </button>
         </div>
       ) : (
-        <div>
-          <h1 className="text-xl font-serif font-bold text-gray-900 sm:text-2xl">My Profile</h1>
-          <p className="mt-1 text-xs text-gray-500">
+        <div className="space-y-3 text-center sm:text-left">
+          <span className="inline-flex items-center gap-2 rounded-full border border-[#2CB5A0]/35 bg-[#1C2628]/80 px-4 py-1.5 text-[11px] font-bold uppercase tracking-widest text-[#6FD3C4]">
+            <Sparkles className="h-3.5 w-3.5 text-[#C7A36A]" />
+            Sanctuary Console
+          </span>
+          <h1 className="font-serif text-3xl font-bold text-white sm:text-4xl">
+            My <span className="text-gold-gradient">Profile</span>
+          </h1>
+          <p className="text-xs text-gray-400">
             Manage your personal details, contact information and profile picture
           </p>
         </div>
@@ -114,6 +128,7 @@ export const ProfilePage: React.FC<ProfileModalProps> = ({ modalMode = false, on
         user={user}
         active={active}
         uploading={uploading}
+        tone={tone}
         fileRef={fileRef}
         onAvatarChange={form.handleAvatarChange}
         onRemoveAvatar={form.handleRemoveAvatar}
@@ -121,12 +136,16 @@ export const ProfilePage: React.FC<ProfileModalProps> = ({ modalMode = false, on
 
       <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-[280px_minmax(0,1fr)]">
         <aside className="space-y-6 lg:sticky lg:top-6">
-          <AccountCard user={user} active={active} />
+          <AccountCard user={user} active={active} tone={tone} />
           {!modalMode ? (
             <button
               type="button"
               onClick={handleLogout}
-              className="inline-flex min-h-[44px] w-full items-center justify-center gap-2 rounded-2xl border border-gray-200 bg-white px-4 py-2.5 text-xs font-bold text-gray-600 shadow-sm transition-colors hover:bg-gray-50 hover:text-rose-600"
+              className={`inline-flex min-h-[44px] w-full items-center justify-center gap-2 rounded-2xl border px-4 py-2.5 text-xs font-bold shadow-sm transition-colors ${
+                dark
+                  ? 'border-white/10 bg-white/[0.04] text-gray-300 hover:border-rose-400/40 hover:text-rose-300'
+                  : 'border-gray-200 bg-white text-gray-600 hover:bg-gray-50 hover:text-rose-600'
+              }`}
             >
               <LogOut className="h-4 w-4" />
               Sign Out
@@ -136,8 +155,8 @@ export const ProfilePage: React.FC<ProfileModalProps> = ({ modalMode = false, on
 
         <div className="min-w-0 space-y-6">
           <form onSubmit={form.handleSave} className="space-y-6">
-            <PersonalFormCard form={form} />
-            <ContactFormCard form={form} />
+            <PersonalFormCard form={form} tone={tone} />
+            <ContactFormCard form={form} tone={tone} />
 
             {/* Sticky floating save bar on mobile, inline on desktop */}
             <div className="sticky bottom-3 z-10 flex justify-stretch sm:static sm:justify-end">
@@ -152,21 +171,19 @@ export const ProfilePage: React.FC<ProfileModalProps> = ({ modalMode = false, on
             </div>
           </form>
 
-          <section
-            aria-label="Change password"
-            className="space-y-4 rounded-2xl border border-gray-200 bg-white p-5 shadow-sm sm:p-6"
-          >
-            <h3 className="flex items-center gap-2 text-xs font-bold uppercase text-gray-500">
-              <Key className="h-4 w-4 text-[#2CB5A0]" /> Change Password
+          <section aria-label="Change password" className={`${cardClass(tone)} space-y-4 p-5 sm:p-6`}>
+            <h3 className={sectionTitleClass(tone)}>
+              <Key className={`h-4 w-4 ${dark ? 'text-[#C7A36A]' : 'text-[#2CB5A0]'}`} />
+              Change Password
             </h3>
             <form onSubmit={handleChangePassword}>
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div className="sm:col-span-2">
                   <label
                     htmlFor="pf-pw-current"
-                    className="mb-1.5 flex items-center gap-1 text-xs font-bold uppercase text-gray-700"
+                    className="mb-1.5 flex items-center gap-1 text-xs font-bold uppercase text-gray-400"
                   >
-                    <Lock className="h-3.5 w-3.5 text-gray-400" />
+                    <Lock className="h-3.5 w-3.5 opacity-60" />
                     <span>Current Password</span>
                   </label>
                   <input
@@ -176,13 +193,13 @@ export const ProfilePage: React.FC<ProfileModalProps> = ({ modalMode = false, on
                     value={pwCurrent}
                     onChange={(e) => setPwCurrent(e.target.value)}
                     placeholder="Enter your current password"
-                    className={inputClass}
+                    className={inputClassFor(tone)}
                   />
                 </div>
                 <div>
                   <label
                     htmlFor="pf-pw-new"
-                    className="mb-1.5 block text-xs font-bold uppercase text-gray-700"
+                    className="mb-1.5 block text-xs font-bold uppercase text-gray-400"
                   >
                     New Password
                   </label>
@@ -193,13 +210,13 @@ export const ProfilePage: React.FC<ProfileModalProps> = ({ modalMode = false, on
                     value={pwNew}
                     onChange={(e) => setPwNew(e.target.value)}
                     placeholder="Min 8 chars, letter + number"
-                    className={inputClass}
+                    className={inputClassFor(tone)}
                   />
                 </div>
                 <div>
                   <label
                     htmlFor="pf-pw-confirm"
-                    className="mb-1.5 block text-xs font-bold uppercase text-gray-700"
+                    className="mb-1.5 block text-xs font-bold uppercase text-gray-400"
                   >
                     Confirm New Password
                   </label>
@@ -210,7 +227,7 @@ export const ProfilePage: React.FC<ProfileModalProps> = ({ modalMode = false, on
                     value={pwConfirm}
                     onChange={(e) => setPwConfirm(e.target.value)}
                     placeholder="Repeat new password"
-                    className={inputClass}
+                    className={inputClassFor(tone)}
                   />
                 </div>
               </div>
@@ -218,7 +235,11 @@ export const ProfilePage: React.FC<ProfileModalProps> = ({ modalMode = false, on
                 <button
                   type="submit"
                   disabled={changingPassword}
-                  className="inline-flex min-h-[44px] w-full items-center justify-center gap-2 rounded-xl border border-gray-200 bg-white px-6 py-3 text-xs font-bold text-gray-700 shadow-sm transition-colors hover:border-[#2CB5A0] hover:text-[#158c7c] disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
+                  className={`inline-flex min-h-[44px] w-full items-center justify-center gap-2 rounded-xl border px-6 py-3 text-xs font-bold shadow-sm transition-colors disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto ${
+                    dark
+                      ? 'border-white/10 bg-white/[0.04] text-gray-200 hover:border-[#2CB5A0]/50 hover:text-[#6FD3C4]'
+                      : 'border-gray-200 bg-white text-gray-700 hover:border-[#2CB5A0] hover:text-[#158c7c]'
+                  }`}
                 >
                   {changingPassword ? (
                     <Loader2 className="h-4 w-4 animate-spin" />
