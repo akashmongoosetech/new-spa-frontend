@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Ticket, Plus, Trash2, CheckCircle2 } from 'lucide-react';
 import { api } from '../../services/api';
 import { showToast } from '../../utils/toastEvents';
+import { DeleteModal } from '../../components/ui/DeleteModal';
 
 interface CouponItem {
   id: string;
@@ -64,13 +65,17 @@ export const AdminCouponsPage: React.FC = () => {
     }
   };
 
-  const handleDelete = async (id: string) => {
-    if (!window.confirm('Delete this coupon permanently?')) return;
+  const [deleteTarget, setDeleteTarget] = useState<CouponItem | null>(null);
+
+  const handleDelete = async () => {
+    if (!deleteTarget) return;
     try {
-      await api.deleteCoupon(id);
-      setCoupons((prev) => prev.filter((c) => c.id !== id));
+      await api.deleteCoupon(deleteTarget.id);
+      setCoupons((prev) => prev.filter((c) => c.id !== deleteTarget.id));
+      setDeleteTarget(null);
     } catch (err: any) {
       showToast({ type: 'error', title: 'Delete Failed', message: err?.message || 'Failed to delete coupon.' });
+      throw err;
     }
   };
 
@@ -94,7 +99,7 @@ export const AdminCouponsPage: React.FC = () => {
           required
           value={code}
           onChange={(e) => setCode(e.target.value.toUpperCase())}
-          placeholder="CODE e.g. AURA10"
+          placeholder="CODE e.g. TRIPOD10"
           className="border border-gray-300 rounded-xl px-3 py-2.5 text-xs uppercase outline-none focus:border-[#2CB5A0]"
         />
         <select
@@ -175,8 +180,9 @@ export const AdminCouponsPage: React.FC = () => {
                     <td className="p-4 text-gray-600">{c.usageCount} uses</td>
                     <td className="p-4 text-right">
                       <button
-                        onClick={() => handleDelete(c.id)}
+                        onClick={() => setDeleteTarget(c)}
                         className="p-1.5 text-gray-500 hover:text-rose-600 inline-block cursor-pointer"
+                        aria-label={`Delete coupon ${c.code}`}
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>
@@ -188,6 +194,13 @@ export const AdminCouponsPage: React.FC = () => {
           </div>
         </div>
       )}
+      <DeleteModal
+        isOpen={!!deleteTarget}
+        onClose={() => setDeleteTarget(null)}
+        onConfirm={handleDelete}
+        title="Delete Coupon"
+        itemName={deleteTarget?.code}
+      />
     </div>
   );
 };

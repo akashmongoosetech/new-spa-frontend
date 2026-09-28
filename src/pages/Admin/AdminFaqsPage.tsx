@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { HelpCircle, Plus, Trash2, X, CheckCircle2, Eye, EyeOff, Edit2, Save, RotateCcw } from 'lucide-react';
 import { Modal } from '../../components/ui/Modal';
+import { DeleteModal } from '../../components/ui/DeleteModal';
 import { api } from '../../services/api';
 import { showToast } from '../../utils/toastEvents';
 
@@ -80,13 +81,17 @@ export const AdminFaqsPage: React.FC = () => {
     }
   };
 
-  const handleDelete = async (id: string) => {
-    if (!window.confirm('Delete this FAQ entry?')) return;
+  const [deleteTarget, setDeleteTarget] = useState<{ id: string; question: string } | null>(null);
+
+  const handleDelete = async () => {
+    if (!deleteTarget) return;
     try {
-      await api.deleteFaq(id);
-      setFaqs((prev) => prev.filter((f) => f.id !== id));
+      await api.deleteFaq(deleteTarget.id);
+      setFaqs((prev) => prev.filter((f) => f.id !== deleteTarget.id));
+      setDeleteTarget(null);
     } catch (err: any) {
       showToast({ type: 'error', title: 'Delete Failed', message: err?.message || 'Failed to delete FAQ.' });
+      throw err;
     }
   };
 
@@ -189,7 +194,7 @@ export const AdminFaqsPage: React.FC = () => {
                   <Edit2 className="w-4 h-4" />
                 </button>
                 <button
-                  onClick={() => handleDelete(faq.id)}
+                  onClick={() => setDeleteTarget({ id: faq.id, question: faq.question })}
                   className="p-2 rounded-lg text-gray-300 hover:text-rose-500 hover:bg-rose-50 transition-colors cursor-pointer shrink-0"
                   title="Delete FAQ"
                   aria-label={`Delete FAQ: ${faq.question}`}
@@ -271,6 +276,14 @@ export const AdminFaqsPage: React.FC = () => {
           </div>
         </form>
       </Modal>
+
+      <DeleteModal
+        isOpen={!!deleteTarget}
+        onClose={() => setDeleteTarget(null)}
+        onConfirm={handleDelete}
+        title="Delete FAQ"
+        itemName={deleteTarget?.question}
+      />
     </div>
   );
 };

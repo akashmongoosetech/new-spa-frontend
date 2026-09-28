@@ -4,6 +4,7 @@ import { Plus, Edit2, Eye, Trash2, Search, Filter, ChevronLeft, ChevronRight, Gl
 import { api } from '../../services/api';
 import { showToast } from '../../utils/toastEvents';
 import { BlogPost } from '../../types';
+import { DeleteModal } from '../../components/ui/DeleteModal';
 
 export const AdminBlogsPage: React.FC = () => {
   const [blogs, setBlogs] = useState<BlogPost[]>([]);
@@ -54,14 +55,18 @@ export const AdminBlogsPage: React.FC = () => {
     currentPage * itemsPerPage
   );
 
-  const handleDelete = async (id: string) => {
-    if (!window.confirm('Delete this article permanently?')) return;
+  const [deleteTarget, setDeleteTarget] = useState<BlogPost | null>(null);
+
+  const handleDelete = async () => {
+    if (!deleteTarget) return;
     try {
-      await api.deleteBlog(id);
-      setBlogs((prev) => prev.filter((b) => b.id !== id));
+      await api.deleteBlog(deleteTarget.id);
+      setBlogs((prev) => prev.filter((b) => b.id !== deleteTarget.id));
+      setDeleteTarget(null);
       showToast({ type: 'success', title: 'Deleted', message: 'Article deleted successfully.' });
     } catch (err: any) {
       showToast({ type: 'error', title: 'Delete Failed', message: err?.message || 'Failed to delete article.' });
+      throw err;
     }
   };
 
@@ -245,9 +250,10 @@ export const AdminBlogsPage: React.FC = () => {
                         {b.status === 'active' ? <ToggleRight className="w-4 h-4" /> : <ToggleLeft className="w-4 h-4" />}
                       </button>
                       <button
-                        onClick={() => handleDelete(b.id)}
+                        onClick={() => setDeleteTarget(b)}
                         className="p-1.5 text-gray-500 hover:text-rose-600 inline-block cursor-pointer"
                         title="Delete"
+                        aria-label={`Delete article ${b.title}`}
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>
@@ -257,6 +263,14 @@ export const AdminBlogsPage: React.FC = () => {
               </tbody>
             </table>
           </div>
+
+      <DeleteModal
+        isOpen={!!deleteTarget}
+        onClose={() => setDeleteTarget(null)}
+        onConfirm={handleDelete}
+        title="Delete Article"
+        itemName={deleteTarget?.title}
+      />
 
           {/* Pagination */}
           {totalPages > 1 && (

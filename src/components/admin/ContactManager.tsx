@@ -15,6 +15,7 @@ import {
 } from 'lucide-react';
 import { ContactMessage } from '../../types';
 import { Modal } from '../ui/Modal';
+import { DeleteModal } from '../ui/DeleteModal';
 import { api } from '../../services/api';
 import { showToast } from '../../utils/toastEvents';
 
@@ -84,24 +85,21 @@ export const ContactManager: React.FC<ContactManagerProps> = ({ contacts, onRefr
     }
   };
 
-  const handleDeleteSingle = async (id: string) => {
-    try {
-      await api.deleteContact(id);
-      onRefreshContacts();
-    } catch (err) {
-      console.error(err);
-    }
+  const [deleteTarget, setDeleteTarget] = useState<ContactMessage | null>(null);
+  const [showBulkDelete, setShowBulkDelete] = useState(false);
+
+  const handleDeleteSingle = async () => {
+    if (!deleteTarget) return;
+    await api.deleteContact(deleteTarget.id);
+    setDeleteTarget(null);
+    onRefreshContacts();
   };
 
   const handleBulkDelete = async () => {
     if (selectedIds.length === 0) return;
-    try {
-      await api.bulkDeleteContacts(selectedIds);
-      setSelectedIds([]);
-      onRefreshContacts();
-    } catch (err) {
-      console.error(err);
-    }
+    await api.bulkDeleteContacts(selectedIds);
+    setSelectedIds([]);
+    onRefreshContacts();
   };
 
   const getStatusBadge = (status: string) => {
@@ -130,7 +128,7 @@ export const ContactManager: React.FC<ContactManagerProps> = ({ contacts, onRefr
         <div className="flex items-center gap-3">
           {selectedIds.length > 0 && (
             <button
-              onClick={handleBulkDelete}
+              onClick={() => setShowBulkDelete(true)}
               className="px-4 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs flex items-center gap-2 cursor-pointer shadow-xs"
             >
               <Trash2 className="w-4 h-4" /> Delete ({selectedIds.length})
@@ -251,9 +249,10 @@ export const ContactManager: React.FC<ContactManagerProps> = ({ contacts, onRefr
                           <Send className="w-4 h-4" />
                         </button>
                         <button
-                          onClick={() => handleDeleteSingle(c.id)}
+                          onClick={() => setDeleteTarget(c)}
                           className="p-1.5 rounded-lg bg-rose-50 text-rose-600 hover:bg-rose-100 cursor-pointer"
                           title="Delete Message"
+                          aria-label={`Delete message from ${c.name}`}
                         >
                           <Trash2 className="w-4 h-4" />
                         </button>
@@ -328,6 +327,22 @@ export const ContactManager: React.FC<ContactManagerProps> = ({ contacts, onRefr
           </div>
         )}
       </Modal>
+
+      <DeleteModal
+        isOpen={!!deleteTarget}
+        onClose={() => setDeleteTarget(null)}
+        onConfirm={handleDeleteSingle}
+        title="Delete Message"
+        itemName={deleteTarget ? `message from ${deleteTarget.name}` : undefined}
+      />
+      <DeleteModal
+        isOpen={showBulkDelete}
+        onClose={() => setShowBulkDelete(false)}
+        onConfirm={handleBulkDelete}
+        title="Delete Messages"
+        count={selectedIds.length}
+        confirmLabel={`Delete ${selectedIds.length}`}
+      />
     </div>
   );
 };

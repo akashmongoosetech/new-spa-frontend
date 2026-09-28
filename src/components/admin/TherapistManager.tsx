@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 import { Therapist } from '../../types';
 import { Modal } from '../ui/Modal';
+import { DeleteModal } from '../ui/DeleteModal';
 import { api } from '../../services/api';
 
 interface TherapistManagerProps {
@@ -116,14 +117,13 @@ export const TherapistManager: React.FC<TherapistManagerProps> = ({ therapists, 
     }
   };
 
-  const handleDelete = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this therapist profile?')) return;
-    try {
-      await api.deleteTherapist(id);
-      onRefreshTherapists();
-    } catch (err) {
-      console.error(err);
-    }
+  const [deleteTarget, setDeleteTarget] = useState<Therapist | null>(null);
+
+  const handleDelete = async () => {
+    if (!deleteTarget) return;
+    await api.deleteTherapist(deleteTarget.id);
+    setDeleteTarget(null);
+    onRefreshTherapists();
   };
 
   return (
@@ -218,9 +218,10 @@ export const TherapistManager: React.FC<TherapistManagerProps> = ({ therapists, 
                   <Edit2 className="w-3.5 h-3.5 text-gray-600" /> Edit
                 </button>
                 <button
-                  onClick={() => handleDelete(t.id)}
+                  onClick={() => setDeleteTarget(t)}
                   className="p-1.5 rounded-xl bg-rose-50 text-rose-600 hover:bg-rose-100 cursor-pointer"
                   title="Delete Profile"
+                  aria-label={`Delete therapist ${t.name}`}
                 >
                   <Trash2 className="w-4 h-4" />
                 </button>
@@ -375,6 +376,14 @@ export const TherapistManager: React.FC<TherapistManagerProps> = ({ therapists, 
           </div>
         </form>
       </Modal>
+
+      <DeleteModal
+        isOpen={!!deleteTarget}
+        onClose={() => setDeleteTarget(null)}
+        onConfirm={handleDelete}
+        title="Delete Therapist"
+        itemName={deleteTarget?.name}
+      />
     </div>
   );
 };

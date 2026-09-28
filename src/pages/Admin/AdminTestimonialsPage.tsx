@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Star, Plus, Trash2 } from 'lucide-react';
 import { api } from '../../services/api';
 import { showToast } from '../../utils/toastEvents';
+import { DeleteModal } from '../../components/ui/DeleteModal';
 
 export const AdminTestimonialsPage: React.FC = () => {
   const [items, setItems] = useState<any[]>([]);
@@ -36,13 +37,17 @@ export const AdminTestimonialsPage: React.FC = () => {
     }
   };
 
-  const handleDelete = async (id: string) => {
-    if (!window.confirm('Delete this testimonial?')) return;
+  const [deleteTarget, setDeleteTarget] = useState<{ id: string; name: string } | null>(null);
+
+  const handleDelete = async () => {
+    if (!deleteTarget) return;
     try {
-      await api.deleteTestimonial(id);
-      setItems((prev) => prev.filter((t) => t.id !== id));
+      await api.deleteTestimonial(deleteTarget.id);
+      setItems((prev) => prev.filter((t) => t.id !== deleteTarget.id));
+      setDeleteTarget(null);
     } catch (err: any) {
       showToast({ type: 'error', title: 'Delete Failed', message: err?.message || 'Failed to delete testimonial.' });
+      throw err;
     }
   };
 
@@ -126,8 +131,9 @@ export const AdminTestimonialsPage: React.FC = () => {
                   {t.approved ? 'Approved' : 'Pending'}
                 </button>
                 <button
-                  onClick={() => handleDelete(t.id)}
+                  onClick={() => setDeleteTarget({ id: t.id, name: t.clientName || t.name })}
                   className="p-1.5 text-gray-400 hover:text-rose-600 cursor-pointer"
+                  aria-label={`Delete testimonial from ${t.clientName || t.name}`}
                 >
                   <Trash2 className="w-4 h-4" />
                 </button>
@@ -137,6 +143,13 @@ export const AdminTestimonialsPage: React.FC = () => {
           </div>
         ))}
       </div>
+      <DeleteModal
+        isOpen={!!deleteTarget}
+        onClose={() => setDeleteTarget(null)}
+        onConfirm={handleDelete}
+        title="Delete Testimonial"
+        itemName={deleteTarget ? `review from ${deleteTarget.name}` : undefined}
+      />
     </div>
   );
 };

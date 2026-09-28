@@ -20,6 +20,7 @@ import {
 } from 'lucide-react';
 import { Booking, Service, Therapist } from '../../types';
 import { Modal } from '../ui/Modal';
+import { DeleteModal } from '../ui/DeleteModal';
 import { api } from '../../services/api';
 import { showToast } from '../../utils/toastEvents';
 import { BookingConfirmationModal } from '../booking/BookingConfirmationModal';
@@ -118,13 +119,8 @@ export const BookingManager: React.FC<BookingManagerProps> = ({
 
   const handleDelete = async () => {
     if (!activeBooking) return;
-    try {
-      await api.deleteBooking(activeBooking.id);
-      setShowDeleteModal(false);
-      onRefreshBookings();
-    } catch (err) {
-      console.error(err);
-    }
+    await api.deleteBooking(activeBooking.id);
+    onRefreshBookings();
   };
 
   const getStatusBadge = (status: Booking['status']) => {
@@ -452,21 +448,14 @@ export const BookingManager: React.FC<BookingManagerProps> = ({
       </Modal>
 
       {/* Delete Confirmation Modal */}
-      <Modal isOpen={showDeleteModal} onClose={() => setShowDeleteModal(false)} title="Confirm Delete Booking">
-        <div className="space-y-4">
-          <p className="text-xs text-gray-600">
-            Are you sure you want to permanently remove booking <span className="font-bold text-gray-900">#{activeBooking?.bookingNumber}</span>?
-          </p>
-          <div className="flex justify-end gap-3">
-            <button onClick={() => setShowDeleteModal(false)} className="px-4 py-2 rounded-xl bg-gray-100 text-xs font-bold cursor-pointer">
-              Cancel
-            </button>
-            <button onClick={handleDelete} className="px-5 py-2 rounded-xl bg-rose-600 text-xs font-bold text-white cursor-pointer">
-              Permanently Delete
-            </button>
-          </div>
-        </div>
-      </Modal>
+      <DeleteModal
+        isOpen={showDeleteModal}
+        onClose={() => setShowDeleteModal(false)}
+        onConfirm={handleDelete}
+        title="Delete Booking"
+        itemName={activeBooking ? `#${activeBooking.bookingNumber}` : undefined}
+        confirmLabel="Permanently Delete"
+      />
 
       {/* Booking Confirmation Details Modal */}
       {showConfirmationModal && activeBooking && (

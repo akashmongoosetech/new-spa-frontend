@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 import { AdminUser, LoginActivity } from '../../types';
 import { Modal } from '../ui/Modal';
+import { DeleteModal } from '../ui/DeleteModal';
 import { api } from '../../services/api';
 
 interface UserManagementProps {
@@ -105,14 +106,13 @@ export const UserManagement: React.FC<UserManagementProps> = ({ currentUser, sea
     }
   };
 
-  const handleDelete = async (id: string) => {
-    if (!confirm('Are you sure you want to remove this staff user?')) return;
-    try {
-      await api.deleteAdminUser(id);
-      fetchData();
-    } catch (err) {
-      console.error(err);
-    }
+  const [deleteTarget, setDeleteTarget] = useState<AdminUser | null>(null);
+
+  const handleDelete = async () => {
+    if (!deleteTarget) return;
+    await api.deleteAdminUser(deleteTarget.id);
+    setDeleteTarget(null);
+    fetchData();
   };
 
   const getRoleBadge = (r: AdminUser['role']) => {
@@ -233,9 +233,10 @@ export const UserManagement: React.FC<UserManagementProps> = ({ currentUser, sea
                     </button>
                     {u.id !== currentUser?.id && (
                       <button
-                        onClick={() => handleDelete(u.id)}
+                        onClick={() => setDeleteTarget(u)}
                         className="p-1.5 rounded-lg bg-rose-50 text-rose-600 hover:bg-rose-100 cursor-pointer"
                         title="Delete User"
+                        aria-label={`Delete user ${u.name}`}
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>
@@ -392,6 +393,15 @@ export const UserManagement: React.FC<UserManagementProps> = ({ currentUser, sea
           </div>
         </form>
       </Modal>
+
+      <DeleteModal
+        isOpen={!!deleteTarget}
+        onClose={() => setDeleteTarget(null)}
+        onConfirm={handleDelete}
+        title="Remove Staff User"
+        itemName={deleteTarget ? `${deleteTarget.name} (${deleteTarget.email})` : undefined}
+        dangerHint="Their portal access is revoked immediately."
+      />
     </div>
   );
 };

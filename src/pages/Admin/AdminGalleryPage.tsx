@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Image, Upload, Trash2 } from 'lucide-react';
 import { api } from '../../services/api';
 import { showToast } from '../../utils/toastEvents';
+import { DeleteModal } from '../../components/ui/DeleteModal';
 
 export const AdminGalleryPage: React.FC = () => {
   const [items, setItems] = useState<any[]>([]);
@@ -70,13 +71,17 @@ export const AdminGalleryPage: React.FC = () => {
     }
   };
 
-  const handleDelete = async (id: string) => {
-    if (!window.confirm('Delete this gallery item?')) return;
+  const [deleteTarget, setDeleteTarget] = useState<{ id: string; title: string } | null>(null);
+
+  const handleDelete = async () => {
+    if (!deleteTarget) return;
     try {
-      await api.deleteGalleryItem(id);
-      setItems((prev) => prev.filter((i) => i.id !== id));
+      await api.deleteGalleryItem(deleteTarget.id);
+      setItems((prev) => prev.filter((i) => i.id !== deleteTarget.id));
+      setDeleteTarget(null);
     } catch (err: any) {
       showToast({ type: 'error', title: 'Delete Failed', message: err?.message || 'Failed to delete gallery item.' });
+      throw err;
     }
   };
 
@@ -182,8 +187,9 @@ export const AdminGalleryPage: React.FC = () => {
               </div>
               <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
                 <button
-                  onClick={() => handleDelete(item.id)}
+                  onClick={() => setDeleteTarget({ id: item.id, title: item.title })}
                   className="p-2 bg-red-600 text-white rounded-lg hover:bg-red-700 cursor-pointer"
+                  aria-label={`Delete gallery item ${item.title}`}
                 >
                   <Trash2 className="w-4 h-4" />
                 </button>
@@ -192,6 +198,13 @@ export const AdminGalleryPage: React.FC = () => {
           ))
         )}
       </div>
+      <DeleteModal
+        isOpen={!!deleteTarget}
+        onClose={() => setDeleteTarget(null)}
+        onConfirm={handleDelete}
+        title="Delete Gallery Item"
+        itemName={deleteTarget?.title}
+      />
     </div>
   );
 };

@@ -3,6 +3,7 @@ import { RefreshCw, UserPlus, CheckCircle2, XCircle, Trash2, Inbox } from 'lucid
 import { StaffApplication } from '../../types';
 import { api } from '../../services/api';
 import { showToast } from '../../utils/toastEvents';
+import { DeleteModal } from '../../components/ui/DeleteModal';
 
 type Filter = 'all' | 'pending' | 'approved' | 'rejected';
 
@@ -89,6 +90,7 @@ export const AdminApplicationsPage: React.FC = () => {
       await load();
     } catch (err: any) {
       showToast({ type: 'error', title: 'Delete failed', message: err?.message || 'Could not delete application.' });
+      throw err;
     } finally {
       setBusyId(null);
     }
@@ -254,25 +256,14 @@ export const AdminApplicationsPage: React.FC = () => {
         </div>
       )}
 
-      {deleteTarget && (
-        <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4" onClick={() => setDeleteTarget(null)}>
-          <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl" onClick={(e) => e.stopPropagation()}>
-            <div className="w-12 h-12 rounded-2xl bg-gray-100 text-gray-500 flex items-center justify-center mb-4">
-              <Trash2 className="w-6 h-6" />
-            </div>
-            <h3 className="text-sm font-bold text-gray-900">Delete application?</h3>
-            <p className="text-xs text-gray-500 mt-1">This permanently removes {deleteTarget.name}'s application ({deleteTarget.email}).</p>
-            <div className="flex justify-end gap-2 mt-6">
-              <button onClick={() => setDeleteTarget(null)} className="px-4 py-2 rounded-xl text-xs font-bold text-gray-500 bg-gray-100 cursor-pointer hover:bg-gray-200">
-                Cancel
-              </button>
-              <button onClick={handleDelete} disabled={busyId === deleteTarget.id} className="px-4 py-2 rounded-xl text-xs font-bold text-white bg-gray-800 cursor-pointer hover:bg-black disabled:opacity-50">
-                {busyId === deleteTarget.id ? 'Deleting...' : 'Delete Entry'}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      <DeleteModal
+        isOpen={!!deleteTarget}
+        onClose={() => setDeleteTarget(null)}
+        onConfirm={handleDelete}
+        title="Delete application?"
+        itemName={deleteTarget ? `${deleteTarget.name} (${deleteTarget.email})` : undefined}
+        confirmLabel="Delete Entry"
+      />
     </div>
   );
 };

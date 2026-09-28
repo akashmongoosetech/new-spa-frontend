@@ -11,6 +11,7 @@ import {
 } from 'lucide-react';
 import { Service } from '../../types';
 import { Modal } from '../ui/Modal';
+import { DeleteModal } from '../ui/DeleteModal';
 import { api } from '../../services/api';
 
 interface ServiceManagerProps {
@@ -116,14 +117,13 @@ export const ServiceManager: React.FC<ServiceManagerProps> = ({ services, onRefr
     }
   };
 
-  const handleDelete = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this service?')) return;
-    try {
-      await api.deleteService(id);
-      onRefreshServices();
-    } catch (err) {
-      console.error(err);
-    }
+  const [deleteTarget, setDeleteTarget] = useState<Service | null>(null);
+
+  const handleDelete = async () => {
+    if (!deleteTarget) return;
+    await api.deleteService(deleteTarget.id);
+    setDeleteTarget(null);
+    onRefreshServices();
   };
 
   return (
@@ -214,9 +214,10 @@ export const ServiceManager: React.FC<ServiceManagerProps> = ({ services, onRefr
                   <Edit2 className="w-3.5 h-3.5 text-gray-600" /> Edit
                 </button>
                 <button
-                  onClick={() => handleDelete(s.id)}
+                  onClick={() => setDeleteTarget(s)}
                   className="p-1.5 rounded-xl bg-rose-50 text-rose-600 hover:bg-rose-100 cursor-pointer"
                   title="Delete Service"
+                  aria-label={`Delete service ${s.title}`}
                 >
                   <Trash2 className="w-4 h-4" />
                 </button>
@@ -372,6 +373,14 @@ export const ServiceManager: React.FC<ServiceManagerProps> = ({ services, onRefr
           </div>
         </form>
       </Modal>
+
+      <DeleteModal
+        isOpen={!!deleteTarget}
+        onClose={() => setDeleteTarget(null)}
+        onConfirm={handleDelete}
+        title="Delete Service"
+        itemName={deleteTarget?.title}
+      />
     </div>
   );
 };
