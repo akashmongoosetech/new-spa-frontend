@@ -210,7 +210,7 @@ function mapBusinessSettings(s: any): BusinessSettings {
     email: s.email || 'wellnesstripod@gmail.com',
     address: s.address || 'Indore, Ujjain, Dewas',
     city: s.city || 'Indore, Ujjain, Dewas',
-    workingHours: s.workingHours || s.openingHours || 'Mon - Sun: 09:00 AM - 10:00 PM IST',
+    workingHours: s.workingHours || s.openingHours || 'Open 24 hours, Mon - Sun (IST)',
     currencySymbol: s.currencySymbol || '₹',
     currencyCode: s.currencyCode || 'INR',
     googleMapsUrl: s.googleMapsUrl || 'https://www.google.com/maps/search/?api=1&query=Indore+Ujjain+Dewas',
@@ -378,7 +378,8 @@ export const api = {
     const raw: string[] = Array.isArray(data) ? data : [];
     const slots = raw.filter((t) => /^\d{1,2}:\d{2}$/.test(String(t))).map((time) => {
       const hour = Number(String(time).split(':')[0]);
-      const period = hour < 12 ? 'morning' : hour < 17 ? 'afternoon' : hour < 21 ? 'evening' : 'night';
+      const period =
+        hour < 5 ? 'late-night' : hour < 12 ? 'morning' : hour < 17 ? 'afternoon' : hour < 21 ? 'evening' : 'night';
       return { time, period, available: true };
     });
     return { date, slots };

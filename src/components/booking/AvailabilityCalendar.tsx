@@ -25,9 +25,31 @@ export const AvailabilityCalendar: React.FC<AvailabilityCalendarProps> = ({
 }) => {
   const [slots, setSlots] = useState<TimeSlotItem[]>([]);
   const [loading, setLoading] = useState(false);
+  const [horizonDays, setHorizonDays] = useState(14);
 
-  // Generate next 14 available dates
-  const datesList = Array.from({ length: 14 }).map((_, i) => {
+  // Booking horizon follows the backend advanceBookingDays setting (14 fallback).
+  useEffect(() => {
+    api.getSettings().then(
+      (s) => {
+        const n = Number((s as { advanceBookingDays?: number }).advanceBookingDays);
+        if (Number.isFinite(n) && n > 0 && n <= 90) setHorizonDays(Math.floor(n));
+      },
+      () => {}
+    );
+  }, []);
+
+  // 12h display for 24h "HH:MM" slot values (values stay 24h for the API).
+  const to12h = (t: string) => {
+    const m = String(t).match(/^(\d{1,2}):(\d{2})$/);
+    if (!m) return t;
+    const h = Number(m[1]);
+    const suffix = h < 12 ? 'AM' : 'PM';
+    const h12 = h % 12 === 0 ? 12 : h % 12;
+    return `${String(h12).padStart(2, '0')}:${m[2]} ${suffix}`;
+  };
+
+  // Generate bookable dates up to the horizon
+  const datesList = Array.from({ length: horizonDays }).map((_, i) => {
     const d = new Date();
     d.setDate(d.getDate() + i);
     const dateStr = d.toISOString().split('T')[0];
@@ -61,10 +83,50 @@ export const AvailabilityCalendar: React.FC<AvailabilityCalendarProps> = ({
 
   const safeSlots = slots || [];
   const groupSlots = {
+    lateNight: safeSlots.filter((s) => s?.period === 'late-night'),
     morning: safeSlots.filter((s) => s?.period === 'morning'),
     afternoon: safeSlots.filter((s) => s?.period === 'afternoon'),
     evening: safeSlots.filter((s) => s?.period === 'evening'),
     night: safeSlots.filter((s) => s?.period === 'night'),
+  };
+
+  const renderGroup = (title: string, icon: React.ReactNode, list: TimeSlotItem[]) => {
+    if (list.length === 0) return null;
+    return (
+      <div>
+        <span className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2.5 flex items-center gap-1.5">
+          {icon} {title}
+        </span>
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2.5">
+          {list.map((slot) => {
+            const isSelected = selectedTimeSlot === slot.time;
+            return (
+              <button
+                key={slot.time}
+                id={`time-slot-${slot.time.replace(/[^a-zA-Z0-9]/g, '')}`}
+                type="button"
+                disabled={!slot.available}
+                onClick={() => onSelectTimeSlot(slot.time)}
+                className={`py-3 px-3.5 rounded-xl text-xs font-bold border transition-all flex items-center justify-between cursor-pointer ${
+                  isSelected
+                    ? 'bg-[#2CB5A0] text-white border-transparent shadow-lg shadow-[#2CB5A0]/25 scale-[1.02]'
+                    : slot.available
+                    ? 'bg-[#182225] border-white/10 text-gray-200 hover:border-[#2CB5A0] hover:bg-[#1E2C2F]'
+                    : 'bg-white/5 border-white/5 text-gray-600 cursor-not-allowed line-through opacity-60'
+                }`}
+              >
+                <span>{to12h(slot.time)}</span>
+                {isSelected ? (
+                  <CheckCircle2 className="w-4 h-4 text-white" />
+                ) : !slot.available ? (
+                  <span className="text-[10px] text-rose-400 font-extrabold no-underline">Booked</span>
+                ) : null}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+    );
   };
 
   return (
@@ -149,115 +211,35 @@ export const AvailabilityCalendar: React.FC<AvailabilityCalendarProps> = ({
           </div>
         ) : (
           <div className="space-y-5">
-            {/* Morning */}
-            {groupSlots.morning.length > 0 && (
-              <div>
-                <span className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2.5 flex items-center gap-1.5">
-                  <Sun className="w-4 h-4 text-amber-400" /> Morning Sessions (09:00 AM - 12:00 PM)
-                </span>
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2.5">
-                  {groupSlots.morning.map((slot) => {
-                    const isSelected = selectedTimeSlot === slot.time;
-                    return (
-                      <button
-                        key={slot.time}
-                        id={`time-slot-${slot.time.replace(/[^a-zA-Z0-9]/g, '')}`}
-                        type="button"
-                        disabled={!slot.available}
-                        onClick={() => onSelectTimeSlot(slot.time)}
-                        className={`py-3 px-3.5 rounded-xl text-xs font-bold border transition-all flex items-center justify-between cursor-pointer ${
-                          isSelected
-                            ? 'bg-[#2CB5A0] text-white border-transparent shadow-lg shadow-[#2CB5A0]/25 scale-[1.02]'
-                            : slot.available
-                            ? 'bg-[#182225] border-white/10 text-gray-200 hover:border-[#2CB5A0] hover:bg-[#1E2C2F]'
-                            : 'bg-white/5 border-white/5 text-gray-600 cursor-not-allowed line-through opacity-60'
-                        }`}
-                      >
-                        <span>{slot.time}</span>
-                        {isSelected ? (
-                          <CheckCircle2 className="w-4 h-4 text-white" />
-                        ) : !slot.available ? (
-                          <span className="text-[10px] text-rose-400 font-extrabold no-underline">Booked</span>
-                        ) : null}
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
+            {renderGroup(
+              'Late Night Sessions (12:00 AM - 05:00 AM)',
+              <Moon className="w-4 h-4 text-violet-400" />,
+              groupSlots.lateNight
             )}
-
-            {/* Afternoon */}
-            {groupSlots.afternoon.length > 0 && (
-              <div>
-                <span className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2.5 flex items-center gap-1.5">
-                  <Sunset className="w-4 h-4 text-orange-400" /> Afternoon Sessions (12:00 PM - 05:00 PM)
-                </span>
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2.5">
-                  {groupSlots.afternoon.map((slot) => {
-                    const isSelected = selectedTimeSlot === slot.time;
-                    return (
-                      <button
-                        key={slot.time}
-                        id={`time-slot-${slot.time.replace(/[^a-zA-Z0-9]/g, '')}`}
-                        type="button"
-                        disabled={!slot.available}
-                        onClick={() => onSelectTimeSlot(slot.time)}
-                        className={`py-3 px-3.5 rounded-xl text-xs font-bold border transition-all flex items-center justify-between cursor-pointer ${
-                          isSelected
-                            ? 'bg-[#2CB5A0] text-white border-transparent shadow-lg shadow-[#2CB5A0]/25 scale-[1.02]'
-                            : slot.available
-                            ? 'bg-[#182225] border-white/10 text-gray-200 hover:border-[#2CB5A0] hover:bg-[#1E2C2F]'
-                            : 'bg-white/5 border-white/5 text-gray-600 cursor-not-allowed line-through opacity-60'
-                        }`}
-                      >
-                        <span>{slot.time}</span>
-                        {isSelected ? (
-                          <CheckCircle2 className="w-4 h-4 text-white" />
-                        ) : !slot.available ? (
-                          <span className="text-[10px] text-rose-400 font-extrabold no-underline">Booked</span>
-                        ) : null}
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
+            {renderGroup(
+              'Morning Sessions (05:00 AM - 12:00 PM)',
+              <Sun className="w-4 h-4 text-amber-400" />,
+              groupSlots.morning
             )}
-
-            {/* Evening & Night */}
-            {(groupSlots.evening.length > 0 || groupSlots.night.length > 0) && (
-              <div>
-                <span className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2.5 flex items-center gap-1.5">
-                  <Moon className="w-4 h-4 text-indigo-400" /> Evening & Night Sessions (05:00 PM - 10:00 PM)
-                </span>
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2.5">
-                  {[...groupSlots.evening, ...groupSlots.night].map((slot) => {
-                    const isSelected = selectedTimeSlot === slot.time;
-                    return (
-                      <button
-                        key={slot.time}
-                        id={`time-slot-${slot.time.replace(/[^a-zA-Z0-9]/g, '')}`}
-                        type="button"
-                        disabled={!slot.available}
-                        onClick={() => onSelectTimeSlot(slot.time)}
-                        className={`py-3 px-3.5 rounded-xl text-xs font-bold border transition-all flex items-center justify-between cursor-pointer ${
-                          isSelected
-                            ? 'bg-[#2CB5A0] text-white border-transparent shadow-lg shadow-[#2CB5A0]/25 scale-[1.02]'
-                            : slot.available
-                            ? 'bg-[#182225] border-white/10 text-gray-200 hover:border-[#2CB5A0] hover:bg-[#1E2C2F]'
-                            : 'bg-white/5 border-white/5 text-gray-600 cursor-not-allowed line-through opacity-60'
-                        }`}
-                      >
-                        <span>{slot.time}</span>
-                        {isSelected ? (
-                          <CheckCircle2 className="w-4 h-4 text-white" />
-                        ) : !slot.available ? (
-                          <span className="text-[10px] text-rose-400 font-extrabold no-underline">Booked</span>
-                        ) : null}
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
+            {renderGroup(
+              'Afternoon Sessions (12:00 PM - 05:00 PM)',
+              <Sunset className="w-4 h-4 text-orange-400" />,
+              groupSlots.afternoon
+            )}
+            {renderGroup(
+              'Evening Sessions (05:00 PM - 09:00 PM)',
+              <Sunset className="w-4 h-4 text-rose-400" />,
+              groupSlots.evening
+            )}
+            {renderGroup(
+              'Night Sessions (09:00 PM - 12:00 AM)',
+              <Moon className="w-4 h-4 text-indigo-400" />,
+              groupSlots.night
+            )}
+            {safeSlots.length === 0 && (
+              <p className="text-xs text-gray-400 text-center py-4">
+                No slots available on this date — pick another day.
+              </p>
             )}
           </div>
         )}

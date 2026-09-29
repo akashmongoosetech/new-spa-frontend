@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 import { ScheduleConfig } from '../../types';
 import { api } from '../../services/api';
+import { showToast } from '../../utils/toastEvents';
 
 export const ScheduleManager: React.FC = () => {
   const [config, setConfig] = useState<ScheduleConfig | null>(null);
@@ -55,15 +56,40 @@ export const ScheduleManager: React.FC = () => {
     }
   };
 
+  const HHMM_RE = /^([01]\d|2[0-3]):([0-5]\d)$/;
+
   const handleSaveConfig = async (updated: Partial<ScheduleConfig>) => {
     if (!config) return;
+    // Client-side guard mirrors the server contract (24h HH:MM, open < close).
+    const start = (updated.workingHoursStart ?? config.workingHoursStart ?? '').trim();
+    const end = (updated.workingHoursEnd ?? config.workingHoursEnd ?? '').trim();
+    if ((updated.workingHoursStart !== undefined || updated.workingHoursEnd !== undefined)) {
+      if ((start && !HHMM_RE.test(start)) || (end && !HHMM_RE.test(end))) {
+        showToast({ type: 'error', title: 'Invalid time', message: 'Use 24-hour HH:MM format (e.g. 00:00 – 23:59 for 24 hours).' });
+        setOpenDraft(config.workingHoursStart || '');
+        setCloseDraft(config.workingHoursEnd || '');
+        return;
+      }
+      if (start && end && start >= end) {
+        showToast({ type: 'error', title: 'Invalid hours', message: 'Opening time must be before closing time (00:00 – 23:59 for 24 hours).' });
+        setOpenDraft(config.workingHoursStart || '');
+        setCloseDraft(config.workingHoursEnd || '');
+        return;
+      }
+    }
     try {
       const saved = await api.updateScheduleConfig(updated);
       setConfig(saved);
       setSaveSuccess(true);
       setTimeout(() => setSaveSuccess(false), 2000);
-    } catch (err) {
-      console.error(err);
+    } catch (err: unknown) {
+      showToast({
+        type: 'error',
+        title: 'Save failed',
+        message: err instanceof Error ? err.message : 'Could not save schedule.',
+      });
+      setOpenDraft(config.workingHoursStart || '');
+      setCloseDraft(config.workingHoursEnd || '');
     }
   };
 
@@ -100,8 +126,15 @@ export const ScheduleManager: React.FC = () => {
   const handleAddTimeSlot = (e: React.FormEvent) => {
     e.preventDefault();
     if (!config || !newSlotTime) return;
-    if ((config.timeSlots || []).includes(newSlotTime)) return;
-    const timeSlots = [...(config.timeSlots || []), newSlotTime];
+    const slot = newSlotTime.trim();
+    // Server only accepts 24h HH:MM — reject anything else up front instead
+    // of silently dropping it.
+    if (!HHMM_RE.test(slot)) {
+      showToast({ type: 'error', title: 'Invalid slot', message: 'Use 24-hour HH:MM format, e.g. 23:30.' });
+      return;
+    }
+    if ((config.timeSlots || []).includes(slot)) return;
+    const timeSlots = [...(config.timeSlots || []), slot];
     handleSaveConfig({ timeSlots });
     setNewSlotTime('');
   };
@@ -227,7 +260,7 @@ export const ScheduleManager: React.FC = () => {
                 type="text"
                 value={newSlotTime}
                 onChange={(e) => setNewSlotTime(e.target.value)}
-                placeholder="e.g. 10:00 PM"
+                placeholder="e.g. 23:30 (24-hour)"
                 className="flex-1 px-3 py-2 rounded-xl border text-xs outline-none"
               />
               <button

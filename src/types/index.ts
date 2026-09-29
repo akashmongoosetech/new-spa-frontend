@@ -40,8 +40,8 @@ export interface Therapist {
 }
 
 export interface TimeSlot {
-  time: string; // e.g. "10:00 AM"
-  period: 'morning' | 'afternoon' | 'evening' | 'night';
+  time: string; // 24h "HH:MM" as returned by the backend
+  period: 'late-night' | 'morning' | 'afternoon' | 'evening' | 'night';
   available: boolean;
 }
 

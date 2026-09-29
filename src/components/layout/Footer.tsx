@@ -308,7 +308,7 @@ export const Footer: React.FC<FooterProps> = ({
               </div>
               <div className="flex items-center gap-2.5">
                 <Clock className="w-4 h-4 text-[#E3C99B] shrink-0" />
-                <span>{settings?.workingHours || 'Mon - Sun: 09:00 AM - 10:00 PM IST'}</span>
+                <span>{settings?.workingHours || 'Open 24 hours, Mon - Sun (IST)'}</span>
               </div>
             </div>
 

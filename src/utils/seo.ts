@@ -160,8 +160,8 @@ export const generateLocalBusinessSchema = (customData?: Record<string, any>): R
       {
         "@type": "OpeningHoursSpecification",
         "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
-        "opens": "09:00",
-        "closes": "22:00"
+        "opens": "00:00",
+        "closes": "23:59"
       }
     ],
     "aggregateRating": {

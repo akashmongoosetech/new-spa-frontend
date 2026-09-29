@@ -63,7 +63,11 @@ export const BookingConfirmationModal: React.FC<BookingConfirmationModalProps> =
   const matchedTherapist = therapists.find((t) => t.id === (newTherapistId !== 'any' ? newTherapistId : booking?.therapistId));
   const therapistDisplayName = matchedTherapist ? matchedTherapist.name : booking?.therapistName || 'Assigned Certified Therapist';
 
+  // Offline fallback only — the picker prefers live availability (24x7).
   const timeSlotOptions = [
+    '12:00 AM',
+    '02:00 AM',
+    '05:00 AM',
     '09:00 AM',
     '10:30 AM',
     '12:00 PM',
@@ -73,6 +77,7 @@ export const BookingConfirmationModal: React.FC<BookingConfirmationModalProps> =
     '06:00 PM',
     '07:30 PM',
     '09:00 PM',
+    '11:00 PM',
   ];
 
   const handleCopyBookingNumber = () => {

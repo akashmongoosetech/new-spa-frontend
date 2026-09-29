@@ -95,9 +95,13 @@ export const TherapistManager: React.FC<TherapistManagerProps> = ({ therapists, 
       rating: Number(rating),
       featured,
       active,
+      // No day/slot restrictions by default so new therapists are bookable
+      // round the clock; weekly off-days can still be set per therapist.
+      // `days` is what the backend enforces, `workingDays` is what the UI displays.
       availability: editingTherapist?.availability || {
-        workingDays: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
-        timeSlots: ['09:00 AM', '11:00 AM', '01:00 PM', '03:00 PM', '05:00 PM', '07:00 PM'],
+        days: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+        workingDays: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+        timeSlots: [],
       },
     };
 
