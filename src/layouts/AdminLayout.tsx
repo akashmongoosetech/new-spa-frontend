@@ -111,6 +111,7 @@ export const AdminLayout: React.FC = () => {
     if (p.includes('/services')) return 'services';
     if (p.includes('/faqs')) return 'faqs';
     if (p.includes('/blogs')) return 'blogs';
+    if (p.includes('/rag')) return 'rag';
     if (p.includes('/calendar') || p.includes('/schedule')) return 'schedule';
     if (p.includes('/reports')) return 'reports';
     if (p.includes('/users')) return 'users';

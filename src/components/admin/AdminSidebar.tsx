@@ -16,7 +16,8 @@ import {
   Lock,
   X,
   UserPlus,
-  HelpCircle
+  HelpCircle,
+  Bot
 } from 'lucide-react';
 import { AdminUser } from '../../types';
 
@@ -33,7 +34,8 @@ export type AdminTab =
   | 'reports'
   | 'audit'
   | 'faqs'
-  | 'blogs';
+  | 'blogs'
+  | 'rag';
 
 interface AdminSidebarProps {
   activeTab: AdminTab;
@@ -72,7 +74,7 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
     if (tab === 'applications') return role === 'super_admin';
     if (role === 'super_admin' || role === 'admin') return true;
     if (role === 'manager') {
-      return ['overview', 'bookings', 'contacts', 'therapists', 'services', 'schedule', 'reports', 'faqs', 'blogs'].includes(tab);
+      return ['overview', 'bookings', 'contacts', 'therapists', 'services', 'schedule', 'reports', 'faqs', 'blogs', 'rag'].includes(tab);
     }
     if (role === 'receptionist') {
       return ['overview', 'bookings', 'contacts', 'schedule'].includes(tab);
@@ -90,6 +92,7 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
     { id: 'reports', label: 'Reports & Export', icon: FileText },
     { id: 'faqs', label: 'FAQ Management', icon: HelpCircle },
     { id: 'blogs', label: 'Blog Management', icon: FileText },
+    { id: 'rag', label: 'AI Knowledge Base', icon: Bot },
     { id: 'users', label: 'Staff & RBAC', icon: Shield },
     { id: 'applications', label: 'Staff Applications', icon: UserPlus },
     { id: 'settings', label: 'System Settings', icon: Settings },

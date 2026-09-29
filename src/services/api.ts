@@ -1017,7 +1017,7 @@ export const api = {
     throw new Error('Use downloadExportReport() — direct links lack auth and will return 401');
   },
 
-  // AI Spa Assistant
+  // AI Spa Assistant (legacy non-streaming endpoint — kept as fallback)
   async sendAiChat(message: string, history?: { sender: 'user' | 'assistant'; text: string }[]): Promise<{ reply: string }> {
     try {
       const { data } = await http.post('/ai/chat', { message, history });
@@ -1025,6 +1025,138 @@ export const api = {
     } catch (error) {
       throw new Error(getErrorMessage(error, 'AI assistant unavailable'));
     }
+  },
+
+  // RAG chat over SSE. Streams `token` events, resolves on `done`.
+  // Uses fetch (not axios) so tokens render progressively + abort works.
+  sendChatStream(
+    args: {
+      message: string;
+      conversationId?: string;
+      history?: { sender: 'user' | 'assistant'; text: string }[];
+      signal?: AbortSignal;
+      onToken: (text: string) => void;
+    }
+  ): Promise<{ conversationId: string; answer: string; sources: { title: string; url: string }[]; confidence: number; grounded: boolean }> {
+    const base = String(API_BASE || '/api').replace(/\/$/, '');
+    const token = localStorage.getItem(TOKEN_KEY);
+    return new Promise((resolvePromise, rejectPromise) => {
+      fetch(`${base}/ai/rag/chat`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'text/event-stream',
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
+        body: JSON.stringify({
+          conversationId: args.conversationId,
+          message: args.message,
+          history: args.history,
+        }),
+        signal: args.signal,
+        credentials: 'include',
+      }).then(async (resp) => {
+        if (!resp.ok || !resp.body) {
+          let detail = 'AI assistant unavailable';
+          try {
+            const data = await resp.json();
+            detail = (data as { error?: string; message?: string }).error || (data as { message?: string }).message || detail;
+          } catch {
+            /* keep default */
+          }
+          rejectPromise(new Error(resp.status === 429 ? 'Too many messages — please wait a little.' : detail));
+          return;
+        }
+        const reader = resp.body.getReader();
+        const decoder = new TextDecoder();
+        let buf = '';
+        let consumed = '';
+        const parseAll = (text: string) => {
+          // Backend SSE uses \r\n line endings — split on either flavour.
+          const blocks = text.split(/\r?\n\r?\n/);
+          for (const b of blocks) {
+            if (!b.trim() || consumed.includes(b)) continue;
+            const evMatch = b.match(/event:\s*(\w+)/);
+            const dMatch = b.match(/data:\s*([\s\S]*)/);
+            if (!evMatch || !dMatch) continue;
+            consumed += b;
+            try {
+              const data = JSON.parse(dMatch[1].trim());
+              if (evMatch[1] === 'token' && typeof data.text === 'string') args.onToken(data.text);
+              else if (evMatch[1] === 'done') {
+                resolvePromise({
+                  conversationId: String(data.conversationId || ''),
+                  answer: String(data.answer || ''),
+                  sources: Array.isArray(data.sources) ? data.sources : [],
+                  confidence: Number(data.confidence ?? 0),
+                  grounded: data.grounded !== false,
+                });
+              } else if (evMatch[1] === 'error') {
+                rejectPromise(new Error(String(data.message || 'AI assistant unavailable')));
+              }
+            } catch {
+              /* partial block — wait for more */
+            }
+          }
+        };
+        const pump = (): void => {
+          reader.read().then(({ done, value }) => {
+            if (done) return;
+            buf += decoder.decode(value, { stream: true });
+            parseAll(buf);
+            pump();
+          }).catch((err: unknown) => {
+            if (err instanceof Error && err.name === 'AbortError') return;
+            rejectPromise(err instanceof Error ? err : new Error('Stream failed'));
+          });
+        };
+        pump();
+      }).catch((err: unknown) => {
+        if (err instanceof Error && err.name === 'AbortError') return;
+        rejectPromise(err instanceof Error ? err : new Error('AI assistant unavailable'));
+      });
+    });
+  },
+
+  async getChatHistory(conversationId: string): Promise<{ conversationId: string; messages: { role: string; text: string }[] }> {
+    const { data } = await http.get(`/ai/rag/history/${encodeURIComponent(conversationId)}`);
+    return data;
+  },
+
+  async clearChatHistory(conversationId: string): Promise<{ success: boolean }> {
+    const { data } = await http.delete(`/ai/rag/history/${encodeURIComponent(conversationId)}`);
+    return data;
+  },
+
+  // Admin RAG console
+  async getRagSources(): Promise<{ sources: { source: string; chunks: number; updatedAt: string | null; status: string }[] }> {
+    const { data } = await http.get('/admin/rag/sources');
+    return data;
+  },
+
+  async reindexRag(source?: string): Promise<{ success: boolean; result: unknown }> {
+    const { data } = await http.post('/admin/rag/reindex', source ? { source } : {});
+    return data;
+  },
+
+  async deleteRagSource(source: string): Promise<{ success: boolean; deleted: number }> {
+    const { data } = await http.delete(`/admin/rag/sources/${encodeURIComponent(source)}`);
+    return data;
+  },
+
+  async testRagRetrieval(query: string): Promise<{ query: string; usedVector: boolean; threshold: number; chunks: { title: string; source: string; category: string; url: string; score: number; excerpt: string }[] }> {
+    const { data } = await http.post('/admin/rag/test', { query });
+    return data;
+  },
+
+  async getRagReview(limit = 50): Promise<{ items: { id: string; conversationId: string; question: string; answer: string; confidence: number; createdAt: string }[] }> {
+    const { data } = await http.get('/admin/rag/review', { params: { limit } });
+    return data;
+  },
+
+  async getRagUsage(): Promise<{ answers7d: number; lowConfidence7d: number; tokens7d: number; avgLatencyMs: number; model: string; embeddingModel: string; topK: number; threshold: number }> {
+    const { data } = await http.get('/admin/rag/usage');
+    return data;
   },
 
   // File upload (admin-only endpoint)

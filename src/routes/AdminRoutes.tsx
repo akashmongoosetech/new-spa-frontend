@@ -27,6 +27,7 @@ const AdminEmailTemplatesPage = lazy(() => import('../pages/Admin/AdminEmailTemp
 const AdminProfilePage = lazy(() => import('../pages/Admin/AdminProfilePage'));
 const AdminChangePasswordPage = lazy(() => import('../pages/Admin/AdminChangePasswordPage'));
 const AdminActivityLogsPage = lazy(() => import('../pages/Admin/AdminActivityLogsPage'));
+const AdminRagPage = lazy(() => import('../pages/Admin/AdminRagPage'));
 
 const ALL_STAFF = ['Super Admin', 'Admin', 'Manager', 'Receptionist'];
 const MANAGER_UP = ['Super Admin', 'Admin', 'Manager'];
@@ -72,6 +73,7 @@ export const renderAdminRoutes = () => (
     <Route path="profile" element={<ProtectedRoute roles={ALL_STAFF}><AdminProfilePage /></ProtectedRoute>} />
     <Route path="change-password" element={<ProtectedRoute roles={ALL_STAFF}><AdminChangePasswordPage /></ProtectedRoute>} />
     <Route path="activity-logs" element={<ProtectedRoute roles={ADMIN_ONLY}><AdminActivityLogsPage /></ProtectedRoute>} />
+    <Route path="rag" element={<ProtectedRoute roles={MANAGER_UP}><AdminRagPage /></ProtectedRoute>} />
   </Route>
 );
 
