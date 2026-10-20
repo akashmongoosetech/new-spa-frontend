@@ -9,7 +9,8 @@ import {
   Save,
   Globe,
   Sliders,
-  Bell
+  Bell,
+  AlertCircle
 } from 'lucide-react';
 import { BusinessSettings } from '../../types';
 import { api } from '../../services/api';
@@ -20,17 +21,22 @@ export const SettingsModule: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [savedMsg, setSavedMsg] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [loadError, setLoadError] = useState('');
+  const [saveError, setSaveError] = useState('');
 
   useEffect(() => {
     fetchSettings();
   }, []);
 
   const fetchSettings = async () => {
+    setLoadError('');
+    setLoading(true);
     try {
       const data = await api.getFullSettings();
       setSettings(data);
     } catch (err) {
       console.error(err);
+      setLoadError('Could not load the saved settings. Please retry before making changes.');
     } finally {
       setLoading(false);
     }
@@ -40,20 +46,36 @@ export const SettingsModule: React.FC = () => {
     e.preventDefault();
     if (!settings) return;
     setSaving(true);
+    setSaveError('');
     try {
       const updated = await api.updateSettings(settings);
       setSettings(updated);
       setSavedMsg(true);
       setTimeout(() => setSavedMsg(false), 2500);
-    } catch (err) {
-      console.error(err);
+    } catch (err: any) {
+      setSaveError(err?.message || 'Could not save settings. Please try again.');
     } finally {
       setSaving(false);
     }
   };
 
-  if (loading || !settings) {
+  if (loading) {
     return <div className="p-8 text-center text-xs text-gray-500">Loading settings configuration...</div>;
+  }
+
+  if (loadError || !settings) {
+    return (
+      <div className="p-8 text-center space-y-3">
+        <p className="text-xs text-rose-600">{loadError || 'Settings are unavailable.'}</p>
+        <button
+          type="button"
+          onClick={fetchSettings}
+          className="px-4 py-2 rounded-xl bg-[#2CB5A0] text-white text-xs font-bold"
+        >
+          Retry
+        </button>
+      </div>
+    );
   }
 
   return (
@@ -67,6 +89,11 @@ export const SettingsModule: React.FC = () => {
         {savedMsg && (
           <div className="px-4 py-2 rounded-xl bg-teal-50 text-[#2CB5A0] font-bold text-xs flex items-center gap-2">
             <CheckCircle2 className="w-4 h-4" /> Settings Saved Successfully!
+          </div>
+        )}
+        {saveError && (
+          <div className="px-4 py-2 rounded-xl bg-rose-50 text-rose-700 font-bold text-xs flex items-center gap-2">
+            <AlertCircle className="w-4 h-4" /> {saveError}
           </div>
         )}
       </div>
@@ -205,13 +232,19 @@ export const SettingsModule: React.FC = () => {
         {activeTab === 'smtp' && (
           <div className="space-y-4">
             <h3 className="font-extrabold text-gray-900 text-sm border-b pb-3">SMTP Mail Server Settings</h3>
+            <div className="p-3 rounded-xl bg-amber-50 border border-amber-200 text-[11px] leading-relaxed text-amber-900">
+              The SMTP password is read from the backend <code className="font-mono">SMTP_PASS</code> environment
+              variable and is never stored in the database or shown here. Leave the host blank to use the
+              environment values (<code className="font-mono">SMTP_HOST</code>, <code className="font-mono">SMTP_PORT</code>).
+            </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className="block font-bold text-gray-700 mb-1">SMTP Host Server</label>
                 <input
                   type="text"
-                  value={settings.smtpHost || 'smtp.gmail.com'}
+                  value={settings.smtpHost || ''}
                   onChange={(e) => setSettings({ ...settings, smtpHost: e.target.value })}
+                  placeholder="smtp.gmail.com"
                   className="w-full px-3.5 py-2.5 rounded-xl border outline-none"
                 />
               </div>
@@ -228,6 +261,16 @@ export const SettingsModule: React.FC = () => {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
+                <label className="block font-bold text-gray-700 mb-1">SMTP Username</label>
+                <input
+                  type="text"
+                  value={settings.smtpUser || ''}
+                  onChange={(e) => setSettings({ ...settings, smtpUser: e.target.value })}
+                  placeholder="wellnesstripod@gmail.com"
+                  className="w-full px-3.5 py-2.5 rounded-xl border outline-none"
+                />
+              </div>
+              <div>
                 <label className="block font-bold text-gray-700 mb-1">Sender Name</label>
                 <input
                   type="text"
@@ -236,15 +279,17 @@ export const SettingsModule: React.FC = () => {
                   className="w-full px-3.5 py-2.5 rounded-xl border outline-none"
                 />
               </div>
-              <div>
-                <label className="block font-bold text-gray-700 mb-1">Sender Email</label>
-                <input
-                  type="email"
-                  value={settings.smtpSenderEmail || 'wellnesstripod@gmail.com'}
-                  onChange={(e) => setSettings({ ...settings, smtpSenderEmail: e.target.value })}
-                  className="w-full px-3.5 py-2.5 rounded-xl border outline-none"
-                />
-              </div>
+            </div>
+
+            <div>
+              <label className="block font-bold text-gray-700 mb-1">Sender Email</label>
+              <input
+                type="email"
+                value={settings.smtpSenderEmail || ''}
+                onChange={(e) => setSettings({ ...settings, smtpSenderEmail: e.target.value })}
+                placeholder="wellnesstripod@gmail.com"
+                className="w-full px-3.5 py-2.5 rounded-xl border outline-none"
+              />
             </div>
           </div>
         )}

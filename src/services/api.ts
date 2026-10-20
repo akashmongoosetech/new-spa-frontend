@@ -38,8 +38,19 @@ http.interceptors.response.use(
   (res) => res,
   (error) => {
     if (error?.response?.status === 401) {
+      const hadSession = Boolean(localStorage.getItem(TOKEN_KEY));
       localStorage.removeItem(TOKEN_KEY);
       localStorage.removeItem(USER_KEY);
+      // Only force a redirect out of the admin console (and only if we just
+      // dropped a session), so public pages and login stay usable.
+      if (
+        hadSession &&
+        typeof window !== 'undefined' &&
+        window.location.pathname.startsWith('/admin') &&
+        !window.location.pathname.startsWith('/admin-login')
+      ) {
+        window.location.assign('/admin-login');
+      }
     }
     return Promise.reject(error);
   }
@@ -70,7 +81,9 @@ function mapService(s: any): Service {
     includedItems: s.included_items || [],
     imageUrl: s.image_url,
     featured: s.featured === 1,
-    active: s.active !== false,
+    // Backend serializes active as 0/1 (not a boolean), so `!== false` treats
+    // a deactivated record (0) as active.
+    active: s.active === 1 || s.active === true,
     rating: s.rating,
     reviewsCount: s.reviews_count,
     faq: s.faq || []
@@ -92,7 +105,8 @@ function mapTherapist(t: any): Therapist {
     rating: t.rating,
     reviewCount: t.reviews_count,
     availableDays: t.availableDays || [],
-    active: t.active !== false
+    // Backend serializes active as 0/1, so compare explicitly.
+    active: t.active === 1 || t.active === true
   };
 }
 
@@ -217,10 +231,21 @@ function mapBusinessSettings(s: any): BusinessSettings {
     facebookUrl: s.facebookUrl || 'https://facebook.com/tripodwellness',
     instagramUrl: s.instagramUrl || 'https://instagram.com/tripodwellness',
     twitterUrl: s.twitterUrl || 'https://twitter.com/tripodwellness',
-    smtpConfigured: s.smtpConfigured !== false,
+    smtpHost: s.smtpHost || '',
+    smtpPort: s.smtpPort || 587,
+    smtpUser: s.smtpUser || '',
+    smtpSenderName: s.smtpSenderName || 'Tripod Wellness Concierge',
+    smtpSenderEmail: s.smtpSenderEmail || '',
+    smtpConfigured: s.smtpConfigured === true,
+    bookingEmailSubject: s.bookingEmailSubject || '',
+    contactEmailSubject: s.contactEmailSubject || '',
+    bookingEmailTemplate: s.bookingEmailTemplate || '',
+    contactEmailTemplate: s.contactEmailTemplate || '',
     maxBookingsPerSlot: s.maxBookingsPerSlot || 3,
     slotIntervalMinutes: s.slotIntervalMinutes || 60,
     autoApproveBookings: s.autoApproveBookings !== false,
+    bookingDurationMinutes: s.bookingDurationMinutes || 60,
+    maxDailyBookings: s.maxDailyBookings || 0,
 
     // SEO
     metaTitle: s.seo?.metaTitle || s.metaTitle,
@@ -230,9 +255,9 @@ function mapBusinessSettings(s: any): BusinessSettings {
     // Payment gateways
     paymentGateways: s.paymentGateways ? {
       payAtVenue: s.paymentGateways.payAtVenue !== false,
-      upiQrCode: s.paymentGateways.upiQrCode !== false,
-      razorpayEnabled: s.paymentGateways.razorpayEnabled !== false,
-      stripeEnabled: s.paymentGateways.stripeEnabled !== false
+      upiQrCode: s.paymentGateways.upiQrCode === true,
+      razorpayEnabled: s.paymentGateways.razorpayEnabled === true,
+      stripeEnabled: s.paymentGateways.stripeEnabled === true
     } : {
       payAtVenue: true,
       upiQrCode: true,
@@ -448,11 +473,11 @@ export const api = {
     return data.map(mapBooking);
   },
 
-  // Public self-service lookup (no auth required). Booking refs require email too.
-  async lookupBooking(query: string, email?: string): Promise<Booking | null> {
+  // Public self-service lookup (no auth required). Ownership is always proven
+  // with the booking reference + the email used at booking time.
+  async lookupBooking(query: string, email: string): Promise<Booking | null> {
     try {
-      const params: Record<string, string> = { q: query };
-      if (email) params.email = email;
+      const params: Record<string, string> = { q: query, email };
       const { data } = await http.get('/bookings/lookup', { params });
       return mapBooking(data);
     } catch (error) {
@@ -522,6 +547,15 @@ export const api = {
       return res.data;
     } catch (error) {
       throw new Error(getErrorMessage(error, 'Failed to subscribe'));
+    }
+  },
+
+  async unsubscribeNewsletter(email: string, token: string) {
+    try {
+      const res = await http.post('/newsletter/unsubscribe', { email, token });
+      return res.data;
+    } catch (error) {
+      throw new Error(getErrorMessage(error, 'Failed to unsubscribe'));
     }
   },
 
@@ -758,12 +792,11 @@ export const api = {
   },
 
   async getFullSettings(): Promise<BusinessSettings> {
-    try {
-      const { data } = await http.get<BusinessSettings>('/settings/full');
-      return mapBusinessSettings(data);
-    } catch {
-      return this.getSettings();
-    }
+    // Never fall back to the public settings payload here: it intentionally
+    // omits SMTP credentials and templates, and saving that fallback would
+    // erase the real values.
+    const { data } = await http.get<BusinessSettings>('/settings/full');
+    return mapBusinessSettings(data);
   },
 
   async updateSettings(data: Partial<BusinessSettings>): Promise<BusinessSettings> {
@@ -887,8 +920,10 @@ export const api = {
   },
 
   // Self-service profile (all staff roles)
-  async updateProfile(data: Partial<AdminUser> & { currentPassword?: string }): Promise<AdminUser> {
-    const res = await http.put<AdminUser>('/admin/profile', {
+  async updateProfile(
+    data: Partial<AdminUser> & { currentPassword?: string }
+  ): Promise<AdminUser & { requireRelogin?: boolean }> {
+    const res = await http.put<AdminUser & { requireRelogin?: boolean }>('/admin/profile', {
       name: data.name,
       firstName: (data as any).firstName,
       lastName: (data as any).lastName,
@@ -904,7 +939,11 @@ export const api = {
       email: data.email,
       currentPassword: data.currentPassword,
     });
-    return mapAdminUser(res.data);
+    // Changing the login identity revokes existing sessions server-side.
+    return {
+      ...mapAdminUser(res.data),
+      requireRelogin: res.data?.requireRelogin === true,
+    };
   },
 
   async uploadAvatar(file: File): Promise<AdminUser> {
@@ -953,13 +992,21 @@ export const api = {
     return mapAdminUser(res.data);
   },
 
-  async updateAdminUser(id: string, data: Partial<AdminUser> & { password?: string }): Promise<AdminUser> {
+  async updateAdminUser(
+    id: string,
+    data: Partial<AdminUser> & { password?: string; currentPassword?: string }
+  ): Promise<AdminUser> {
+    const active =
+      data.status === undefined ? undefined : data.status === 'active';
     const res = await http.put<AdminUser>(`/admin/users/${id}`, {
       name: data.name,
       email: data.email,
       role: data.role ? mapRoleToBackend(data.role as string) : undefined,
+      phone: (data as any).phone,
+      // Identity/state changes are honored by the backend now.
+      active,
       password: data.password || undefined,
-      phone: (data as any).phone
+      currentPassword: data.currentPassword || undefined
     });
     return mapAdminUser(res.data);
   },
@@ -1041,7 +1088,62 @@ export const api = {
   ): Promise<{ conversationId: string; answer: string; sources: { title: string; url: string }[]; confidence: number; grounded: boolean }> {
     const base = String(API_BASE || '/api').replace(/\/$/, '');
     const token = localStorage.getItem(TOKEN_KEY);
+    const IDLE_TIMEOUT_MS = 60_000;
+
     return new Promise((resolvePromise, rejectPromise) => {
+      let settled = false;
+      let reader: ReadableStreamDefaultReader<Uint8Array> | null = null;
+      let idleTimer: ReturnType<typeof setTimeout> | undefined;
+
+      const cleanup = () => {
+        if (idleTimer) clearTimeout(idleTimer);
+        idleTimer = undefined;
+        args.signal?.removeEventListener('abort', onAbort);
+        if (reader) {
+          try {
+            void reader.cancel();
+          } catch {
+            /* already closed */
+          }
+          reader = null;
+        }
+      };
+
+      const finish = (
+        fn: (value: any) => void,
+        value: unknown
+      ) => {
+        if (settled) return;
+        settled = true;
+        cleanup();
+        fn(value);
+      };
+
+      const fail = (err: unknown) =>
+        finish(rejectPromise, err instanceof Error ? err : new Error('AI assistant unavailable'));
+
+      const succeed = (value: {
+        conversationId: string;
+        answer: string;
+        sources: { title: string; url: string }[];
+        confidence: number;
+        grounded: boolean;
+      }) => finish(resolvePromise, value);
+
+      const onAbort = () => fail(new DOMException('Aborted', 'AbortError'));
+
+      const resetIdleTimer = () => {
+        if (idleTimer) clearTimeout(idleTimer);
+        idleTimer = setTimeout(() => fail(new Error('The assistant stopped responding. Please try again.')), IDLE_TIMEOUT_MS);
+      };
+
+      if (args.signal?.aborted) {
+        onAbort();
+        return;
+      }
+      args.signal?.addEventListener('abort', onAbort, { once: true });
+      resetIdleTimer();
+
       fetch(`${base}/ai/rag/chat`, {
         method: 'POST',
         headers: {
@@ -1056,66 +1158,118 @@ export const api = {
         }),
         signal: args.signal,
         credentials: 'include',
-      }).then(async (resp) => {
-        if (!resp.ok || !resp.body) {
-          let detail = 'AI assistant unavailable';
-          try {
-            const data = await resp.json();
-            detail = (data as { error?: string; message?: string }).error || (data as { message?: string }).message || detail;
-          } catch {
-            /* keep default */
-          }
-          rejectPromise(new Error(resp.status === 429 ? 'Too many messages — please wait a little.' : detail));
-          return;
-        }
-        const reader = resp.body.getReader();
-        const decoder = new TextDecoder();
-        let buf = '';
-        let consumed = '';
-        const parseAll = (text: string) => {
-          // Backend SSE uses \r\n line endings — split on either flavour.
-          const blocks = text.split(/\r?\n\r?\n/);
-          for (const b of blocks) {
-            if (!b.trim() || consumed.includes(b)) continue;
-            const evMatch = b.match(/event:\s*(\w+)/);
-            const dMatch = b.match(/data:\s*([\s\S]*)/);
-            if (!evMatch || !dMatch) continue;
-            consumed += b;
+      })
+        .then(async (resp) => {
+          if (!resp.ok || !resp.body) {
+            let detail = 'AI assistant unavailable';
             try {
-              const data = JSON.parse(dMatch[1].trim());
-              if (evMatch[1] === 'token' && typeof data.text === 'string') args.onToken(data.text);
-              else if (evMatch[1] === 'done') {
-                resolvePromise({
-                  conversationId: String(data.conversationId || ''),
-                  answer: String(data.answer || ''),
-                  sources: Array.isArray(data.sources) ? data.sources : [],
-                  confidence: Number(data.confidence ?? 0),
-                  grounded: data.grounded !== false,
-                });
-              } else if (evMatch[1] === 'error') {
-                rejectPromise(new Error(String(data.message || 'AI assistant unavailable')));
-              }
+              const data = await resp.json();
+              detail = (data as { error?: string; message?: string }).error || (data as { message?: string }).message || detail;
             } catch {
-              /* partial block — wait for more */
+              try {
+                const text = await resp.text();
+                if (text.trim()) detail = text.trim().slice(0, 300);
+              } catch {
+                /* keep default */
+              }
             }
+            fail(new Error(resp.status === 429 ? 'Too many messages — please wait a little.' : detail));
+            return;
           }
-        };
-        const pump = (): void => {
-          reader.read().then(({ done, value }) => {
-            if (done) return;
-            buf += decoder.decode(value, { stream: true });
-            parseAll(buf);
-            pump();
-          }).catch((err: unknown) => {
-            if (err instanceof Error && err.name === 'AbortError') return;
-            rejectPromise(err instanceof Error ? err : new Error('Stream failed'));
-          });
-        };
-        pump();
-      }).catch((err: unknown) => {
-        if (err instanceof Error && err.name === 'AbortError') return;
-        rejectPromise(err instanceof Error ? err : new Error('AI assistant unavailable'));
-      });
+
+          reader = resp.body.getReader();
+          const decoder = new TextDecoder();
+          let buf = '';
+          let eventName = '';
+          let dataLines: string[] = [];
+
+          const dispatch = () => {
+            const name = eventName || 'message';
+            const raw = dataLines.join('\n');
+            eventName = '';
+            dataLines = [];
+            if (!raw.trim()) return;
+
+            let data: any;
+            try {
+              data = JSON.parse(raw);
+            } catch {
+              // A malformed frame should not kill the whole stream; the server
+              // always sends one JSON object per event.
+              return;
+            }
+
+            if (name === 'token' && typeof data.text === 'string') {
+              args.onToken(data.text);
+            } else if (name === 'done') {
+              succeed({
+                conversationId: String(data.conversationId || ''),
+                answer: String(data.answer || ''),
+                sources: Array.isArray(data.sources) ? data.sources : [],
+                confidence: Number(data.confidence ?? 0),
+                grounded: data.grounded !== false,
+              });
+            } else if (name === 'error') {
+              fail(new Error(String(data.message || 'AI assistant unavailable')));
+            }
+          };
+
+          const processLine = (line: string) => {
+            // Comments / heartbeats start with a colon.
+            if (line.startsWith(':')) return;
+            if (line === '') {
+              dispatch();
+              return;
+            }
+            const idx = line.indexOf(':');
+            const field = idx === -1 ? line : line.slice(0, idx);
+            let value = idx === -1 ? '' : line.slice(idx + 1);
+            if (value.startsWith(' ')) value = value.slice(1);
+            if (field === 'event') eventName = value;
+            else if (field === 'data') dataLines.push(value);
+            // `id` / `retry` fields are irrelevant to this stream.
+          };
+
+          const pump = async () => {
+            try {
+              for (;;) {
+                if (settled) return;
+                const { done, value } = await reader!.read();
+                if (done) {
+                  buf += decoder.decode();
+                  if (buf) {
+                    for (const line of buf.split(/\r?\n/)) processLine(line);
+                  }
+                  dispatch();
+                  if (!settled) fail(new Error('The assistant connection closed before finishing.'));
+                  return;
+                }
+                resetIdleTimer();
+                buf += decoder.decode(value, { stream: true });
+                let newline = buf.search(/\r?\n/);
+                while (!settled && newline !== -1) {
+                  const line = buf.slice(0, newline);
+                  const match = buf.slice(newline).match(/^\r?\n/);
+                  buf = buf.slice(newline + (match ? match[0].length : 1));
+                  processLine(line);
+                  if (settled) return;
+                  newline = buf.search(/\r?\n/);
+                }
+              }
+            } catch (err) {
+              if (settled) return;
+              if (err instanceof Error && err.name === 'AbortError') onAbort();
+              else fail(err);
+            }
+          };
+
+          void pump();
+        })
+        .catch((err: unknown) => {
+          if (settled) return;
+          if (err instanceof Error && err.name === 'AbortError') onAbort();
+          else fail(err);
+        });
     });
   },
 

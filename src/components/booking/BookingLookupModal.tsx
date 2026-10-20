@@ -27,28 +27,35 @@ export const BookingLookupModal: React.FC<BookingLookupModalProps> = ({
 
   const handleLookup = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!searchQuery.trim()) return;
+    const ref = searchQuery.trim();
+    const email = emailQuery.trim();
+    if (!ref || !email) return;
 
     setLoading(true);
     setErrorMsg('');
     setFoundBooking(null);
 
     try {
-      const isRef = /^AL-/i.test(searchQuery.trim());
-      if (isRef && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailQuery.trim())) {
-        setErrorMsg('For a booking reference, also enter the email used at booking.');
+      // Ownership always requires both the booking reference and the email.
+      if (!/^AL-/i.test(ref)) {
+        setErrorMsg('Enter your booking reference (e.g. AL-20240101-ABC123) and the email used at booking.');
         setLoading(false);
         return;
       }
-      const result = await api.lookupBooking(searchQuery.trim(), isRef ? emailQuery.trim() : undefined);
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        setErrorMsg('Enter the email address used at booking.');
+        setLoading(false);
+        return;
+      }
+      const result = await api.lookupBooking(ref, email);
       if (!result) {
-        setErrorMsg('No appointment found matching that Booking Reference or Email address.');
+        setErrorMsg('No appointment found for that booking reference and email.');
       } else {
         setFoundBooking(result);
         setShowConfirmationModal(true);
       }
     } catch (err: any) {
-      setErrorMsg('Error looking up appointment. Please check your internet connection.');
+      setErrorMsg(err?.message || 'Error looking up appointment. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -64,21 +71,21 @@ export const BookingLookupModal: React.FC<BookingLookupModalProps> = ({
               Find Your Appointment
             </h4>
             <p className="text-gray-600">
-              Enter your <strong>Booking Reference ID</strong> (e.g., <code>AL-20240101-001</code>) or the <strong>Email address</strong> used when reserving.
+              Enter your <strong>Booking Reference ID</strong> (e.g., <code>AL-20240101-ABC123</code>) <strong>and</strong> the <strong>Email address</strong> used when reserving. Both are required to protect your booking.
             </p>
           </div>
 
           <form onSubmit={handleLookup} className="space-y-3">
             <div>
               <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">
-                Booking ID or Email:
+                Booking Reference:
               </label>
               <div className="relative">
                 <input
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="e.g. AL-20240101-001 or client@example.com"
+                  placeholder="e.g. AL-20240101-ABC123"
                   className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 text-sm font-medium focus:outline-none focus:border-[#2CB5A0] focus:ring-1 focus:ring-[#2CB5A0]"
                 />
                 <Search className="w-4 h-4 text-gray-400 absolute left-3.5 top-3.5" />
@@ -86,7 +93,7 @@ export const BookingLookupModal: React.FC<BookingLookupModalProps> = ({
             </div>
             <div>
               <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">
-                Email (required for booking references):
+                Email used at booking (required):
               </label>
               <input
                 type="email"
@@ -114,7 +121,7 @@ export const BookingLookupModal: React.FC<BookingLookupModalProps> = ({
               </button>
               <button
                 type="submit"
-                disabled={loading || !searchQuery.trim()}
+                disabled={loading || !searchQuery.trim() || !emailQuery.trim()}
                 className="px-6 py-2.5 rounded-xl bg-[#2CB5A0] hover:bg-[#259b89] text-white font-bold text-xs shadow-md transition-all flex items-center gap-2 cursor-pointer disabled:opacity-50"
               >
                 {loading ? (

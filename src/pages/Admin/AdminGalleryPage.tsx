@@ -45,7 +45,10 @@ export const AdminGalleryPage: React.FC = () => {
 
   const handleAdd = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!title || !imageUrl) return;
+    if (!title.trim() || !imageUrl.trim()) {
+      showToast({ type: 'error', title: 'Missing fields', message: 'A title and image are required.' });
+      return;
+    }
     try {
       await api.createGalleryItem({
         title,
@@ -66,6 +69,7 @@ export const AdminGalleryPage: React.FC = () => {
       setHighlights('');
       setDimensions('');
       setSanitizationLevel('');
+      showToast({ type: 'success', title: 'Gallery item added', message: 'The new image is now live.' });
     } catch (err: any) {
       showToast({ type: 'error', title: 'Add Failed', message: err?.message || 'Failed to add gallery item.' });
     }
@@ -102,74 +106,75 @@ export const AdminGalleryPage: React.FC = () => {
         <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={handleFileSelect} />
       </div>
 
-      <form onSubmit={handleAdd} className="bg-white rounded-2xl border border-gray-200 p-4 shadow-sm grid grid-cols-1 sm:grid-cols-4 gap-3">
-        <input
-          type="text"
-          required
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          placeholder="Item title"
-          className="border border-gray-300 rounded-xl px-3 py-2.5 text-xs outline-none focus:border-[#2CB5A0]"
-        />
-        <select
-          value={category}
-          onChange={(e) => setCategory(e.target.value)}
-          className="border border-gray-300 rounded-xl px-3 py-2.5 text-xs outline-none bg-white"
-        >
-          <option value="suites">VIP Suites</option>
-          <option value="equipment">Equipment</option>
-          <option value="ambiance">Ambiance</option>
-          <option value="hydrotherapy">Hydrotherapy</option>
-        </select>
-        <input
-          type="text"
-          required
-          value={imageUrl}
-          onChange={(e) => setImageUrl(e.target.value)}
-          placeholder="Image URL (or upload)"
-          className="border border-gray-300 rounded-xl px-3 py-2.5 text-xs outline-none focus:border-[#2CB5A0]"
-        />
-        <button type="submit" className="px-4 py-2.5 bg-[#1A1A1A] hover:bg-black text-white rounded-xl text-xs font-bold cursor-pointer">
-          Add Item
-        </button>
-      </form>
-
-      <form onSubmit={handleAdd} className="bg-white rounded-2xl border border-gray-200 p-4 shadow-sm grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-        <input
-          type="text"
-          value={subtitle}
-          onChange={(e) => setSubtitle(e.target.value)}
-          placeholder="Subtitle (e.g. Private Master Suite)"
-          className="border border-gray-300 rounded-xl px-3 py-2.5 text-xs outline-none focus:border-[#2CB5A0]"
-        />
-        <input
-          type="text"
-          value={dimensions}
-          onChange={(e) => setDimensions(e.target.value)}
-          placeholder="Dimensions (e.g. 350 sq ft Suite)"
-          className="border border-gray-300 rounded-xl px-3 py-2.5 text-xs outline-none focus:border-[#2CB5A0]"
-        />
-        <input
-          type="text"
-          value={sanitizationLevel}
-          onChange={(e) => setSanitizationLevel(e.target.value)}
-          placeholder="Sanitization level (e.g. Hospital-Grade UV-C)"
-          className="border border-gray-300 rounded-xl px-3 py-2.5 text-xs outline-none focus:border-[#2CB5A0]"
-        />
-        <input
-          type="text"
-          value={highlights}
-          onChange={(e) => setHighlights(e.target.value)}
-          placeholder="Highlights (comma separated)"
-          className="border border-gray-300 rounded-xl px-3 py-2.5 text-xs outline-none focus:border-[#2CB5A0]"
-        />
+      <form onSubmit={handleAdd} className="bg-white rounded-2xl border border-gray-200 p-4 shadow-sm space-y-3">
+        <div className="grid grid-cols-1 sm:grid-cols-4 gap-3">
+          <input
+            type="text"
+            required
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            placeholder="Item title"
+            className="border border-gray-300 rounded-xl px-3 py-2.5 text-xs outline-none focus:border-[#2CB5A0]"
+          />
+          <select
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+            className="border border-gray-300 rounded-xl px-3 py-2.5 text-xs outline-none bg-white"
+          >
+            <option value="suites">VIP Suites</option>
+            <option value="equipment">Equipment</option>
+            <option value="ambiance">Ambiance</option>
+            <option value="hydrotherapy">Hydrotherapy</option>
+          </select>
+          <input
+            type="text"
+            required
+            value={imageUrl}
+            onChange={(e) => setImageUrl(e.target.value)}
+            placeholder="Image URL (or upload)"
+            className="border border-gray-300 rounded-xl px-3 py-2.5 text-xs outline-none focus:border-[#2CB5A0]"
+          />
+          <input
+            type="text"
+            value={subtitle}
+            onChange={(e) => setSubtitle(e.target.value)}
+            placeholder="Subtitle (e.g. Private Master Suite)"
+            className="border border-gray-300 rounded-xl px-3 py-2.5 text-xs outline-none focus:border-[#2CB5A0]"
+          />
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <input
+            type="text"
+            value={dimensions}
+            onChange={(e) => setDimensions(e.target.value)}
+            placeholder="Dimensions (e.g. 350 sq ft Suite)"
+            className="border border-gray-300 rounded-xl px-3 py-2.5 text-xs outline-none focus:border-[#2CB5A0]"
+          />
+          <input
+            type="text"
+            value={sanitizationLevel}
+            onChange={(e) => setSanitizationLevel(e.target.value)}
+            placeholder="Sanitization level (e.g. Hospital-Grade UV-C)"
+            className="border border-gray-300 rounded-xl px-3 py-2.5 text-xs outline-none focus:border-[#2CB5A0]"
+          />
+          <input
+            type="text"
+            value={highlights}
+            onChange={(e) => setHighlights(e.target.value)}
+            placeholder="Highlights (comma separated)"
+            className="border border-gray-300 rounded-xl px-3 py-2.5 text-xs outline-none focus:border-[#2CB5A0]"
+          />
+        </div>
         <textarea
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           placeholder="Short description"
           rows={2}
-          className="sm:col-span-2 lg:col-span-4 border border-gray-300 rounded-xl px-3 py-2.5 text-xs outline-none focus:border-[#2CB5A0] resize-none"
+          className="w-full border border-gray-300 rounded-xl px-3 py-2.5 text-xs outline-none focus:border-[#2CB5A0] resize-none"
         />
+        <button type="submit" className="px-4 py-2.5 bg-[#1A1A1A] hover:bg-black text-white rounded-xl text-xs font-bold cursor-pointer">
+          Add Item
+        </button>
       </form>
 
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">

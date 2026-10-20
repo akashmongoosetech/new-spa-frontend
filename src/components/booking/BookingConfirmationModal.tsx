@@ -22,6 +22,7 @@ import {
 import { Booking, Therapist, Service } from '../../types';
 import { Modal } from '../ui/Modal';
 import { api } from '../../services/api';
+import { localDateInputValue, formatSlot12h } from '../../utils/date';
 
 interface BookingConfirmationModalProps {
   isOpen: boolean;
@@ -51,8 +52,8 @@ export const BookingConfirmationModal: React.FC<BookingConfirmationModalProps> =
   const [cancelLoading, setCancelLoading] = useState(false);
 
   // Reschedule form
-  const [newDate, setNewDate] = useState(booking?.date || new Date().toISOString().split('T')[0]);
-  const [newTimeSlot, setNewTimeSlot] = useState(booking?.timeSlot || '02:00 PM');
+  const [newDate, setNewDate] = useState(booking?.date || localDateInputValue());
+  const [newTimeSlot, setNewTimeSlot] = useState(booking?.timeSlot || '');
   const [newTherapistId, setNewTherapistId] = useState(booking?.therapistId || 'any');
   const [rescheduleLoading, setRescheduleLoading] = useState(false);
 
@@ -63,22 +64,9 @@ export const BookingConfirmationModal: React.FC<BookingConfirmationModalProps> =
   const matchedTherapist = therapists.find((t) => t.id === (newTherapistId !== 'any' ? newTherapistId : booking?.therapistId));
   const therapistDisplayName = matchedTherapist ? matchedTherapist.name : booking?.therapistName || 'Assigned Certified Therapist';
 
-  // Offline fallback only — the picker prefers live availability (24x7).
-  const timeSlotOptions = [
-    '12:00 AM',
-    '02:00 AM',
-    '05:00 AM',
-    '09:00 AM',
-    '10:30 AM',
-    '12:00 PM',
-    '01:30 PM',
-    '03:00 PM',
-    '04:30 PM',
-    '06:00 PM',
-    '07:30 PM',
-    '09:00 PM',
-    '11:00 PM',
-  ];
+  // Offline fallback only — the picker prefers live availability. Values stay
+  // in the API's 24h format; labels are rendered as 12h.
+  const timeSlotOptions = ['00:00', '02:00', '05:00', '09:00', '10:30', '12:00', '13:30', '15:00', '16:30', '18:00', '19:30', '21:00', '23:00'];
 
   const handleCopyBookingNumber = () => {
     if (!booking) return;
@@ -150,6 +138,14 @@ export const BookingConfirmationModal: React.FC<BookingConfirmationModalProps> =
     return () => { cancelled = true; };
   }, [viewState, newDate, newTherapistId, booking]);
 
+  // When live slots arrive, drop a stale (or legacy 12h) selection.
+  React.useEffect(() => {
+    if (!liveSlots || liveSlots.length === 0) return;
+    if (!newTimeSlot || !liveSlots.includes(newTimeSlot)) {
+      setNewTimeSlot(liveSlots[0]);
+    }
+  }, [liveSlots, newTimeSlot]);
+
   // Reschedule Handler (admin session uses privileged endpoint, guests use self-service)
   const handleConfirmReschedule = async () => {
     if (!booking) return;
@@ -182,7 +178,7 @@ export const BookingConfirmationModal: React.FC<BookingConfirmationModalProps> =
 
       setFeedbackMessage({
         type: 'success',
-        text: `Appointment successfully rescheduled to ${newDate} at ${newTimeSlot}!`,
+        text: `Appointment successfully rescheduled to ${newDate} at ${formatSlot12h(newTimeSlot)}!`,
       });
 
       if (onBookingUpdated) onBookingUpdated(updated);
@@ -315,7 +311,7 @@ export const BookingConfirmationModal: React.FC<BookingConfirmationModalProps> =
                   <div>
                     <span className="text-gray-400 block text-[11px]">Date & Time Slot:</span>
                     <strong className="text-sm font-semibold text-gray-900">
-                      {booking.date} at {booking.timeSlot}
+                      {booking.date} at {formatSlot12h(booking.timeSlot)}
                     </strong>
                   </div>
                   <div className="pt-1 flex items-center gap-1.5 text-gray-600">
@@ -540,7 +536,7 @@ export const BookingConfirmationModal: React.FC<BookingConfirmationModalProps> =
                 </label>
                 <input
                   type="date"
-                  min={new Date().toISOString().split('T')[0]}
+                  min={localDateInputValue()}
                   value={newDate}
                   onChange={(e) => setNewDate(e.target.value)}
                   className="w-full p-2.5 rounded-xl border border-gray-200 focus:outline-none focus:border-[#2CB5A0] font-semibold text-gray-800"
@@ -572,7 +568,7 @@ export const BookingConfirmationModal: React.FC<BookingConfirmationModalProps> =
                               : 'bg-gray-50 text-gray-700 border-gray-200 hover:border-teal-300'
                           }`}
                         >
-                          {slot}
+                          {formatSlot12h(slot)}
                         </button>
                       );
                     })}

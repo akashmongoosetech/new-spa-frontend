@@ -38,6 +38,8 @@ export const UserManagement: React.FC<UserManagementProps> = ({ currentUser, sea
   const [phone, setPhone] = useState('');
   const [role, setRole] = useState<AdminUser['role']>('admin');
   const [status, setStatus] = useState<'active' | 'inactive'>('active');
+  const [adminPassword, setAdminPassword] = useState('');
+  const [originalEmail, setOriginalEmail] = useState('');
 
   useEffect(() => {
     fetchData();
@@ -56,8 +58,13 @@ export const UserManagement: React.FC<UserManagementProps> = ({ currentUser, sea
   };
 
   const safeUsers = users || [];
-  const isSuperAdmin =
-    (currentUser?.role || '').toLowerCase().replace(/\s+/g, '_') === 'super_admin';
+  const roleKey = (r?: string) => (r || '').toLowerCase().replace(/\s+/g, '_');
+  const ROLE_RANK: Record<string, number> = { super_admin: 3, admin: 2, manager: 1, receptionist: 0 };
+  const isSuperAdmin = roleKey(currentUser?.role) === 'super_admin';
+  // Mirrors the backend hierarchy: no role may manage an account at or above
+  // its own level (and only a Super Admin may manage Super Admins).
+  const canManage = (u: AdminUser) =>
+    isSuperAdmin || (ROLE_RANK[roleKey(u.role)] ?? -1) < (ROLE_RANK[roleKey(currentUser?.role)] ?? -1);
   const filteredUsers = safeUsers.filter(
     (u) =>
       u &&
@@ -74,6 +81,8 @@ export const UserManagement: React.FC<UserManagementProps> = ({ currentUser, sea
     setPhone('');
     setRole('admin');
     setStatus('active');
+    setAdminPassword('');
+    setOriginalEmail('');
     setShowUserModal(true);
   };
 
@@ -85,15 +94,30 @@ export const UserManagement: React.FC<UserManagementProps> = ({ currentUser, sea
     setPhone(u.phone || '');
     setRole(u.role);
     setStatus(u.status);
+    setAdminPassword('');
+    setOriginalEmail(u.email);
     setShowUserModal(true);
   };
+
+  const emailChanged = !!editingUser && email.trim().toLowerCase() !== (originalEmail || '').toLowerCase();
+  const needsReauth =
+    !!editingUser &&
+    (emailChanged || password.length > 0 || status !== editingUser.status || role !== editingUser.role);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSaving(true);
     try {
       if (editingUser) {
-        await api.updateAdminUser(editingUser.id, { name, email, role, status, phone, password: password || undefined });
+        await api.updateAdminUser(editingUser.id, {
+          name,
+          email,
+          role,
+          status,
+          phone,
+          password: password || undefined,
+          currentPassword: needsReauth ? adminPassword || undefined : undefined,
+        });
       } else {
         await api.createAdminUser({ name, email, password, role, status, phone });
       }
@@ -226,12 +250,13 @@ export const UserManagement: React.FC<UserManagementProps> = ({ currentUser, sea
                   <td className="py-4 px-6 text-right space-x-1">
                     <button
                       onClick={() => handleOpenEdit(u)}
-                      className="p-1.5 rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200 cursor-pointer"
-                      title="Edit User"
+                      disabled={!canManage(u)}
+                      className="p-1.5 rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
+                      title={canManage(u) ? 'Edit User' : 'You cannot manage this account'}
                     >
                       <Edit2 className="w-4 h-4" />
                     </button>
-                    {u.id !== currentUser?.id && (
+                    {u.id !== currentUser?.id && canManage(u) && (
                       <button
                         onClick={() => setDeleteTarget(u)}
                         className="p-1.5 rounded-lg bg-rose-50 text-rose-600 hover:bg-rose-100 cursor-pointer"
@@ -342,25 +367,52 @@ export const UserManagement: React.FC<UserManagementProps> = ({ currentUser, sea
             <input
               type="password"
               required={!editingUser}
+              minLength={8}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              placeholder="Min 8 characters, letter + number"
               className="w-full px-3.5 py-2.5 rounded-xl border outline-none"
             />
           </div>
 
+          {needsReauth && (
+            <div className="p-3 rounded-xl bg-amber-50 border border-amber-200 space-y-1">
+              <label className="block font-bold text-amber-800">
+                Confirm with your password (required for email, password, role or status changes)
+              </label>
+              <input
+                type="password"
+                required
+                value={adminPassword}
+                onChange={(e) => setAdminPassword(e.target.value)}
+                placeholder="Your current password"
+                className="w-full px-3.5 py-2.5 rounded-xl border border-amber-300 outline-none"
+              />
+              <p className="text-[10px] text-amber-700">
+                Security-sensitive changes re-authenticate the acting administrator and revoke the account's existing sessions.
+              </p>
+            </div>
+          )}
+
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <label className="block font-bold text-gray-700 mb-1">Role</label>
-              <select
-                value={role}
-                onChange={(e: any) => setRole(e.target.value)}
-                className="w-full px-3 py-2.5 rounded-xl border font-semibold outline-none"
-              >
-                <option value="super_admin">Super Admin</option>
-                <option value="admin">Admin</option>
-                <option value="manager">Manager</option>
-                <option value="receptionist">Receptionist</option>
-              </select>
+              {isSuperAdmin ? (
+                <select
+                  value={role}
+                  onChange={(e: any) => setRole(e.target.value)}
+                  className="w-full px-3 py-2.5 rounded-xl border font-semibold outline-none"
+                >
+                  <option value="super_admin">Super Admin</option>
+                  <option value="admin">Admin</option>
+                  <option value="manager">Manager</option>
+                  <option value="receptionist">Receptionist</option>
+                </select>
+              ) : (
+                <div className="w-full px-3 py-2.5 rounded-xl border bg-gray-50 font-semibold text-gray-600 capitalize">
+                  {(role || '').replace('_', ' ')}
+                </div>
+              )}
             </div>
             <div>
               <label className="block font-bold text-gray-700 mb-1">Account Status</label>

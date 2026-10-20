@@ -135,6 +135,19 @@ export function useProfileForm(context: ProfileFormContext) {
         gender,
         currentPassword: emailChanged ? currentPassword : undefined,
       });
+      if (updated.requireRelogin) {
+        showToast({
+          type: 'success',
+          title: 'Email updated',
+          message: 'Your email was changed. Please sign in again with the new address.',
+        });
+        window.setTimeout(() => {
+          localStorage.removeItem('aura_admin_token');
+          localStorage.removeItem('aura_admin_user');
+          window.location.assign('/admin-login');
+        }, 1200);
+        return;
+      }
       context.onUpdateCurrentUser?.(updated);
       try {
         localStorage.setItem('aura_admin_user', JSON.stringify(updated));

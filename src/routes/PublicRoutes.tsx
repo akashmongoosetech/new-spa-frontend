@@ -20,6 +20,7 @@ const TermsPage = lazy(() => import('../pages/Legal/TermsPage'));
 const RefundPolicyPage = lazy(() => import('../pages/Legal/RefundPolicyPage'));
 const CookiePolicyPage = lazy(() => import('../pages/Legal/CookiePolicyPage'));
 const SitemapPage = lazy(() => import('../pages/Legal/SitemapPage'));
+const UnsubscribePage = lazy(() => import('../pages/UnsubscribePage'));
 
 export const renderPublicRoutes = () => (
   <Route
@@ -46,6 +47,7 @@ export const renderPublicRoutes = () => (
     <Route path="refund-policy" element={<RefundPolicyPage />} />
     <Route path="cookie-policy" element={<CookiePolicyPage />} />
     <Route path="sitemap" element={<SitemapPage />} />
+    <Route path="unsubscribe" element={<UnsubscribePage />} />
   </Route>
 );
 

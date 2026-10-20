@@ -89,7 +89,7 @@ export const SpaAssistantChat: React.FC<SpaAssistantChatProps> = ({ onOpenBookin
         history,
         signal: ctrl.signal,
         onToken: (t) => {
-          acc += (acc ? ' ' : '') + t;
+          acc += t;
           setStreamText(acc.slice(0, 4000));
         },
       });
@@ -137,9 +137,13 @@ export const SpaAssistantChat: React.FC<SpaAssistantChatProps> = ({ onOpenBookin
         ]);
       }
     } finally {
-      setStreaming(false);
-      setStreamText('');
-      abortRef.current = null;
+      // A newer request may have replaced this controller while the abort was
+      // unwinding; only reset UI state for the request that still owns it.
+      if (abortRef.current === ctrl) {
+        setStreaming(false);
+        setStreamText('');
+        abortRef.current = null;
+      }
     }
   };
 

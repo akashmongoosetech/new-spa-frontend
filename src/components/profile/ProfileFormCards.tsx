@@ -3,6 +3,7 @@ import { AlertCircle, AtSign, Cake, Mail, MapPin, Phone, User } from 'lucide-rea
 import type { ProfileForm } from './useProfileForm';
 import type { ProfileTone } from './profileTheme';
 import { cardClass, inputClassFor, sectionTitleClass } from './profileTheme';
+import { localDateInputValue } from '../../utils/date';
 
 export const inputClass =
   'w-full rounded-xl border border-gray-300 bg-white p-3 text-sm text-gray-900 placeholder:text-gray-400 focus:border-[#2CB5A0] focus:outline-none focus:ring-1 focus:ring-[#2CB5A0]';
@@ -51,7 +52,7 @@ interface CardsProps {
 export const PersonalFormCard: React.FC<CardsProps> = ({ form, tone = 'light' }) => {
   const { fields } = form;
   const input = inputClassFor(tone);
-  const today = new Date().toISOString().slice(0, 10);
+  const today = localDateInputValue();
 
   return (
     <section aria-label="Personal information" className={`${cardClass(tone)} space-y-4 p-5 sm:p-6`}>

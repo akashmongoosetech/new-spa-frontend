@@ -9,6 +9,7 @@ export const AdminSeoPage: React.FC = () => {
   const [error, setError] = useState('');
   const [saved, setSaved] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -17,8 +18,9 @@ export const AdminSeoPage: React.FC = () => {
         setMetaTitle(s.metaTitle || '');
         setMetaDescription(s.metaDescription || '');
         setKeywords(s.keywords || '');
-      } catch (err) {
-        // defaults stay empty
+        setLoaded(true);
+      } catch (err: any) {
+        setError(err?.message || 'Could not load the saved SEO settings. Reload before saving.');
       }
     })();
   }, []);
@@ -92,7 +94,8 @@ export const AdminSeoPage: React.FC = () => {
 
           <button
             type="submit"
-            disabled={saving}
+            disabled={saving || !loaded}
+            title={!loaded ? 'Load the saved SEO settings before saving.' : undefined}
             className="px-6 py-3 bg-[#2CB5A0] text-white rounded-xl text-xs font-bold flex items-center gap-2 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <Save className="w-4 h-4" />

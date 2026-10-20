@@ -61,10 +61,10 @@ export const Header: React.FC<HeaderProps> = ({
             </div>
           </div>
           <div className="flex items-center gap-6">
-            <div className="flex items-center gap-1.5 text-emerald-400 font-medium">
+            {/* <div className="flex items-center gap-1.5 text-emerald-400 font-medium">
               <ShieldCheck className="w-3.5 h-3.5" />
               <span>100% Licensed & Certified Male Therapists</span>
-            </div>
+            </div> */}
             <div className="flex items-center gap-2 border-l border-gray-700 pl-4">
               <MapPin className="w-3.5 h-3.5 text-[#2CB5A0]" />
               <span className="text-gray-300">{settings.city}</span>
@@ -91,9 +91,9 @@ export const Header: React.FC<HeaderProps> = ({
             }}
             className="flex items-center gap-2.5 text-left group cursor-pointer"
           >
-            <div className="w-10 h-10 rounded-xl bg-white p-1 flex items-center justify-center shadow-md group-hover:scale-105 transition-transform overflow-hidden">
+            <div className="w-15 h-15 rounded-xl bg-white p-1 flex items-center justify-center shadow-md group-hover:scale-105 transition-transform overflow-hidden">
               <img
-                src={settings.logoUrl || '/logo.png'}
+                src={settings.logoUrl || '/icon.png'}
                 alt="Tripod Wellness"
                 className="w-full h-full object-contain"
               />
@@ -103,7 +103,7 @@ export const Header: React.FC<HeaderProps> = ({
                 TRIPOD WELLNESS
               </span>
               <span className="block text-[10px] font-semibold tracking-widest text-[#C7A36A] uppercase -mt-0.5">
-                Men's Spa Sanctuary
+                RESTORE · REBALANCE · RECONNECT
               </span>
             </div>
           </button>

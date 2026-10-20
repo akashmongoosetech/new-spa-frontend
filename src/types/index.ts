@@ -185,6 +185,8 @@ export interface BusinessSettings {
   smtpSenderName?: string;
   smtpSenderEmail?: string;
   smtpConfigured: boolean;
+  bookingEmailSubject?: string;
+  contactEmailSubject?: string;
   bookingEmailTemplate?: string;
   contactEmailTemplate?: string;
 

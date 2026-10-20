@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Calendar as CalendarIcon, Clock, Sun, Sunset, Moon, Sparkles, CheckCircle2, AlertCircle } from 'lucide-react';
 import { api } from '../../services/api';
+import { localDateInputValue, formatSlot12h } from '../../utils/date';
 
 interface TimeSlotItem {
   time: string;
@@ -38,21 +39,11 @@ export const AvailabilityCalendar: React.FC<AvailabilityCalendarProps> = ({
     );
   }, []);
 
-  // 12h display for 24h "HH:MM" slot values (values stay 24h for the API).
-  const to12h = (t: string) => {
-    const m = String(t).match(/^(\d{1,2}):(\d{2})$/);
-    if (!m) return t;
-    const h = Number(m[1]);
-    const suffix = h < 12 ? 'AM' : 'PM';
-    const h12 = h % 12 === 0 ? 12 : h % 12;
-    return `${String(h12).padStart(2, '0')}:${m[2]} ${suffix}`;
-  };
-
-  // Generate bookable dates up to the horizon
+  // Generate bookable dates up to the horizon (local calendar dates).
   const datesList = Array.from({ length: horizonDays }).map((_, i) => {
     const d = new Date();
     d.setDate(d.getDate() + i);
-    const dateStr = d.toISOString().split('T')[0];
+    const dateStr = localDateInputValue(d);
     const dayName = d.toLocaleDateString('en-US', { weekday: 'short' });
     const monthName = d.toLocaleDateString('en-US', { month: 'short' });
     const dayNum = d.getDate();
@@ -80,6 +71,14 @@ export const AvailabilityCalendar: React.FC<AvailabilityCalendarProps> = ({
     };
     fetchSlots();
   }, [selectedDate, selectedTherapistId]);
+
+  // If the chosen slot disappears (date/therapist change or someone books it),
+  // clear it so the guest cannot submit a stale slot.
+  useEffect(() => {
+    if (!selectedTimeSlot || loading) return;
+    const stillAvailable = slots.some((s) => s.time === selectedTimeSlot && s.available);
+    if (!stillAvailable) onSelectTimeSlot('');
+  }, [slots, selectedTimeSlot, loading, onSelectTimeSlot]);
 
   const safeSlots = slots || [];
   const groupSlots = {
@@ -115,7 +114,7 @@ export const AvailabilityCalendar: React.FC<AvailabilityCalendarProps> = ({
                     : 'bg-white/5 border-white/5 text-gray-600 cursor-not-allowed line-through opacity-60'
                 }`}
               >
-                <span>{to12h(slot.time)}</span>
+                <span>{formatSlot12h(slot.time)}</span>
                 {isSelected ? (
                   <CheckCircle2 className="w-4 h-4 text-white" />
                 ) : !slot.available ? (
@@ -197,7 +196,7 @@ export const AvailabilityCalendar: React.FC<AvailabilityCalendarProps> = ({
           ) : (
             selectedTimeSlot && (
               <span className="text-xs text-emerald-400 font-bold bg-emerald-950/60 border border-emerald-500/40 px-2.5 py-1 rounded-md">
-                Selected: {selectedTimeSlot}
+                Selected: {formatSlot12h(selectedTimeSlot)}
               </span>
             )
           )}

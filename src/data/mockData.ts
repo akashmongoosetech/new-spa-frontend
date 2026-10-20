@@ -8,7 +8,7 @@ export const DEFAULT_SETTINGS: BusinessSettings = {
   email: "wellnesstripod@gmail.com",
   address: "Indore, Ujjain, Dewas",
   city: "Indore, Ujjain, Dewas",
-  workingHours: "Open 24 hours, Mon - Sun (IST)",
+  workingHours: "Open 24 hours, Mon - Sun",
   currencySymbol: "₹",
   currencyCode: "INR",
   googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=Indore+Ujjain+Dewas",

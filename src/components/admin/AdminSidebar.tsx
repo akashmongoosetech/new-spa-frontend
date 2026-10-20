@@ -17,7 +17,12 @@ import {
   X,
   UserPlus,
   HelpCircle,
-  Bot
+  Bot,
+  Image,
+  Star,
+  Ticket,
+  Mail,
+  Globe
 } from 'lucide-react';
 import { AdminUser } from '../../types';
 
@@ -35,6 +40,12 @@ export type AdminTab =
   | 'audit'
   | 'faqs'
   | 'blogs'
+  | 'gallery'
+  | 'testimonials'
+  | 'coupons'
+  | 'email-logs'
+  | 'email-templates'
+  | 'seo'
   | 'rag';
 
 interface AdminSidebarProps {
@@ -74,7 +85,7 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
     if (tab === 'applications') return role === 'super_admin';
     if (role === 'super_admin' || role === 'admin') return true;
     if (role === 'manager') {
-      return ['overview', 'bookings', 'contacts', 'therapists', 'services', 'schedule', 'reports', 'faqs', 'blogs', 'rag'].includes(tab);
+      return ['overview', 'bookings', 'contacts', 'therapists', 'services', 'schedule', 'reports', 'faqs', 'blogs', 'coupons', 'rag'].includes(tab);
     }
     if (role === 'receptionist') {
       return ['overview', 'bookings', 'contacts', 'schedule'].includes(tab);
@@ -92,10 +103,16 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
     { id: 'reports', label: 'Reports & Export', icon: FileText },
     { id: 'faqs', label: 'FAQ Management', icon: HelpCircle },
     { id: 'blogs', label: 'Blog Management', icon: FileText },
+    { id: 'gallery', label: 'Gallery Manager', icon: Image },
+    { id: 'testimonials', label: 'Testimonials', icon: Star },
+    { id: 'coupons', label: 'Coupons & Offers', icon: Ticket },
     { id: 'rag', label: 'AI Knowledge Base', icon: Bot },
     { id: 'users', label: 'Staff & RBAC', icon: Shield },
     { id: 'applications', label: 'Staff Applications', icon: UserPlus },
     { id: 'settings', label: 'System Settings', icon: Settings },
+    { id: 'seo', label: 'SEO & Metadata', icon: Globe },
+    { id: 'email-templates', label: 'Email Templates', icon: FileText },
+    { id: 'email-logs', label: 'Email Logs', icon: Mail },
     { id: 'audit', label: 'Audit Logs', icon: Lock },
   ];
 

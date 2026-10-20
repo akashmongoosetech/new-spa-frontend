@@ -2,8 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { useParams, Link, useOutletContext } from 'react-router-dom';
 import { Clock, Star, CheckCircle2, Calendar, ArrowLeft, ShieldCheck, Sparkles } from 'lucide-react';
 import { SEO } from '../../components/ui/SEO';
-import { createBooking } from '../../services/api';
+import { api, createBooking } from '../../services/api';
 import { showToast } from '../../utils/toastEvents';
+import { localDateInputValue, formatSlot12h } from '../../utils/date';
 import { mockSettings as defaultSettings } from '../../data/mockData';
 import NotFound from '../NotFound';
 
@@ -35,11 +36,38 @@ export const ServiceDetailPage: React.FC = () => {
     customerName: '',
     customerEmail: '',
     customerPhone: '',
-    selectedDate: new Date().toISOString().split('T')[0],
-    selectedTime: '10:00 AM',
+    selectedDate: localDateInputValue(),
+    selectedTime: '',
     selectedTherapist: ''
   });
   const [bookingStatus, setBookingStatus] = useState<'idle' | 'submitting'>('idle');
+  const [availableSlots, setAvailableSlots] = useState<string[]>([]);
+  const [slotsLoading, setSlotsLoading] = useState(false);
+
+  // Live availability so this page only offers slots the API will accept.
+  useEffect(() => {
+    let cancelled = false;
+    if (!bookingData.selectedDate) return;
+    setSlotsLoading(true);
+    api.getAvailability(bookingData.selectedDate, bookingData.selectedTherapist || 'any')
+      .then((res) => {
+        if (cancelled) return;
+        const slots = (res.slots || []).map((s) => s.time);
+        setAvailableSlots(slots);
+        setBookingData((prev) =>
+          prev.selectedTime && slots.includes(prev.selectedTime)
+            ? prev
+            : { ...prev, selectedTime: slots[0] || '' }
+        );
+      })
+      .catch(() => {
+        if (!cancelled) setAvailableSlots([]);
+      })
+      .finally(() => {
+        if (!cancelled) setSlotsLoading(false);
+      });
+    return () => { cancelled = true; };
+  }, [bookingData.selectedDate, bookingData.selectedTherapist]);
 
 
   const handleBook = async () => {
@@ -50,8 +78,11 @@ export const ServiceDetailPage: React.FC = () => {
       if (!bookingData.customerName.trim() || !emailOk || bookingData.customerPhone.replace(/\D/g, '').length < 7) {
         throw new Error('Enter a valid name, email and phone number');
       }
-      if (!bookingData.selectedDate || bookingData.selectedDate < new Date().toISOString().slice(0, 10)) {
+      if (!bookingData.selectedDate || bookingData.selectedDate < localDateInputValue()) {
         throw new Error('Choose a valid future date');
+      }
+      if (!bookingData.selectedTime) {
+        throw new Error('Choose an available time slot');
       }
       const result = await createBooking({
         serviceId: service.id,
@@ -226,8 +257,9 @@ export const ServiceDetailPage: React.FC = () => {
                   <input
                     type="date"
                     required
+                    min={localDateInputValue()}
                     value={bookingData.selectedDate}
-                    onChange={(e) => setBookingData(prev => ({ ...prev, selectedDate: e.target.value }))}
+                    onChange={(e) => setBookingData(prev => ({ ...prev, selectedDate: e.target.value, selectedTime: '' }))}
                     className="w-full border border-gray-300 rounded-xl py-3 px-4 text-sm focus:border-[#2CB5A0] focus:outline-none"
                   />
                 </div>
@@ -235,15 +267,19 @@ export const ServiceDetailPage: React.FC = () => {
                 <div>
                   <label className="block text-xs font-bold uppercase text-gray-700 mb-2">Select Time Slot</label>
                   <select
+                    required
                     value={bookingData.selectedTime}
                     onChange={(e) => setBookingData(prev => ({ ...prev, selectedTime: e.target.value }))}
-                    className="w-full border border-gray-300 rounded-xl py-3 px-4 text-sm focus:border-[#2CB5A0] focus:outline-none"
+                    disabled={slotsLoading || availableSlots.length === 0}
+                    className="w-full border border-gray-300 rounded-xl py-3 px-4 text-sm focus:border-[#2CB5A0] focus:outline-none disabled:bg-gray-100"
                   >
-                    <option value="10:00 AM">10:00 AM</option>
-                    <option value="12:00 PM">12:00 PM</option>
-                    <option value="02:00 PM">02:00 PM</option>
-                    <option value="04:00 PM">04:00 PM</option>
-                    <option value="06:00 PM">06:00 PM</option>
+                    {slotsLoading && <option value="">Loading available slots…</option>}
+                    {!slotsLoading && availableSlots.length === 0 && (
+                      <option value="">No slots available — choose another date</option>
+                    )}
+                    {availableSlots.map((slot) => (
+                      <option key={slot} value={slot}>{formatSlot12h(slot)}</option>
+                    ))}
                   </select>
                 </div>
 

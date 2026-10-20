@@ -128,9 +128,9 @@ export const Footer: React.FC<FooterProps> = ({
           {/* Col 1: Brand Info */}
           <div className="lg:col-span-4 space-y-5">
             <div className="flex items-center gap-3">
-              <div className="w-11 h-11 rounded-2xl bg-white p-1 flex items-center justify-center shadow-lg border border-teal-400/30 overflow-hidden">
+              <div className="w-18 h-18 rounded-2xl bg-white p-1 flex items-center justify-center shadow-lg border border-teal-400/30 overflow-hidden">
                 <img
-                  src={settings?.logoUrl || '/logo.png'}
+                  src={settings?.logoUrl || '/icon.png'}
                   alt="Tripod Wellness"
                   className="w-full h-full object-contain"
                 />
@@ -140,7 +140,7 @@ export const Footer: React.FC<FooterProps> = ({
                   TRIPOD WELLNESS
                 </span>
                 <span className="block text-[11px] font-semibold tracking-widest text-[#E3C99B] uppercase mt-1">
-                  Men's Wellness & Spa Sanctuary
+                  RESTORE · REBALANCE · RECONNECT
                 </span>
               </div>
             </div>

@@ -411,7 +411,9 @@ export const BookingManager: React.FC<BookingManagerProps> = ({
                   value={editTimeSlot}
                   onChange={(e) => setEditTimeSlot(e.target.value)}
                   className="w-full px-3.5 py-2.5 rounded-xl border text-xs outline-none"
-                  placeholder="02:00 PM"
+                  placeholder="14:00 (24-hour)"
+                  pattern="^([01]\d|2[0-3]):[0-5]\d$"
+                  title="Use 24-hour HH:MM, e.g. 14:00"
                 />
               </div>
             </div>

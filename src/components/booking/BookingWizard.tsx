@@ -22,6 +22,7 @@ import {
 import confetti from 'canvas-confetti';
 import { Service, Therapist, Booking } from '../../types';
 import { AvailabilityCalendar } from './AvailabilityCalendar';
+import { localDateInputValue, formatSlot12h } from '../../utils/date';
 import { api } from '../../services/api';
 import { BookingConfirmationModal } from './BookingConfirmationModal';
 import { broadcastNewBooking } from '../../utils/toastEvents';
@@ -50,10 +51,9 @@ export const BookingWizard: React.FC<BookingWizardProps> = ({
     initialServiceId || services[0]?.id || 'srv-1'
   );
   const [selectedTherapistId, setSelectedTherapistId] = useState<string>('any');
-  const [selectedDate, setSelectedDate] = useState<string>(
-    new Date().toISOString().split('T')[0]
-  );
-  const [selectedTimeSlot, setSelectedTimeSlot] = useState<string>('02:00 PM');
+  const [selectedDate, setSelectedDate] = useState<string>(localDateInputValue());
+  // Kept empty until the guest picks a live 24h slot from the calendar.
+  const [selectedTimeSlot, setSelectedTimeSlot] = useState<string>('');
 
   // Customer Details
   const [firstName, setFirstName] = useState('');
@@ -111,6 +111,10 @@ export const BookingWizard: React.FC<BookingWizardProps> = ({
     e.preventDefault();
     if (!firstName || !lastName || !email || !phone) {
       setErrorMessage('Please fill in your full name, email, and phone number.');
+      return;
+    }
+    if (!selectedTimeSlot) {
+      setErrorMessage('Please choose an available time slot.');
       return;
     }
 
@@ -270,7 +274,7 @@ export const BookingWizard: React.FC<BookingWizardProps> = ({
                   <>
                     <span className="text-gray-500">•</span>
                     <span className="text-teal-300 flex items-center gap-1">
-                      📅 {selectedDate} @ {selectedTimeSlot}
+                      📅 {selectedDate} @ {formatSlot12h(selectedTimeSlot)}
                     </span>
                   </>
                 )}
@@ -826,7 +830,7 @@ export const BookingWizard: React.FC<BookingWizardProps> = ({
                 <div>
                   <span className="text-gray-400 font-semibold block">Scheduled Date & Time:</span>
                   <span className="font-bold text-[#81E3D4] text-sm">
-                    {completedBooking.date} @ {completedBooking.timeSlot}
+                    {completedBooking.date} @ {formatSlot12h(completedBooking.timeSlot)}
                   </span>
                 </div>
                 <div>

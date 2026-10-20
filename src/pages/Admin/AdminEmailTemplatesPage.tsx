@@ -3,22 +3,26 @@ import { Save, CheckCircle2, AlertCircle } from 'lucide-react';
 import { api } from '../../services/api';
 
 export const AdminEmailTemplatesPage: React.FC = () => {
-  const [bookingSubject, setBookingSubject] = useState('Appointment Confirmed - Tripod Wellness');
+  const [bookingSubject, setBookingSubject] = useState('');
   const [bookingBody, setBookingBody] = useState('');
-  const [contactSubject, setContactSubject] = useState('We received your inquiry - Tripod Wellness');
+  const [contactSubject, setContactSubject] = useState('');
   const [contactBody, setContactBody] = useState('');
   const [error, setError] = useState('');
   const [saved, setSaved] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
     (async () => {
       try {
         const s = await api.getFullSettings();
+        if (s.bookingEmailSubject) setBookingSubject(s.bookingEmailSubject);
+        if (s.contactEmailSubject) setContactSubject(s.contactEmailSubject);
         if (s.bookingEmailTemplate) setBookingBody(s.bookingEmailTemplate);
         if (s.contactEmailTemplate) setContactBody(s.contactEmailTemplate);
-      } catch (err) {
-        // defaults stay
+        setLoaded(true);
+      } catch (err: any) {
+        setError(err?.message || 'Could not load the saved templates. Reload before saving.');
       }
     })();
   }, []);
@@ -30,6 +34,8 @@ export const AdminEmailTemplatesPage: React.FC = () => {
     setSaving(true);
     try {
       await api.updateSettings({
+        bookingEmailSubject: bookingSubject,
+        contactEmailSubject: contactSubject,
         bookingEmailTemplate: bookingBody,
         contactEmailTemplate: contactBody,
       });
@@ -45,7 +51,7 @@ export const AdminEmailTemplatesPage: React.FC = () => {
     <div className="max-w-4xl space-y-6">
       <div>
         <h1 className="text-2xl font-serif font-bold text-gray-900">Email Notification Templates</h1>
-        <p className="text-xs text-gray-500 mt-1">Configure automated transactional emails for booking confirmations and reminders</p>
+        <p className="text-xs text-gray-500 mt-1">Configure automated transactional emails for booking confirmations and contact auto-replies</p>
       </div>
 
       <div className="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm space-y-6">
@@ -62,6 +68,20 @@ export const AdminEmailTemplatesPage: React.FC = () => {
           </div>
         )}
 
+        <div className="p-4 rounded-xl bg-teal-50 border border-teal-200 text-[11px] leading-relaxed text-teal-900">
+          <p className="font-bold mb-1">Supported placeholders</p>
+          <p>
+            Booking: <code className="font-mono">{'{{customerName}} {{bookingNumber}} {{serviceName}} {{therapistName}} {{date}} {{dateLong}} {{time}} {{duration}} {{total}} {{status}} {{businessName}}'}</code>
+          </p>
+          <p className="mt-1">
+            Contact: <code className="font-mono">{'{{name}} {{email}} {{phone}} {{subject}} {{message}} {{businessName}}'}</code>
+          </p>
+          <p className="mt-1 text-teal-800">
+            The body is inserted into the branded email shell. Full HTML documents are also supported. Leave a subject
+            or template blank to use the built-in default.
+          </p>
+        </div>
+
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
             <label className="block text-xs font-bold uppercase text-gray-700 mb-1.5">Booking Confirmation Subject</label>
@@ -69,6 +89,7 @@ export const AdminEmailTemplatesPage: React.FC = () => {
               type="text"
               value={bookingSubject}
               onChange={(e) => setBookingSubject(e.target.value)}
+              placeholder="Appointment {{status}} — {{bookingNumber}}"
               className="w-full border border-gray-300 rounded-xl p-3 text-sm focus:border-[#2CB5A0] focus:outline-none"
             />
           </div>
@@ -90,6 +111,7 @@ export const AdminEmailTemplatesPage: React.FC = () => {
               type="text"
               value={contactSubject}
               onChange={(e) => setContactSubject(e.target.value)}
+              placeholder="We received your message"
               className="w-full border border-gray-300 rounded-xl p-3 text-sm focus:border-[#2CB5A0] focus:outline-none"
             />
           </div>
@@ -107,7 +129,8 @@ export const AdminEmailTemplatesPage: React.FC = () => {
 
           <button
             type="submit"
-            disabled={saving}
+            disabled={saving || !loaded}
+            title={!loaded ? 'Load the saved templates before saving.' : undefined}
             className="px-6 py-3 bg-[#2CB5A0] text-white rounded-xl text-xs font-bold flex items-center gap-2 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <Save className="w-4 h-4" />

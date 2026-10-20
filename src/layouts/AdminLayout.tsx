@@ -111,6 +111,12 @@ export const AdminLayout: React.FC = () => {
     if (p.includes('/services')) return 'services';
     if (p.includes('/faqs')) return 'faqs';
     if (p.includes('/blogs')) return 'blogs';
+    if (p.includes('/gallery')) return 'gallery';
+    if (p.includes('/testimonials')) return 'testimonials';
+    if (p.includes('/coupons')) return 'coupons';
+    if (p.includes('/email-logs')) return 'email-logs';
+    if (p.includes('/email-templates')) return 'email-templates';
+    if (p.includes('/seo')) return 'seo';
     if (p.includes('/rag')) return 'rag';
     if (p.includes('/calendar') || p.includes('/schedule')) return 'schedule';
     if (p.includes('/reports')) return 'reports';
@@ -123,10 +129,18 @@ export const AdminLayout: React.FC = () => {
 
   const handleSetTab = (tab: AdminTab) => {
     setMobileMenuOpen(false);
-    if (tab === 'overview') navigate('/admin/dashboard');
-    else if (tab === 'audit') navigate('/admin/activity-logs');
-    else if (tab === 'schedule') navigate('/admin/calendar');
-    else navigate(`/admin/${tab}`);
+    const target = String(tab || '').trim();
+    if (!target) return;
+    // Notifications may store either a tab id ("bookings") or a full path
+    // ("/admin/bookings"); support both without double-prefixing.
+    if (target.startsWith('/')) {
+      navigate(target);
+      return;
+    }
+    if (target === 'overview') navigate('/admin/dashboard');
+    else if (target === 'audit') navigate('/admin/activity-logs');
+    else if (target === 'schedule') navigate('/admin/calendar');
+    else navigate(`/admin/${target}`);
   };
 
   const handleLogout = () => {

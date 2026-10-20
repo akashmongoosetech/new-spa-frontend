@@ -133,10 +133,11 @@ export const AuthModals: React.FC<AuthModalsProps> = ({
             <input
               type="password"
               required
+              minLength={8}
               value={signupPassword}
               onChange={(e) => setSignupPassword(e.target.value)}
               className="w-full px-3.5 py-2.5 rounded-xl border text-xs focus:ring-2 focus:ring-[#2CB5A0] outline-none"
-              placeholder="Min 6 characters"
+              placeholder="Min 8 characters, letter + number"
             />
           </div>
           <div>
@@ -214,8 +215,10 @@ export const AuthModals: React.FC<AuthModalsProps> = ({
             <input
               type="password"
               required
+              minLength={8}
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
+              placeholder="Min 8 characters, letter + number"
               className="w-full px-3.5 py-2.5 rounded-xl border text-xs focus:ring-2 focus:ring-[#2CB5A0] outline-none"
             />
           </div>

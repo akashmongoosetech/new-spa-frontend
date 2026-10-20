@@ -22,6 +22,10 @@ export const AdminSignupPage: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+    if (password.length < 8 || !/[a-zA-Z]/.test(password) || !/\d/.test(password)) {
+      setError('Password must be at least 8 characters with a letter and a number.');
+      return;
+    }
     setLoading(true);
     try {
       await adminSignup({ name, email, password, requestedRole });
@@ -96,11 +100,11 @@ export const AdminSignupPage: React.FC = () => {
           <input
             type="password"
             required
-            minLength={6}
+            minLength={8}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             className="w-full bg-gray-950/80 border border-gray-800 focus:border-[#2CB5A0] rounded-xl py-3 px-4 text-sm text-white focus:outline-none"
-            placeholder="Min 6 characters"
+            placeholder="Min 8 characters, letter + number"
           />
         </div>
 
