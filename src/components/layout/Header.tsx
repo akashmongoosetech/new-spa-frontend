@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Phone, Mail, Clock, MapPin, Calendar, Menu, X, ChevronDown, Sparkles, MessageCircle, ShieldCheck } from 'lucide-react';
 import { BusinessSettings, Service } from '../../types';
+import { BrandLogo } from '../brand/BrandLogo';
 
 interface HeaderProps {
   settings: BusinessSettings;
@@ -92,9 +93,8 @@ export const Header: React.FC<HeaderProps> = ({
             className="flex items-center gap-2.5 text-left group cursor-pointer"
           >
             <div className="w-15 h-15 rounded-xl bg-white p-1 flex items-center justify-center shadow-md group-hover:scale-105 transition-transform overflow-hidden">
-              <img
-                src={settings.logoUrl || '/icon.png'}
-                alt="Tripod Wellness"
+              <BrandLogo
+                variant="icon"
                 className="w-full h-full object-contain"
               />
             </div>

@@ -17,6 +17,7 @@ import {
   Award
 } from 'lucide-react';
 import { BusinessSettings, Service } from '../../types';
+import { BrandLogo } from '../brand/BrandLogo';
 
 interface FooterProps {
   settings: BusinessSettings;
@@ -129,9 +130,8 @@ export const Footer: React.FC<FooterProps> = ({
           <div className="lg:col-span-4 space-y-5">
             <div className="flex items-center gap-3">
               <div className="w-18 h-18 rounded-2xl bg-white p-1 flex items-center justify-center shadow-lg border border-teal-400/30 overflow-hidden">
-                <img
-                  src={settings?.logoUrl || '/icon.png'}
-                  alt="Tripod Wellness"
+                <BrandLogo
+                  variant="icon"
                   className="w-full h-full object-contain"
                 />
               </div>

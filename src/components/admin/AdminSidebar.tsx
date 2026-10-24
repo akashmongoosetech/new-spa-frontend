@@ -25,6 +25,7 @@ import {
   Globe
 } from 'lucide-react';
 import { AdminUser } from '../../types';
+import { BrandLogo } from '../brand/BrandLogo';
 
 export type AdminTab =
   | 'overview'
@@ -138,7 +139,7 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
             {!isCollapsed && (
               <div className="flex items-center gap-3">
                 <div className="w-9 h-9 rounded-xl bg-white p-0.5 flex items-center justify-center shadow-lg shadow-[#2CB5A0]/20 overflow-hidden">
-                  <img src="/logo.png" alt="Tripod Wellness" className="w-full h-full object-contain rounded-lg" />
+                  <BrandLogo variant="icon" className="w-full h-full object-contain rounded-lg" />
                 </div>
                 <div>
                   <h1 className="font-bold text-white text-base tracking-wide leading-tight">TRIPOD WELLNESS</h1>
@@ -148,7 +149,7 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
             )}
             {isCollapsed && (
               <div className="mx-auto w-10 h-10 rounded-xl bg-white p-0.5 flex items-center justify-center overflow-hidden">
-                <img src="/logo.png" alt="Tripod Wellness" className="w-full h-full object-contain rounded-lg" />
+                <BrandLogo variant="icon" className="w-full h-full object-contain rounded-lg" />
               </div>
             )}
             <button

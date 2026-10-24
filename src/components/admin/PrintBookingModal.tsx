@@ -2,6 +2,7 @@ import React from 'react';
 import { Printer, Download, Sparkles, CheckCircle2, Calendar, Clock, User, Phone, Mail, MapPin } from 'lucide-react';
 import { Modal } from '../ui/Modal';
 import { Booking } from '../../types';
+import { BrandLogo } from '../brand/BrandLogo';
 
 interface PrintBookingModalProps {
   isOpen: boolean;
@@ -24,7 +25,7 @@ export const PrintBookingModal: React.FC<PrintBookingModalProps> = ({ isOpen, on
           <div>
             <div className="flex items-center gap-2">
               <div className="w-8 h-8 rounded-lg bg-white p-0.5 border border-gray-200 flex items-center justify-center overflow-hidden">
-                <img src="/logo.png" alt="Tripod Wellness" className="w-full h-full object-contain" />
+                <BrandLogo variant="icon" className="w-full h-full object-contain" />
               </div>
               <h2 className="font-extrabold text-gray-900 text-lg tracking-wider">TRIPOD WELLNESS</h2>
             </div>

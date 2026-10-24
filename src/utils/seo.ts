@@ -4,6 +4,8 @@
  * canonical link injection, and Schema.org JSON-LD structured data.
  */
 
+import { BRAND_ICON, BRAND_LOGO } from '../branding/logo';
+
 export interface SEOConfig {
   title?: string;
   description?: string;
@@ -22,7 +24,7 @@ const DEFAULT_SEO: Required<Omit<SEOConfig, 'jsonLd' | 'path'>> = {
   description: "Licensed Men-to-Men massage therapy sanctuary in Indore, Ujjain & Dewas. Deep Tissue, Swedish, Ayurvedic Abhyanga, and Hot Stone in private soundproof suites.",
   keywords: "men to men massage Indore, Ujjain, Dewas, male massage therapist Indore, Ujjain, Dewas, deep tissue massage Indore, Ujjain, Dewas, Ayurvedic Abhyanga, male spa Indore, Ujjain, Dewas, male wellness sanctuary",
   ogImage: "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?q=80&w=1200&auto=format&fit=crop",
-  favicon: '/logo.png',
+  favicon: BRAND_ICON,
   canonicalUrl: "https://tripod-wellness.netlify.app",
   type: "website",
   robots: "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1",
@@ -98,7 +100,8 @@ export const updatePageSEO = (config: SEOConfig = {}) => {
   linkCanonical.setAttribute('href', canonicalUrl);
 
   // 4. Update Favicon Link
-  const favicon = config.favicon || DEFAULT_SEO.favicon;
+  // The approved icon is the only favicon source of truth.
+  const favicon = BRAND_ICON;
   let linkFavicon = document.querySelector('link[rel="icon"], link[rel="shortcut icon"]') as HTMLLinkElement;
   if (!linkFavicon) {
     linkFavicon = document.createElement('link');
@@ -139,7 +142,7 @@ export const generateLocalBusinessSchema = (customData?: Record<string, any>): R
     "priceRange": "₹₹₹",
     "currenciesAccepted": "INR",
     "paymentAccepted": "Cash, Credit Card, Debit Card, UPI, Net Banking",
-    "logo": `${BASE_URL}/logo.png`,
+    "logo": `${BASE_URL}${BRAND_LOGO}`,
     "image": [
       "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?q=80&w=1200&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1540555700478-4be289fbecef?q=80&w=1200&auto=format&fit=crop",

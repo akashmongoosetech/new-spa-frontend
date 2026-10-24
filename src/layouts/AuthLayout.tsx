@@ -1,6 +1,7 @@
 import React from 'react';
 import { Outlet, Link } from 'react-router-dom';
 import { ArrowLeft, Shield } from 'lucide-react';
+import { BrandLogo } from '../components/brand/BrandLogo';
 
 export const AuthLayout: React.FC<{ wide?: boolean }> = ({ wide = false }) => {
   return (
@@ -22,7 +23,7 @@ export const AuthLayout: React.FC<{ wide?: boolean }> = ({ wide = false }) => {
         {!wide ? (
           <div className="text-center mb-8">
             <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-white p-1 shadow-xl shadow-[#2CB5A0]/10 mb-4 overflow-hidden">
-              <img src="/logo.png" alt="Tripod Wellness" className="w-full h-full object-contain rounded-[10px]" />
+              <BrandLogo variant="icon" className="w-full h-full object-contain rounded-[10px]" />
             </div>
             <h1 className="text-2xl font-serif font-bold text-white tracking-wide">TRIPOD WELLNESS</h1>
             <p className="text-xs font-medium text-gray-400 tracking-widest uppercase mt-1">Management Console</p>
