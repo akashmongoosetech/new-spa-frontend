@@ -102,7 +102,7 @@ export const AuthModals: React.FC<AuthModalsProps> = ({
       <Modal isOpen={showSignupModal} onClose={() => setShowSignupModal(false)} title="Create Admin Staff Account">
         <form onSubmit={handleSignupSubmit} className="space-y-4">
           {signupMsg && (
-            <div className={`p-3 rounded-xl text-xs font-semibold ${signupMsg.type === 'success' ? 'bg-teal-50 text-[#2CB5A0]' : 'bg-rose-50 text-rose-600'}`}>
+            <div className={`p-3 rounded-xl text-xs font-semibold ${signupMsg.type === 'success' ? 'bg-brand-50 text-[var(--brand-ink)]' : 'bg-rose-50 text-rose-600'}`}>
               {signupMsg.text}
             </div>
           )}
@@ -113,7 +113,7 @@ export const AuthModals: React.FC<AuthModalsProps> = ({
               required
               value={signupName}
               onChange={(e) => setSignupName(e.target.value)}
-              className="w-full px-3.5 py-2.5 rounded-xl border text-xs focus:ring-2 focus:ring-[#2CB5A0] outline-none"
+              className="w-full px-3.5 py-2.5 rounded-xl border text-xs focus:ring-2 focus:ring-[#BFA476] outline-none"
               placeholder="e.g. Marcus Sterling"
             />
           </div>
@@ -124,7 +124,7 @@ export const AuthModals: React.FC<AuthModalsProps> = ({
               required
               value={signupEmail}
               onChange={(e) => setSignupEmail(e.target.value)}
-              className="w-full px-3.5 py-2.5 rounded-xl border text-xs focus:ring-2 focus:ring-[#2CB5A0] outline-none"
+              className="w-full px-3.5 py-2.5 rounded-xl border text-xs focus:ring-2 focus:ring-[#BFA476] outline-none"
               placeholder="you@example.com"
             />
           </div>
@@ -136,7 +136,7 @@ export const AuthModals: React.FC<AuthModalsProps> = ({
               minLength={8}
               value={signupPassword}
               onChange={(e) => setSignupPassword(e.target.value)}
-              className="w-full px-3.5 py-2.5 rounded-xl border text-xs focus:ring-2 focus:ring-[#2CB5A0] outline-none"
+              className="w-full px-3.5 py-2.5 rounded-xl border text-xs focus:ring-2 focus:ring-[#BFA476] outline-none"
               placeholder="Min 8 characters, letter + number"
             />
           </div>
@@ -145,7 +145,7 @@ export const AuthModals: React.FC<AuthModalsProps> = ({
             <select
               value={signupRole}
               onChange={(e: any) => setSignupRole(e.target.value)}
-              className="w-full px-3.5 py-2.5 rounded-xl border text-xs font-semibold focus:ring-2 focus:ring-[#2CB5A0] outline-none"
+              className="w-full px-3.5 py-2.5 rounded-xl border text-xs font-semibold focus:ring-2 focus:ring-[#BFA476] outline-none"
             >
               <option value="admin">Admin (Bookings, Services, Settings)</option>
               <option value="manager">Manager (Bookings, Reports)</option>
@@ -155,7 +155,7 @@ export const AuthModals: React.FC<AuthModalsProps> = ({
           <button
             type="submit"
             disabled={signupLoading}
-            className="w-full py-3 rounded-xl bg-[#2CB5A0] hover:bg-teal-600 text-white font-bold text-xs transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full py-3 rounded-xl bg-brand-500 hover:bg-brand-500 text-brand-950 font-bold text-xs transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {signupLoading ? 'Creating Account...' : 'Create Staff Account'}
           </button>
@@ -167,7 +167,7 @@ export const AuthModals: React.FC<AuthModalsProps> = ({
         <form onSubmit={handleForgotSubmit} className="space-y-4">
           <p className="text-xs text-gray-600">Enter your administrator email to receive password recovery instructions.</p>
           {forgotMsg && (
-            <div className={`p-3 rounded-xl text-xs font-semibold ${forgotMsg.type === 'success' ? 'bg-teal-50 text-[#2CB5A0]' : 'bg-rose-50 text-rose-600'}`}>
+            <div className={`p-3 rounded-xl text-xs font-semibold ${forgotMsg.type === 'success' ? 'bg-brand-50 text-[var(--brand-ink)]' : 'bg-rose-50 text-rose-600'}`}>
               {forgotMsg.text}
             </div>
           )}
@@ -178,7 +178,7 @@ export const AuthModals: React.FC<AuthModalsProps> = ({
               required
               value={forgotEmail}
               onChange={(e) => setForgotEmail(e.target.value)}
-              className="w-full px-3.5 py-2.5 rounded-xl border text-xs focus:ring-2 focus:ring-[#2CB5A0] outline-none"
+              className="w-full px-3.5 py-2.5 rounded-xl border text-xs focus:ring-2 focus:ring-[#BFA476] outline-none"
               placeholder="you@example.com"
             />
           </div>
@@ -196,7 +196,7 @@ export const AuthModals: React.FC<AuthModalsProps> = ({
       <Modal isOpen={showChangePasswordModal} onClose={() => setShowChangePasswordModal(false)} title="Change Account Password">
         <form onSubmit={handleChangePasswordSubmit} className="space-y-4">
           {changeMsg && (
-            <div className={`p-3 rounded-xl text-xs font-semibold ${changeMsg.type === 'success' ? 'bg-teal-50 text-[#2CB5A0]' : 'bg-rose-50 text-rose-600'}`}>
+            <div className={`p-3 rounded-xl text-xs font-semibold ${changeMsg.type === 'success' ? 'bg-brand-50 text-[var(--brand-ink)]' : 'bg-rose-50 text-rose-600'}`}>
               {changeMsg.text}
             </div>
           )}
@@ -207,7 +207,7 @@ export const AuthModals: React.FC<AuthModalsProps> = ({
               required
               value={currPassword}
               onChange={(e) => setCurrPassword(e.target.value)}
-              className="w-full px-3.5 py-2.5 rounded-xl border text-xs focus:ring-2 focus:ring-[#2CB5A0] outline-none"
+              className="w-full px-3.5 py-2.5 rounded-xl border text-xs focus:ring-2 focus:ring-[#BFA476] outline-none"
             />
           </div>
           <div>
@@ -219,7 +219,7 @@ export const AuthModals: React.FC<AuthModalsProps> = ({
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
               placeholder="Min 8 characters, letter + number"
-              className="w-full px-3.5 py-2.5 rounded-xl border text-xs focus:ring-2 focus:ring-[#2CB5A0] outline-none"
+              className="w-full px-3.5 py-2.5 rounded-xl border text-xs focus:ring-2 focus:ring-[#BFA476] outline-none"
             />
           </div>
           <div>
@@ -229,13 +229,13 @@ export const AuthModals: React.FC<AuthModalsProps> = ({
               required
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
-              className="w-full px-3.5 py-2.5 rounded-xl border text-xs focus:ring-2 focus:ring-[#2CB5A0] outline-none"
+              className="w-full px-3.5 py-2.5 rounded-xl border text-xs focus:ring-2 focus:ring-[#BFA476] outline-none"
             />
           </div>
           <button
             type="submit"
             disabled={changeLoading}
-            className="w-full py-3 rounded-xl bg-[#2CB5A0] hover:bg-teal-600 text-white font-bold text-xs transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full py-3 rounded-xl bg-brand-500 hover:bg-brand-500 text-brand-950 font-bold text-xs transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {changeLoading ? 'Updating...' : 'Update Password'}
           </button>

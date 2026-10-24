@@ -140,7 +140,7 @@ export const TherapistManager: React.FC<TherapistManagerProps> = ({ therapists, 
         </div>
         <button
           onClick={handleOpenAdd}
-          className="px-4 py-2.5 rounded-xl bg-[#2CB5A0] hover:bg-teal-600 text-white font-bold text-xs flex items-center gap-2 cursor-pointer shadow-md shadow-[#2CB5A0]/20"
+          className="px-4 py-2.5 rounded-xl bg-brand-500 hover:bg-brand-500 text-brand-950 font-bold text-xs flex items-center gap-2 cursor-pointer shadow-md shadow-[#BFA476]/20"
         >
           <Plus className="w-4 h-4" /> Add New Therapist
         </button>
@@ -189,7 +189,7 @@ export const TherapistManager: React.FC<TherapistManagerProps> = ({ therapists, 
               <div className="p-5 space-y-3">
                 <div>
                   <h3 className="font-extrabold text-gray-900 text-base">{t.name}</h3>
-                  <p className="text-xs text-[#2CB5A0] font-semibold">{t.title}</p>
+                  <p className="text-xs text-[var(--brand-ink)] font-semibold">{t.title}</p>
                   <p className="text-[11px] text-gray-400 mt-0.5">{t.experienceYears} Years Licensed Experience</p>
                 </div>
 
@@ -200,7 +200,7 @@ export const TherapistManager: React.FC<TherapistManagerProps> = ({ therapists, 
                   {t.specialties.map((spec, i) => (
                     <span
                       key={i}
-                      className="px-2.5 py-1 rounded-lg bg-teal-50 text-[#2CB5A0] font-semibold text-[10px] border border-teal-100"
+                      className="px-2.5 py-1 rounded-lg bg-brand-50 text-[var(--brand-ink)] font-semibold text-[10px] border border-brand-100"
                     >
                       {spec}
                     </span>
@@ -252,7 +252,7 @@ export const TherapistManager: React.FC<TherapistManagerProps> = ({ therapists, 
                 required
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-xl border font-semibold outline-none focus:ring-2 focus:ring-[#2CB5A0]"
+                className="w-full px-3.5 py-2.5 rounded-xl border font-semibold outline-none focus:ring-2 focus:ring-[#BFA476]"
                 placeholder="e.g. Julian Rivera"
               />
             </div>
@@ -263,7 +263,7 @@ export const TherapistManager: React.FC<TherapistManagerProps> = ({ therapists, 
                 required
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-xl border font-semibold outline-none focus:ring-2 focus:ring-[#2CB5A0]"
+                className="w-full px-3.5 py-2.5 rounded-xl border font-semibold outline-none focus:ring-2 focus:ring-[#BFA476]"
                 placeholder="e.g. Master Deep Tissue Specialist"
               />
             </div>
@@ -337,7 +337,7 @@ export const TherapistManager: React.FC<TherapistManagerProps> = ({ therapists, 
               required
               value={bio}
               onChange={(e) => setBio(e.target.value)}
-              className="w-full p-3 rounded-xl border outline-none focus:ring-2 focus:ring-[#2CB5A0]"
+              className="w-full p-3 rounded-xl border outline-none focus:ring-2 focus:ring-[#BFA476]"
             ></textarea>
           </div>
 
@@ -347,7 +347,7 @@ export const TherapistManager: React.FC<TherapistManagerProps> = ({ therapists, 
                 type="checkbox"
                 checked={featured}
                 onChange={(e) => setFeatured(e.target.checked)}
-                className="w-4 h-4 text-[#2CB5A0] rounded-md"
+                className="w-4 h-4 text-[var(--brand-ink)] rounded-md"
               />
               Show on Homepage (Featured)
             </label>
@@ -356,7 +356,7 @@ export const TherapistManager: React.FC<TherapistManagerProps> = ({ therapists, 
                 type="checkbox"
                 checked={active}
                 onChange={(e) => setActive(e.target.checked)}
-                className="w-4 h-4 text-[#2CB5A0] rounded-md"
+                className="w-4 h-4 text-[var(--brand-ink)] rounded-md"
               />
               Active Practitioner Status
             </label>
@@ -373,7 +373,7 @@ export const TherapistManager: React.FC<TherapistManagerProps> = ({ therapists, 
             <button
               type="submit"
               disabled={saving}
-              className="px-6 py-2.5 rounded-xl bg-[#2CB5A0] hover:bg-teal-600 text-white font-bold cursor-pointer shadow-md shadow-[#2CB5A0]/20 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="px-6 py-2.5 rounded-xl bg-brand-500 hover:bg-brand-500 text-brand-950 font-bold cursor-pointer shadow-md shadow-[#BFA476]/20 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {saving ? 'Saving...' : 'Save Therapist Profile'}
             </button>

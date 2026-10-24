@@ -26,7 +26,7 @@ export const SitemapPage: React.FC = () => {
       <SEO title="Sitemap | Tripod Wellness" description="Navigate all pages and services on Tripod Wellness." />
       <div className="bg-white rounded-2xl border border-gray-100 p-8 shadow-sm space-y-6">
         <div className="flex items-center gap-3">
-          <Compass className="w-8 h-8 text-[#2CB5A0]" />
+          <Compass className="w-8 h-8 text-[var(--brand-ink)]" />
           <div>
             <h1 className="text-3xl font-serif font-bold text-gray-900">Sanctuary Sitemap</h1>
             <p className="text-xs text-gray-500 font-light mt-1">Complete directory of all pages & portal paths</p>
@@ -38,7 +38,7 @@ export const SitemapPage: React.FC = () => {
             <Link
               key={idx}
               to={link.path}
-              className="p-4 rounded-xl border border-gray-100 hover:border-[#2CB5A0] hover:bg-[#2CB5A0]/5 transition-all flex items-center justify-between text-sm font-medium text-gray-800 hover:text-[#2CB5A0]"
+              className="p-4 rounded-xl border border-gray-100 hover:border-[#BFA476] hover:bg-brand-500/5 transition-all flex items-center justify-between text-sm font-medium text-gray-800 hover:text-[var(--brand-ink)]"
             >
               <span>{link.label}</span>
               <span className="text-xs text-gray-400 font-mono">{link.path}</span>

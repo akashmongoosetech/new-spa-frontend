@@ -123,7 +123,7 @@ export const AdminRagPage: React.FC = () => {
         <button
           onClick={() => handleReindex()}
           disabled={reindexing !== null}
-          className="px-4 py-2.5 bg-[#2CB5A0] hover:bg-[#259b89] text-white rounded-xl text-xs font-bold flex items-center gap-2 shadow-sm cursor-pointer disabled:opacity-50"
+          className="px-4 py-2.5 bg-brand-500 hover:bg-brand-400 text-brand-950 rounded-xl text-xs font-bold flex items-center gap-2 shadow-sm cursor-pointer disabled:opacity-50"
         >
           <RefreshCw className={`w-4 h-4 ${reindexing ? 'animate-spin' : ''}`} />
           {reindexing ? 'Reindexing…' : 'Reindex All'}
@@ -140,7 +140,7 @@ export const AdminRagPage: React.FC = () => {
           ].map((c) => (
             <div key={c.label} className="bg-white rounded-2xl border border-gray-200 p-4 shadow-sm">
               <div className="flex items-center gap-2 text-gray-500">
-                <c.icon className="w-4 h-4 text-[#2CB5A0]" />
+                <c.icon className="w-4 h-4 text-[var(--brand-ink)]" />
                 <span className="text-[11px] font-bold uppercase tracking-wider">{c.label}</span>
               </div>
               <p className="mt-1 text-xl font-bold text-gray-900">{String(c.value)}</p>
@@ -151,7 +151,7 @@ export const AdminRagPage: React.FC = () => {
 
       <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
         <div className="p-4 border-b border-gray-100 flex items-center gap-2">
-          <Database className="w-4 h-4 text-[#2CB5A0]" />
+          <Database className="w-4 h-4 text-[var(--brand-ink)]" />
           <h2 className="text-sm font-bold text-gray-900">Knowledge sources</h2>
         </div>
         {loading ? (
@@ -184,7 +184,7 @@ export const AdminRagPage: React.FC = () => {
                     disabled={reindexing !== null}
                     title={`Reindex ${s.source}`}
                     aria-label={`Reindex ${s.source}`}
-                    className="p-2 rounded-lg text-gray-500 hover:text-[#2CB5A0] hover:bg-teal-50 cursor-pointer disabled:opacity-50"
+                    className="p-2 rounded-lg text-gray-500 hover:text-[var(--brand-ink)] hover:bg-brand-50 cursor-pointer disabled:opacity-50"
                   >
                     <RefreshCw className={`w-4 h-4 ${reindexing === s.source ? 'animate-spin' : ''}`} />
                   </button>
@@ -205,7 +205,7 @@ export const AdminRagPage: React.FC = () => {
 
       <div className="bg-white rounded-2xl border border-gray-200 p-5 shadow-sm space-y-4">
         <h2 className="text-sm font-bold text-gray-900 flex items-center gap-2">
-          <FlaskConical className="w-4 h-4 text-[#2CB5A0]" /> Retrieval test
+          <FlaskConical className="w-4 h-4 text-[var(--brand-ink)]" /> Retrieval test
         </h2>
         <form onSubmit={handleTest} className="flex flex-col sm:flex-row gap-2">
           <input
@@ -213,7 +213,7 @@ export const AdminRagPage: React.FC = () => {
             value={testQuery}
             onChange={(e) => setTestQuery(e.target.value)}
             placeholder="e.g. What is the price of Swedish massage?"
-            className="flex-1 px-3.5 py-2.5 rounded-xl border border-gray-200 text-xs focus:outline-none focus:border-[#2CB5A0] focus:ring-1 focus:ring-[#2CB5A0]"
+            className="flex-1 px-3.5 py-2.5 rounded-xl border border-gray-200 text-xs focus:outline-none focus:border-[#BFA476] focus:ring-1 focus:ring-[#BFA476]"
           />
           <button
             type="submit"
@@ -233,7 +233,7 @@ export const AdminRagPage: React.FC = () => {
               <div key={i} className="rounded-xl border border-gray-100 bg-gray-50 p-3">
                 <p className="text-xs font-bold text-gray-900">
                   {c.title}{' '}
-                  <span className="ml-1 font-mono text-[10px] text-teal-700">
+                  <span className="ml-1 font-mono text-[10px] text-brand-700">
                     {(c.score || 0).toFixed(3)}
                   </span>
                 </p>

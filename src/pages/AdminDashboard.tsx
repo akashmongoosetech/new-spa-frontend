@@ -271,7 +271,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
             {/* Welcome Banner */}
             <div className="p-8 rounded-3xl bg-linear-to-r from-[#1A1A1A] via-gray-900 to-black text-white relative overflow-hidden shadow-2xl flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
               <div className="space-y-2 relative z-10">
-                <span className="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-[#2CB5A0] text-black">
+                <span className="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-brand-500 text-black">
                   Indore, Ujjain & Dewas Sanctuary
                 </span>
                 <h1 className="text-2xl font-black tracking-tight">
@@ -284,7 +284,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
               <div className="flex items-center gap-3 relative z-10">
                 <button
                   onClick={() => setShowCreateBookingWizard(true)}
-                  className="px-5 py-3 rounded-2xl bg-[#2CB5A0] hover:bg-teal-400 text-black font-extrabold text-xs flex items-center gap-2 transition-all cursor-pointer shadow-lg shadow-[#2CB5A0]/20"
+                  className="px-5 py-3 rounded-2xl bg-brand-500 hover:bg-brand-400 text-black font-extrabold text-xs flex items-center gap-2 transition-all cursor-pointer shadow-lg shadow-[#BFA476]/20"
                 >
                   <Plus className="w-4 h-4" /> Reserve Walk-In Client
                 </button>
@@ -304,7 +304,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
               <div className="p-6 bg-white rounded-3xl border border-gray-100 shadow-xs space-y-2">
                 <div className="flex items-center justify-between text-gray-400">
                   <span className="text-xs font-bold uppercase tracking-wider">Total Revenue</span>
-                  <div className="w-10 h-10 rounded-2xl bg-teal-50 text-[#2CB5A0] flex items-center justify-center">
+                  <div className="w-10 h-10 rounded-2xl bg-brand-50 text-[var(--brand-ink)] flex items-center justify-center">
                     <DollarSign className="w-5 h-5" />
                   </div>
                 </div>
@@ -365,7 +365,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                     <h3 className="font-extrabold text-gray-900 text-sm">Monthly Revenue Analytics</h3>
                     <p className="text-xs text-gray-400">Gross revenue performance from therapy sessions & VIP packages.</p>
                   </div>
-                  <span className="px-3 py-1 rounded-full text-xs font-bold bg-teal-50 text-[#2CB5A0]">
+                  <span className="px-3 py-1 rounded-full text-xs font-bold bg-brand-50 text-[var(--brand-ink)]">
                     2026 Financial Year
                   </span>
                 </div>
@@ -374,15 +374,15 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                     <AreaChart data={chartData}>
                       <defs>
                         <linearGradient id="colorRev" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="5%" stopColor="#2CB5A0" stopOpacity={0.4} />
-                          <stop offset="95%" stopColor="#2CB5A0" stopOpacity={0} />
+                          <stop offset="5%" stopColor="#BFA476" stopOpacity={0.4} />
+                          <stop offset="95%" stopColor="#BFA476" stopOpacity={0} />
                         </linearGradient>
                       </defs>
                       <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#F3F4F6" />
                       <XAxis dataKey="month" stroke="#9CA3AF" fontSize={11} tickLine={false} />
                       <YAxis stroke="#9CA3AF" fontSize={11} tickLine={false} />
                       <Tooltip />
-                      <Area type="monotone" dataKey="revenue" stroke="#2CB5A0" strokeWidth={3} fillOpacity={1} fill="url(#colorRev)" />
+                      <Area type="monotone" dataKey="revenue" stroke="#BFA476" strokeWidth={3} fillOpacity={1} fill="url(#colorRev)" />
                     </AreaChart>
                   </ResponsiveContainer>
                 </div>
@@ -395,7 +395,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                     <h3 className="font-extrabold text-gray-900 text-sm">Latest Appointments</h3>
                     <button
                       onClick={() => handleTabChange('bookings')}
-                      className="text-xs font-bold text-[#2CB5A0] hover:underline"
+                      className="text-xs font-bold text-[var(--brand-ink)] hover:underline"
                     >
                       View All
                     </button>
@@ -409,7 +409,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                           <p className="text-[10px] text-gray-500">{b.serviceTitle}</p>
                         </div>
                         <div className="text-right">
-                          <span className="font-bold text-[#2CB5A0]">{settings.currencySymbol || '₹'}{b.totalPaid}</span>
+                          <span className="font-bold text-[var(--brand-ink)]">{settings.currencySymbol || '₹'}{b.totalPaid}</span>
                           <p className="text-[9px] text-gray-400">{b.date}</p>
                         </div>
                       </div>
@@ -421,7 +421,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                   onClick={() => setShowCreateBookingWizard(true)}
                   className="w-full py-3 rounded-2xl bg-[#1A1A1A] hover:bg-black text-white font-bold text-xs flex items-center justify-center gap-2 cursor-pointer shadow-md"
                 >
-                  <Plus className="w-4 h-4 text-[#2CB5A0]" /> New Reservation
+                  <Plus className="w-4 h-4 text-[var(--brand-ink)]" /> New Reservation
                 </button>
               </div>
             </div>

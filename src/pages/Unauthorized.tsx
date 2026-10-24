@@ -4,8 +4,8 @@ import { ShieldAlert, Lock, ArrowLeft } from 'lucide-react';
 
 export const Unauthorized: React.FC = () => {
   return (
-    <div className="min-h-screen bg-[#111827] text-white flex items-center justify-center p-6">
-      <div className="max-w-md w-full bg-gray-900 border border-gray-800 rounded-2xl p-8 text-center shadow-2xl">
+    <div className="on-dark-brand min-h-screen bg-[#17130F] text-white flex items-center justify-center p-6">
+      <div className="max-w-md w-full bg-[#201A14] border border-[#BFA476]/15 rounded-2xl p-8 text-center shadow-2xl">
         <div className="w-16 h-16 bg-red-500/10 text-red-400 rounded-2xl flex items-center justify-center mx-auto mb-6">
           <ShieldAlert className="w-8 h-8" />
         </div>
@@ -18,14 +18,14 @@ export const Unauthorized: React.FC = () => {
         <div className="flex flex-col sm:flex-row gap-3">
           <Link
             to="/"
-            className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-3 bg-gray-800 hover:bg-gray-700 text-gray-200 rounded-xl font-medium text-sm transition-colors"
+            className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-3 bg-[#2A231B] hover:bg-[#332A20] text-[#C3AA7E] rounded-xl font-medium text-sm transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
             Website
           </Link>
           <Link
             to="/admin-login"
-            className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-3 bg-[#2CB5A0] hover:bg-[#259b89] text-white rounded-xl font-medium text-sm transition-colors shadow-sm"
+            className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-3 bg-brand-500 hover:bg-brand-400 text-brand-950 rounded-xl font-medium text-sm transition-colors shadow-sm"
           >
             <Lock className="w-4 h-4" />
             Admin Login

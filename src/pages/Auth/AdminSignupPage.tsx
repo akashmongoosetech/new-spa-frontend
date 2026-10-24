@@ -39,8 +39,8 @@ export const AdminSignupPage: React.FC = () => {
 
   if (submitted) {
     return (
-      <div className="bg-gray-900/80 border border-gray-800 rounded-2xl p-8 shadow-2xl backdrop-blur-md text-center space-y-4">
-        <div className="w-14 h-14 bg-[#2CB5A0]/20 text-[#2CB5A0] rounded-full flex items-center justify-center mx-auto">
+      <div className="bg-[#201A14]/90 border border-[#BFA476]/15 rounded-2xl p-8 shadow-2xl backdrop-blur-md text-center space-y-4">
+        <div className="w-14 h-14 bg-brand-500/20 text-[var(--brand-ink)] rounded-full flex items-center justify-center mx-auto">
           <CheckCircle2 className="w-8 h-8" />
         </div>
         <h2 className="text-xl font-serif font-bold text-white">Application Submitted</h2>
@@ -50,7 +50,7 @@ export const AdminSignupPage: React.FC = () => {
         </p>
         <button
           onClick={() => navigate('/admin-login')}
-          className="w-full py-3 bg-[#2CB5A0] text-white rounded-xl text-xs font-bold transition-all shadow-md mt-4"
+          className="w-full py-3 bg-brand-500 text-brand-950 rounded-xl text-xs font-bold transition-all shadow-md mt-4"
         >
           Return to Admin Login
         </button>
@@ -59,7 +59,7 @@ export const AdminSignupPage: React.FC = () => {
   }
 
   return (
-    <div className="bg-gray-900/80 border border-gray-800 rounded-2xl p-6 sm:p-8 shadow-2xl backdrop-blur-md">
+    <div className="bg-[#201A14]/90 border border-[#BFA476]/15 rounded-2xl p-6 sm:p-8 shadow-2xl backdrop-blur-md">
       <h2 className="text-xl font-serif font-bold text-white mb-2 text-center">Staff Account Application</h2>
       <p className="text-xs text-gray-400 text-center mb-6">Apply for authorized portal credentials — access is granted after director approval</p>
 
@@ -78,7 +78,7 @@ export const AdminSignupPage: React.FC = () => {
             required
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="w-full bg-gray-950/80 border border-gray-800 focus:border-[#2CB5A0] rounded-xl py-3 px-4 text-sm text-white focus:outline-none"
+            className="w-full bg-[#17130F]/80 border border-[#BFA476]/15 focus:border-[#BFA476] rounded-xl py-3 px-4 text-sm text-white focus:outline-none"
             placeholder="Julian Vance"
           />
         </div>
@@ -90,7 +90,7 @@ export const AdminSignupPage: React.FC = () => {
             required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full bg-gray-950/80 border border-gray-800 focus:border-[#2CB5A0] rounded-xl py-3 px-4 text-sm text-white focus:outline-none"
+            className="w-full bg-[#17130F]/80 border border-[#BFA476]/15 focus:border-[#BFA476] rounded-xl py-3 px-4 text-sm text-white focus:outline-none"
             placeholder="therapist@example.com"
           />
         </div>
@@ -103,7 +103,7 @@ export const AdminSignupPage: React.FC = () => {
             minLength={8}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="w-full bg-gray-950/80 border border-gray-800 focus:border-[#2CB5A0] rounded-xl py-3 px-4 text-sm text-white focus:outline-none"
+            className="w-full bg-[#17130F]/80 border border-[#BFA476]/15 focus:border-[#BFA476] rounded-xl py-3 px-4 text-sm text-white focus:outline-none"
             placeholder="Min 8 characters, letter + number"
           />
         </div>
@@ -118,8 +118,8 @@ export const AdminSignupPage: React.FC = () => {
                 onClick={() => setRequestedRole(opt.value)}
                 className={`flex items-center justify-center gap-1.5 px-3 py-3 rounded-xl border text-xs font-bold transition-all cursor-pointer ${
                   requestedRole === opt.value
-                    ? 'bg-[#2CB5A0]/15 border-[#2CB5A0] text-[#2CB5A0]'
-                    : 'bg-gray-950/60 border-gray-800 text-gray-400 hover:border-gray-600'
+                    ? 'bg-brand-500/15 border-[#BFA476] text-[var(--brand-ink)]'
+                    : 'bg-[#17130F]/60 border-[#BFA476]/15 text-gray-400 hover:border-gray-600'
                 }`}
               >
                 <BadgeCheck className="w-4 h-4" />
@@ -132,16 +132,16 @@ export const AdminSignupPage: React.FC = () => {
         <button
           type="submit"
           disabled={loading}
-          className="w-full py-3.5 bg-[#2CB5A0] hover:bg-[#259b89] text-white rounded-xl text-sm font-bold tracking-wide transition-all shadow-lg shadow-[#2CB5A0]/20 mt-6"
+          className="w-full py-3.5 bg-brand-500 hover:bg-brand-400 text-brand-950 rounded-xl text-sm font-bold tracking-wide transition-all shadow-lg shadow-[#BFA476]/20 mt-6"
         >
           {loading ? 'Submitting...' : 'Submit Application'}
         </button>
       </form>
 
-      <div className="mt-6 pt-6 border-t border-gray-800 text-center">
+      <div className="mt-6 pt-6 border-t border-[#BFA476]/15 text-center">
         <p className="text-xs text-gray-400">
           Already registered?{' '}
-          <Link to="/admin-login" className="text-[#2CB5A0] font-semibold hover:underline">
+          <Link to="/admin-login" className="text-[var(--brand-ink)] font-semibold hover:underline">
             Sign In Here
           </Link>
         </p>

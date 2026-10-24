@@ -26,7 +26,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({
         {/* Story Banner */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           <div className="lg:col-span-6 space-y-5">
-            <span className="text-xs font-bold uppercase tracking-widest text-[#2CB5A0] bg-teal-50 px-3 py-1 rounded-full">
+            <span className="text-xs font-bold uppercase tracking-widest text-[var(--brand-ink)] bg-brand-50 px-3 py-1 rounded-full">
               Our Vision & Story
             </span>
             <h1 className="text-4xl sm:text-5xl font-serif font-extrabold text-gray-900 leading-tight">
@@ -41,11 +41,11 @@ export const AboutPage: React.FC<AboutPageProps> = ({
 
             <div className="grid grid-cols-2 gap-4 pt-4 text-xs font-bold text-gray-800">
               <div className="flex items-center gap-2 p-3 rounded-xl bg-white border border-gray-100 shadow-sm">
-                <ShieldCheck className="w-5 h-5 text-[#2CB5A0]" />
+                <ShieldCheck className="w-5 h-5 text-[var(--brand-ink)]" />
                 <span>100% Certified Male Therapists</span>
               </div>
               <div className="flex items-center gap-2 p-3 rounded-xl bg-white border border-gray-100 shadow-sm">
-                <Award className="w-5 h-5 text-[#C7A36A]" />
+                <Award className="w-5 h-5 text-[var(--brand-ink)]" />
                 <span>Hospital-Grade Hygiene</span>
               </div>
             </div>
@@ -63,7 +63,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({
         </div>
 
         {/* Core Principles */}
-        <div className="bg-white rounded-3xl p-8 sm:p-12 border border-teal-50 shadow-md space-y-8">
+        <div className="bg-white rounded-3xl p-8 sm:p-12 border border-brand-50 shadow-md space-y-8">
           <div className="text-center max-w-2xl mx-auto">
             <h2 className="text-3xl font-serif font-bold text-gray-900">
               Our Core Commitments
@@ -72,7 +72,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-xs">
             <div className="p-6 rounded-2xl bg-[#FAFAFA] border border-gray-100 space-y-3">
-              <div className="w-10 h-10 rounded-xl bg-[#2CB5A0] text-white flex items-center justify-center font-bold">
+              <div className="w-10 h-10 rounded-xl bg-brand-500 text-brand-950 flex items-center justify-center font-bold">
                 01
               </div>
               <h3 className="text-base font-serif font-bold text-gray-900">Executive Privacy</h3>
@@ -82,7 +82,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({
             </div>
 
             <div className="p-6 rounded-2xl bg-[#FAFAFA] border border-gray-100 space-y-3">
-              <div className="w-10 h-10 rounded-xl bg-[#2CB5A0] text-white flex items-center justify-center font-bold">
+              <div className="w-10 h-10 rounded-xl bg-brand-500 text-brand-950 flex items-center justify-center font-bold">
                 02
               </div>
               <h3 className="text-base font-serif font-bold text-gray-900">Clinical Hygiene</h3>
@@ -92,7 +92,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({
             </div>
 
             <div className="p-6 rounded-2xl bg-[#FAFAFA] border border-gray-100 space-y-3">
-              <div className="w-10 h-10 rounded-xl bg-[#2CB5A0] text-white flex items-center justify-center font-bold">
+              <div className="w-10 h-10 rounded-xl bg-brand-500 text-brand-950 flex items-center justify-center font-bold">
                 03
               </div>
               <h3 className="text-base font-serif font-bold text-gray-900">Anatomical Mastery</h3>
@@ -120,17 +120,17 @@ export const AboutPage: React.FC<AboutPageProps> = ({
                 <img
                   src={th.imageUrl}
                   alt={th.name}
-                  className="w-24 h-24 rounded-full object-cover mx-auto ring-4 ring-teal-50"
+                  className="w-24 h-24 rounded-full object-cover mx-auto ring-4 ring-brand-50"
                 />
                 <div>
                   <h3 className="font-bold text-gray-900 text-base">{th.name}</h3>
-                  <p className="text-xs text-[#2CB5A0] font-semibold mt-0.5">{th.title}</p>
+                  <p className="text-xs text-[var(--brand-ink)] font-semibold mt-0.5">{th.title}</p>
                   <p className="text-[11px] text-gray-500 mt-1">{th.experienceYears} Years Clinical Experience</p>
                 </div>
                 <p className="text-xs text-gray-600 leading-relaxed line-clamp-3">{th.bio}</p>
                 <button
                   onClick={onOpenBooking}
-                  className="w-full py-2.5 rounded-xl bg-[#1A1A1A] text-white font-bold text-xs hover:bg-[#2CB5A0] transition-colors cursor-pointer"
+                  className="w-full py-2.5 rounded-xl bg-[#1A1A1A] text-white font-bold text-xs hover:bg-brand-500 hover:text-brand-950 transition-colors cursor-pointer"
                 >
                   Book Session
                 </button>

@@ -40,15 +40,15 @@ export const ResetPasswordPage: React.FC = () => {
 
   if (success) {
     return (
-      <div className="bg-gray-900/80 border border-gray-800 rounded-2xl p-8 shadow-2xl backdrop-blur-md text-center space-y-4">
-        <div className="w-14 h-14 bg-[#2CB5A0]/20 text-[#2CB5A0] rounded-full flex items-center justify-center mx-auto">
+      <div className="bg-[#201A14]/90 border border-[#BFA476]/15 rounded-2xl p-8 shadow-2xl backdrop-blur-md text-center space-y-4">
+        <div className="w-14 h-14 bg-brand-500/20 text-[var(--brand-ink)] rounded-full flex items-center justify-center mx-auto">
           <CheckCircle2 className="w-8 h-8" />
         </div>
         <h2 className="text-xl font-serif font-bold text-white">Password Updated</h2>
         <p className="text-xs text-gray-400 font-light">Your portal credentials have been successfully updated.</p>
         <button
           onClick={() => navigate('/admin-login')}
-          className="w-full py-3 bg-[#2CB5A0] text-white rounded-xl text-xs font-bold transition-all shadow-md mt-4"
+          className="w-full py-3 bg-brand-500 text-brand-950 rounded-xl text-xs font-bold transition-all shadow-md mt-4"
         >
           Sign In Now
         </button>
@@ -57,7 +57,7 @@ export const ResetPasswordPage: React.FC = () => {
   }
 
   return (
-    <div className="bg-gray-900/80 border border-gray-800 rounded-2xl p-6 sm:p-8 shadow-2xl backdrop-blur-md">
+    <div className="bg-[#201A14]/90 border border-[#BFA476]/15 rounded-2xl p-6 sm:p-8 shadow-2xl backdrop-blur-md">
       <h2 className="text-xl font-serif font-bold text-white mb-2 text-center">Set New Password</h2>
       <p className="text-xs text-gray-400 text-center mb-6">Choose a new password for your portal account</p>
 
@@ -77,7 +77,7 @@ export const ResetPasswordPage: React.FC = () => {
             minLength={8}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="w-full bg-gray-950/80 border border-gray-800 focus:border-[#2CB5A0] rounded-xl py-3 px-4 text-sm text-white focus:outline-none"
+            className="w-full bg-[#17130F]/80 border border-[#BFA476]/15 focus:border-[#BFA476] rounded-xl py-3 px-4 text-sm text-white focus:outline-none"
             placeholder="Min 8 chars, letter + number"
           />
         </div>
@@ -89,7 +89,7 @@ export const ResetPasswordPage: React.FC = () => {
             required
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
-            className="w-full bg-gray-950/80 border border-gray-800 focus:border-[#2CB5A0] rounded-xl py-3 px-4 text-sm text-white focus:outline-none"
+            className="w-full bg-[#17130F]/80 border border-[#BFA476]/15 focus:border-[#BFA476] rounded-xl py-3 px-4 text-sm text-white focus:outline-none"
             placeholder="••••••••"
           />
         </div>
@@ -97,7 +97,7 @@ export const ResetPasswordPage: React.FC = () => {
         <button
           type="submit"
           disabled={loading}
-          className="w-full py-3.5 bg-[#2CB5A0] hover:bg-[#259b89] text-white rounded-xl text-sm font-bold tracking-wide transition-all shadow-lg shadow-[#2CB5A0]/20 mt-4"
+          className="w-full py-3.5 bg-brand-500 hover:bg-brand-400 text-brand-950 rounded-xl text-sm font-bold tracking-wide transition-all shadow-lg shadow-[#BFA476]/20 mt-4"
         >
           {loading ? 'Saving...' : 'Save New Password'}
         </button>

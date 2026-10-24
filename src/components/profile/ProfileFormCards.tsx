@@ -6,7 +6,7 @@ import { cardClass, inputClassFor, sectionTitleClass } from './profileTheme';
 import { localDateInputValue } from '../../utils/date';
 
 export const inputClass =
-  'w-full rounded-xl border border-gray-300 bg-white p-3 text-sm text-gray-900 placeholder:text-gray-400 focus:border-[#2CB5A0] focus:outline-none focus:ring-1 focus:ring-[#2CB5A0]';
+  'w-full rounded-xl border border-gray-300 bg-white p-3 text-sm text-gray-900 placeholder:text-gray-400 focus:border-[#BFA476] focus:outline-none focus:ring-1 focus:ring-[#BFA476]';
 
 function Field({
   id,
@@ -57,7 +57,7 @@ export const PersonalFormCard: React.FC<CardsProps> = ({ form, tone = 'light' })
   return (
     <section aria-label="Personal information" className={`${cardClass(tone)} space-y-4 p-5 sm:p-6`}>
       <h3 className={sectionTitleClass(tone)}>
-        <User className={`h-4 w-4 ${tone === 'dark' ? 'text-[#C7A36A]' : 'text-[#2CB5A0]'}`} />
+        <User className={`h-4 w-4 ${tone === 'dark' ? 'text-[var(--brand-ink)]' : 'text-[var(--brand-ink)]'}`} />
         Personal Information
       </h3>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -144,7 +144,7 @@ export const ContactFormCard: React.FC<CardsProps> = ({ form, tone = 'light' }) 
   return (
     <section aria-label="Contact and address" className={`${cardClass(tone)} space-y-4 p-5 sm:p-6`}>
       <h3 className={sectionTitleClass(tone)}>
-        <Mail className={`h-4 w-4 ${dark ? 'text-[#C7A36A]' : 'text-[#2CB5A0]'}`} /> Contact
+        <Mail className={`h-4 w-4 ${dark ? 'text-[var(--brand-ink)]' : 'text-[var(--brand-ink)]'}`} /> Contact
       </h3>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div className="sm:col-span-2">

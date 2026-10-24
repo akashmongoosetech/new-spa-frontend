@@ -98,7 +98,7 @@ export const AdminGalleryPage: React.FC = () => {
         </div>
         <button
           onClick={() => fileRef.current?.click()}
-          className="px-4 py-2.5 bg-[#2CB5A0] hover:bg-[#259b89] text-white rounded-xl text-xs font-bold flex items-center gap-2 shadow-sm cursor-pointer"
+          className="px-4 py-2.5 bg-brand-500 hover:bg-brand-400 text-brand-950 rounded-xl text-xs font-bold flex items-center gap-2 shadow-sm cursor-pointer"
         >
           <Upload className="w-4 h-4" />
           {uploading ? 'Uploading...' : 'Upload New Image'}
@@ -114,7 +114,7 @@ export const AdminGalleryPage: React.FC = () => {
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder="Item title"
-            className="border border-gray-300 rounded-xl px-3 py-2.5 text-xs outline-none focus:border-[#2CB5A0]"
+            className="border border-gray-300 rounded-xl px-3 py-2.5 text-xs outline-none focus:border-[#BFA476]"
           />
           <select
             value={category}
@@ -132,14 +132,14 @@ export const AdminGalleryPage: React.FC = () => {
             value={imageUrl}
             onChange={(e) => setImageUrl(e.target.value)}
             placeholder="Image URL (or upload)"
-            className="border border-gray-300 rounded-xl px-3 py-2.5 text-xs outline-none focus:border-[#2CB5A0]"
+            className="border border-gray-300 rounded-xl px-3 py-2.5 text-xs outline-none focus:border-[#BFA476]"
           />
           <input
             type="text"
             value={subtitle}
             onChange={(e) => setSubtitle(e.target.value)}
             placeholder="Subtitle (e.g. Private Master Suite)"
-            className="border border-gray-300 rounded-xl px-3 py-2.5 text-xs outline-none focus:border-[#2CB5A0]"
+            className="border border-gray-300 rounded-xl px-3 py-2.5 text-xs outline-none focus:border-[#BFA476]"
           />
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
@@ -148,21 +148,21 @@ export const AdminGalleryPage: React.FC = () => {
             value={dimensions}
             onChange={(e) => setDimensions(e.target.value)}
             placeholder="Dimensions (e.g. 350 sq ft Suite)"
-            className="border border-gray-300 rounded-xl px-3 py-2.5 text-xs outline-none focus:border-[#2CB5A0]"
+            className="border border-gray-300 rounded-xl px-3 py-2.5 text-xs outline-none focus:border-[#BFA476]"
           />
           <input
             type="text"
             value={sanitizationLevel}
             onChange={(e) => setSanitizationLevel(e.target.value)}
             placeholder="Sanitization level (e.g. Hospital-Grade UV-C)"
-            className="border border-gray-300 rounded-xl px-3 py-2.5 text-xs outline-none focus:border-[#2CB5A0]"
+            className="border border-gray-300 rounded-xl px-3 py-2.5 text-xs outline-none focus:border-[#BFA476]"
           />
           <input
             type="text"
             value={highlights}
             onChange={(e) => setHighlights(e.target.value)}
             placeholder="Highlights (comma separated)"
-            className="border border-gray-300 rounded-xl px-3 py-2.5 text-xs outline-none focus:border-[#2CB5A0]"
+            className="border border-gray-300 rounded-xl px-3 py-2.5 text-xs outline-none focus:border-[#BFA476]"
           />
         </div>
         <textarea
@@ -170,7 +170,7 @@ export const AdminGalleryPage: React.FC = () => {
           onChange={(e) => setDescription(e.target.value)}
           placeholder="Short description"
           rows={2}
-          className="w-full border border-gray-300 rounded-xl px-3 py-2.5 text-xs outline-none focus:border-[#2CB5A0] resize-none"
+          className="w-full border border-gray-300 rounded-xl px-3 py-2.5 text-xs outline-none focus:border-[#BFA476] resize-none"
         />
         <button type="submit" className="px-4 py-2.5 bg-[#1A1A1A] hover:bg-black text-white rounded-xl text-xs font-bold cursor-pointer">
           Add Item

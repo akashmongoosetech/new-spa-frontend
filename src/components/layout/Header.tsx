@@ -45,19 +45,19 @@ export const Header: React.FC<HeaderProps> = ({
   return (
     <header className="sticky top-0 z-40 w-full font-sans">
       {/* Pre-Header Bar */}
-      <div className="bg-[#1A1A1A] text-gray-300 text-xs py-2 px-4 border-b border-gray-800 hidden lg:block">
+      <div className="on-dark-brand bg-[#1A1A1A] text-gray-300 text-xs py-2 px-4 border-b border-gray-800 hidden lg:block">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
           <div className="flex items-center gap-6">
-            <a href={`tel:${settings.phone}`} className="flex items-center gap-1.5 hover:text-[#2CB5A0] transition-colors">
-              <Phone className="w-3.5 h-3.5 text-[#2CB5A0]" />
+            <a href={`tel:${settings.phone}`} className="flex items-center gap-1.5 hover:text-[var(--brand-ink)] transition-colors">
+              <Phone className="w-3.5 h-3.5 text-[var(--brand-ink)]" />
               <span>{settings.phone}</span>
             </a>
-            <a href={`mailto:${settings.email}`} className="flex items-center gap-1.5 hover:text-[#2CB5A0] transition-colors">
-              <Mail className="w-3.5 h-3.5 text-[#2CB5A0]" />
+            <a href={`mailto:${settings.email}`} className="flex items-center gap-1.5 hover:text-[var(--brand-ink)] transition-colors">
+              <Mail className="w-3.5 h-3.5 text-[var(--brand-ink)]" />
               <span>{settings.email}</span>
             </a>
             <div className="flex items-center gap-1.5 text-gray-400">
-              <Clock className="w-3.5 h-3.5 text-[#C7A36A]" />
+              <Clock className="w-3.5 h-3.5 text-[var(--brand-ink)]" />
               <span>{settings.workingHours}</span>
             </div>
           </div>
@@ -67,7 +67,7 @@ export const Header: React.FC<HeaderProps> = ({
               <span>100% Licensed & Certified Male Therapists</span>
             </div> */}
             <div className="flex items-center gap-2 border-l border-gray-700 pl-4">
-              <MapPin className="w-3.5 h-3.5 text-[#2CB5A0]" />
+              <MapPin className="w-3.5 h-3.5 text-[var(--brand-ink)]" />
               <span className="text-gray-300">{settings.city}</span>
             </div>
           </div>
@@ -78,7 +78,7 @@ export const Header: React.FC<HeaderProps> = ({
       <nav
         className={`transition-all duration-300 ${
           isScrolled
-            ? 'bg-white/95 backdrop-blur-md shadow-md py-3 border-b border-teal-50/50'
+            ? 'bg-white/95 backdrop-blur-md shadow-md py-3 border-b border-brand-50/50'
             : 'bg-white/90 backdrop-blur-sm py-4 border-b border-gray-100'
         }`}
       >
@@ -99,10 +99,10 @@ export const Header: React.FC<HeaderProps> = ({
               />
             </div>
             <div>
-              <span className="block font-serif font-extrabold text-xl tracking-wider text-[#1A1A1A] group-hover:text-[#2CB5A0] transition-colors">
+              <span className="block font-serif font-extrabold text-xl tracking-wider text-[#1A1A1A] group-hover:text-[var(--brand-ink)] transition-colors">
                 TRIPOD WELLNESS
               </span>
-              <span className="block text-[10px] font-semibold tracking-widest text-[#C7A36A] uppercase -mt-0.5">
+              <span className="block text-[10px] font-semibold tracking-widest text-[var(--brand-ink)] uppercase -mt-0.5">
                 RESTORE · REBALANCE · RECONNECT
               </span>
             </div>
@@ -128,8 +128,8 @@ export const Header: React.FC<HeaderProps> = ({
                       aria-haspopup="true"
                       className={`px-3.5 py-2 rounded-lg text-sm font-medium transition-all flex items-center gap-1 ${
                         activeTab === 'services'
-                          ? 'text-[#2CB5A0] bg-teal-50/80 font-semibold'
-                          : 'text-gray-700 hover:text-[#2CB5A0] hover:bg-gray-50'
+                          ? 'text-[var(--brand-ink)] bg-brand-50/80 font-semibold'
+                          : 'text-gray-700 hover:text-[var(--brand-ink)] hover:bg-gray-50'
                       }`}
                     >
                       <span>Therapies</span>
@@ -138,7 +138,7 @@ export const Header: React.FC<HeaderProps> = ({
 
                     {/* Mega Menu Dropdown */}
                     {megaMenuOpen && (
-                      <div className="absolute top-full left-0 w-145 bg-white rounded-2xl shadow-2xl border border-teal-100 p-5 grid grid-cols-2 gap-3 z-50 animate-in fade-in slide-in-from-top-2 duration-200">
+                      <div className="absolute top-full left-0 w-145 bg-white rounded-2xl shadow-2xl border border-brand-100 p-5 grid grid-cols-2 gap-3 z-50 animate-in fade-in slide-in-from-top-2 duration-200">
                         <div className="col-span-2 pb-2 mb-1 border-b border-gray-100 flex items-center justify-between">
                           <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">
                             Curated Massage Treatments
@@ -148,7 +148,7 @@ export const Header: React.FC<HeaderProps> = ({
                               setActiveTab('services');
                               setMegaMenuOpen(false);
                             }}
-                            className="text-xs font-semibold text-[#2CB5A0] hover:underline"
+                            className="text-xs font-semibold text-[var(--brand-ink)] hover:underline"
                           >
                             View All Services →
                           </button>
@@ -162,7 +162,7 @@ export const Header: React.FC<HeaderProps> = ({
                               setMegaMenuOpen(false);
                               onOpenBooking(srv.id);
                             }}
-                            className="text-left p-2.5 rounded-xl hover:bg-teal-50/60 transition-all flex items-start gap-3 group/item border border-transparent hover:border-teal-100"
+                            className="text-left p-2.5 rounded-xl hover:bg-brand-50/60 transition-all flex items-start gap-3 group/item border border-transparent hover:border-brand-100"
                           >
                             <img
                               src={srv.imageUrl}
@@ -170,7 +170,7 @@ export const Header: React.FC<HeaderProps> = ({
                               className="w-12 h-12 rounded-lg object-cover group-hover/item:scale-105 transition-transform"
                             />
                             <div>
-                              <div className="text-sm font-bold text-gray-900 group-hover/item:text-[#2CB5A0] transition-colors leading-snug">
+                              <div className="text-sm font-bold text-gray-900 group-hover/item:text-[var(--brand-ink)] transition-colors leading-snug">
                                 {srv.title}
                               </div>
                               <div className="text-xs text-gray-500 font-medium mt-0.5">
@@ -192,8 +192,8 @@ export const Header: React.FC<HeaderProps> = ({
                   onClick={() => setActiveTab(item.id)}
                   className={`px-3.5 py-2 rounded-lg text-sm font-medium transition-all ${
                     activeTab === item.id
-                      ? 'text-[#2CB5A0] bg-teal-50/80 font-semibold'
-                      : 'text-gray-700 hover:text-[#2CB5A0] hover:bg-gray-50'
+                      ? 'text-[var(--brand-ink)] bg-brand-50/80 font-semibold'
+                      : 'text-gray-700 hover:text-[var(--brand-ink)] hover:bg-gray-50'
                   }`}
                 >
                   {item.label}
@@ -211,7 +211,7 @@ export const Header: React.FC<HeaderProps> = ({
                 className="px-3.5 py-2.5 rounded-xl border border-gray-200 text-gray-700 hover:bg-gray-50 font-semibold text-xs flex items-center gap-1.5 transition-colors cursor-pointer"
                 title="View, Reschedule or Cancel your Booking"
               >
-                <Clock className="w-3.5 h-3.5 text-[#2CB5A0]" />
+                <Clock className="w-3.5 h-3.5 text-[var(--brand-ink)]" />
                 <span>My Reservation</span>
               </button>
             )}
@@ -230,7 +230,7 @@ export const Header: React.FC<HeaderProps> = ({
             <button
               id="header-book-cta-btn"
               onClick={() => onOpenBooking()}
-              className="px-5 py-2.5 rounded-xl bg-linear-to-r from-[#2CB5A0] to-[#1a6e61] text-white font-semibold text-sm shadow-md hover:shadow-lg hover:brightness-105 transition-all flex items-center gap-2 cursor-pointer"
+              className="px-5 py-2.5 rounded-xl bg-linear-to-r from-[#C3AA7E] to-[#BFA476] text-brand-950 font-semibold text-sm shadow-md hover:shadow-lg hover:brightness-105 transition-all flex items-center gap-2 cursor-pointer"
             >
               <Calendar className="w-4 h-4" />
               <span>Book Appointment</span>
@@ -263,7 +263,7 @@ export const Header: React.FC<HeaderProps> = ({
                   }}
                   className={`text-left px-4 py-3 rounded-xl font-medium text-base transition-colors ${
                     activeTab === item.id
-                      ? 'bg-teal-50 text-[#2CB5A0] font-bold'
+                      ? 'bg-brand-50 text-[var(--brand-ink)] font-bold'
                       : 'text-gray-800 hover:bg-gray-50'
                   }`}
                 >
@@ -282,7 +282,7 @@ export const Header: React.FC<HeaderProps> = ({
                   }}
                   className="w-full py-3 rounded-xl border border-gray-200 text-gray-800 font-bold text-center text-sm flex items-center justify-center gap-2 hover:bg-gray-50"
                 >
-                  <Clock className="w-4 h-4 text-[#2CB5A0]" />
+                  <Clock className="w-4 h-4 text-[var(--brand-ink)]" />
                   <span>Look Up / Manage Reservation</span>
                 </button>
               )}
@@ -293,7 +293,7 @@ export const Header: React.FC<HeaderProps> = ({
                   setMobileMenuOpen(false);
                   onOpenBooking();
                 }}
-                className="w-full py-3.5 rounded-xl bg-[#2CB5A0] text-white font-bold text-center shadow-md flex items-center justify-center gap-2"
+                className="w-full py-3.5 rounded-xl bg-brand-500 text-brand-950 font-bold text-center shadow-md flex items-center justify-center gap-2"
               >
                 <Calendar className="w-5 h-5" />
                 <span>Book Appointment Now</span>
@@ -303,7 +303,7 @@ export const Header: React.FC<HeaderProps> = ({
                 href={`tel:${settings.phone}`}
                 className="w-full py-3 rounded-xl border border-gray-200 text-gray-800 font-semibold text-center flex items-center justify-center gap-2 hover:bg-gray-50"
               >
-                <Phone className="w-4 h-4 text-[#2CB5A0]" />
+                <Phone className="w-4 h-4 text-[var(--brand-ink)]" />
                 <span>Call Us: {settings.phone}</span>
               </a>
             </div>

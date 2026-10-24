@@ -31,7 +31,7 @@ export const AdminLoginPage: React.FC = () => {
   };
 
   return (
-    <div className="bg-gray-900/80 border border-gray-800 rounded-2xl p-6 sm:p-8 shadow-2xl backdrop-blur-md">
+    <div className="bg-[#201A14]/90 border border-[#BFA476]/15 rounded-2xl p-6 sm:p-8 shadow-2xl backdrop-blur-md">
       <h2 className="text-xl font-serif font-bold text-white mb-2 text-center">Admin Console Sign In</h2>
       <p className="text-xs text-gray-400 text-center mb-6">Enter authorized credentials to enter sanctuary panel</p>
 
@@ -53,7 +53,7 @@ export const AdminLoginPage: React.FC = () => {
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full bg-gray-950/80 border border-gray-800 focus:border-[#2CB5A0] rounded-xl py-3 pl-10 pr-4 text-sm text-white focus:outline-none transition-colors"
+              className="w-full bg-[#17130F]/80 border border-[#BFA476]/15 focus:border-[#BFA476] rounded-xl py-3 pl-10 pr-4 text-sm text-white focus:outline-none transition-colors"
               placeholder="you@example.com"
             />
           </div>
@@ -64,7 +64,7 @@ export const AdminLoginPage: React.FC = () => {
             <label className="block text-xs font-semibold text-gray-300 uppercase tracking-wider">
               Password
             </label>
-            <Link to="/forgot-password" className="text-xs text-[#2CB5A0] hover:underline">
+            <Link to="/forgot-password" className="text-xs text-[var(--brand-ink)] hover:underline">
               Forgot?
             </Link>
           </div>
@@ -75,7 +75,7 @@ export const AdminLoginPage: React.FC = () => {
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full bg-gray-950/80 border border-gray-800 focus:border-[#2CB5A0] rounded-xl py-3 pl-10 pr-10 text-sm text-white focus:outline-none transition-colors"
+              className="w-full bg-[#17130F]/80 border border-[#BFA476]/15 focus:border-[#BFA476] rounded-xl py-3 pl-10 pr-10 text-sm text-white focus:outline-none transition-colors"
               placeholder="••••••••"
             />
             <button
@@ -91,10 +91,10 @@ export const AdminLoginPage: React.FC = () => {
         <button
           type="submit"
           disabled={loading}
-          className="w-full py-3.5 bg-linear-to-r from-[#2CB5A0] to-[#259b89] hover:brightness-110 text-white rounded-xl text-sm font-bold tracking-wide transition-all shadow-lg shadow-[#2CB5A0]/20 flex items-center justify-center gap-2 mt-6"
+          className="w-full py-3.5 bg-linear-to-r from-[#C3AA7E] to-[#BFA476] hover:brightness-110 text-brand-950 rounded-xl text-sm font-bold tracking-wide transition-all shadow-lg shadow-[#BFA476]/20 flex items-center justify-center gap-2 mt-6"
         >
           {loading ? (
-            <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+            <div className="w-5 h-5 border-2 border-brand-950/30 border-t-brand-950 rounded-full animate-spin" />
           ) : (
             <>
               <span>Authenticate Portal</span>
@@ -104,10 +104,10 @@ export const AdminLoginPage: React.FC = () => {
         </button>
       </form>
 
-      <div className="mt-6 pt-6 border-t border-gray-800 text-center">
+      <div className="mt-6 pt-6 border-t border-[#BFA476]/15 text-center">
         <p className="text-xs text-gray-400">
           Need staff access?{' '}
-          <Link to="/admin-signup" className="text-[#2CB5A0] font-semibold hover:underline">
+          <Link to="/admin-signup" className="text-[var(--brand-ink)] font-semibold hover:underline">
             Request Registration
           </Link>
         </p>

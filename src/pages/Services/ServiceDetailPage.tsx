@@ -124,7 +124,7 @@ export const ServiceDetailPage: React.FC = () => {
 
       <Link
         to="/services"
-        className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-[#2CB5A0] mb-8 font-medium transition-colors"
+        className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-[var(--brand-ink)] mb-8 font-medium transition-colors"
       >
         <ArrowLeft className="w-4 h-4" />
         Back to All Therapies
@@ -138,7 +138,7 @@ export const ServiceDetailPage: React.FC = () => {
               alt={service.title}
               className="w-full h-full object-cover"
             />
-            <div className="absolute top-4 left-4 bg-[#1A1A1A]/90 backdrop-blur-md text-[#C7A36A] px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider border border-[#C7A36A]/30 flex items-center gap-1.5">
+            <div className="on-dark-brand absolute top-4 left-4 bg-[#1A1A1A]/90 backdrop-blur-md text-[var(--brand-ink)] px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider border border-[#BFA476]/30 flex items-center gap-1.5">
               <Sparkles className="w-3.5 h-3.5" />
               {service.category.replace('_', ' ')}
             </div>
@@ -159,7 +159,7 @@ export const ServiceDetailPage: React.FC = () => {
               <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {service.benefits.map((b: string, i: number) => (
                   <li key={i} className="flex items-start gap-2.5 text-sm text-gray-700">
-                    <CheckCircle2 className="w-5 h-5 text-[#2CB5A0] shrink-0 mt-0.5" />
+                    <CheckCircle2 className="w-5 h-5 text-[var(--brand-ink)] shrink-0 mt-0.5" />
                     <span>{b}</span>
                   </li>
                 ))}
@@ -204,11 +204,11 @@ export const ServiceDetailPage: React.FC = () => {
 
             <div className="space-y-3 text-sm text-gray-600">
               <div className="flex items-center gap-3">
-                <Clock className="w-5 h-5 text-[#2CB5A0]" />
+                <Clock className="w-5 h-5 text-[var(--brand-ink)]" />
                 <span>Session Duration: <strong className="text-gray-900">{service.durationMinutes} Minutes</strong></span>
               </div>
               <div className="flex items-center gap-3">
-                <ShieldCheck className="w-5 h-5 text-[#2CB5A0]" />
+                <ShieldCheck className="w-5 h-5 text-[var(--brand-ink)]" />
                 <span>Private Male Therapist Assigned</span>
               </div>
             </div>
@@ -224,7 +224,7 @@ export const ServiceDetailPage: React.FC = () => {
                     value={bookingData.customerName}
                     onChange={(e) => setBookingData(prev => ({ ...prev, customerName: e.target.value }))}
                     placeholder="Your full name"
-                    className="w-full border border-gray-300 rounded-xl py-3 px-4 text-sm focus:border-[#2CB5A0] focus:outline-none"
+                    className="w-full border border-gray-300 rounded-xl py-3 px-4 text-sm focus:border-[#BFA476] focus:outline-none"
                   />
                 </div>
 
@@ -236,7 +236,7 @@ export const ServiceDetailPage: React.FC = () => {
                     value={bookingData.customerEmail}
                     onChange={(e) => setBookingData(prev => ({ ...prev, customerEmail: e.target.value }))}
                     placeholder="you@example.com"
-                    className="w-full border border-gray-300 rounded-xl py-3 px-4 text-sm focus:border-[#2CB5A0] focus:outline-none"
+                    className="w-full border border-gray-300 rounded-xl py-3 px-4 text-sm focus:border-[#BFA476] focus:outline-none"
                   />
                 </div>
 
@@ -248,7 +248,7 @@ export const ServiceDetailPage: React.FC = () => {
                     value={bookingData.customerPhone}
                     onChange={(e) => setBookingData(prev => ({ ...prev, customerPhone: e.target.value }))}
                     placeholder="+91-9171606807"
-                    className="w-full border border-gray-300 rounded-xl py-3 px-4 text-sm focus:border-[#2CB5A0] focus:outline-none"
+                    className="w-full border border-gray-300 rounded-xl py-3 px-4 text-sm focus:border-[#BFA476] focus:outline-none"
                   />
                 </div>
 
@@ -260,7 +260,7 @@ export const ServiceDetailPage: React.FC = () => {
                     min={localDateInputValue()}
                     value={bookingData.selectedDate}
                     onChange={(e) => setBookingData(prev => ({ ...prev, selectedDate: e.target.value, selectedTime: '' }))}
-                    className="w-full border border-gray-300 rounded-xl py-3 px-4 text-sm focus:border-[#2CB5A0] focus:outline-none"
+                    className="w-full border border-gray-300 rounded-xl py-3 px-4 text-sm focus:border-[#BFA476] focus:outline-none"
                   />
                 </div>
 
@@ -271,7 +271,7 @@ export const ServiceDetailPage: React.FC = () => {
                     value={bookingData.selectedTime}
                     onChange={(e) => setBookingData(prev => ({ ...prev, selectedTime: e.target.value }))}
                     disabled={slotsLoading || availableSlots.length === 0}
-                    className="w-full border border-gray-300 rounded-xl py-3 px-4 text-sm focus:border-[#2CB5A0] focus:outline-none disabled:bg-gray-100"
+                    className="w-full border border-gray-300 rounded-xl py-3 px-4 text-sm focus:border-[#BFA476] focus:outline-none disabled:bg-gray-100"
                   >
                     {slotsLoading && <option value="">Loading available slots…</option>}
                     {!slotsLoading && availableSlots.length === 0 && (
@@ -288,7 +288,7 @@ export const ServiceDetailPage: React.FC = () => {
                   <select
                     value={bookingData.selectedTherapist}
                     onChange={(e) => setBookingData(prev => ({ ...prev, selectedTherapist: e.target.value }))}
-                    className="w-full border border-gray-300 rounded-xl py-3 px-4 text-sm focus:border-[#2CB5A0] focus:outline-none"
+                    className="w-full border border-gray-300 rounded-xl py-3 px-4 text-sm focus:border-[#BFA476] focus:outline-none"
                   >
                     <option value="">Select a therapist</option>
                     {therapists.length > 0 ? (
@@ -306,7 +306,7 @@ export const ServiceDetailPage: React.FC = () => {
                 <button
                   type="submit"
                   disabled={bookingStatus === 'submitting'}
-                  className="w-full py-4 bg-[#2CB5A0] hover:bg-[#259b89] text-white rounded-xl font-bold text-sm tracking-wide transition-all shadow-lg shadow-[#2CB5A0]/20 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full py-4 bg-brand-500 hover:bg-brand-400 text-brand-950 rounded-xl font-bold text-sm tracking-wide transition-all shadow-lg shadow-[#BFA476]/20 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <Calendar className="w-4 h-4" />
                   {bookingStatus === 'submitting' ? 'Reserving Appointment...' : 'Confirm Booking'}

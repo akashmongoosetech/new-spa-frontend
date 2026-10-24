@@ -31,11 +31,11 @@ export const AccountCard: React.FC<AccountCardProps> = ({ user, active, tone = '
     {
       label: (
         <span className="inline-flex items-center gap-1.5">
-          <Award className={`h-3.5 w-3.5 ${dark ? 'text-[#C7A36A]' : 'text-gray-400'}`} /> Role
+          <Award className={`h-3.5 w-3.5 ${dark ? 'text-[var(--brand-ink)]' : 'text-gray-400'}`} /> Role
         </span>
       ),
       value: (
-        <span className={`font-bold capitalize ${dark ? 'text-[#e8d5a8]' : 'text-gray-800'}`}>
+        <span className={`font-bold capitalize ${dark ? 'text-[#DDC8A5]' : 'text-gray-800'}`}>
           {formatRole(user.role)}
         </span>
       ),
@@ -65,7 +65,7 @@ export const AccountCard: React.FC<AccountCardProps> = ({ user, active, tone = '
   return (
     <section aria-label="Account summary" className={`${cardClass(tone)} space-y-3 p-5 sm:p-6`}>
       <h3 className={sectionTitleClass(tone)}>
-        <Shield className={`h-4 w-4 ${dark ? 'text-[#C7A36A]' : 'text-[#2CB5A0]'}`} /> Account
+        <Shield className={`h-4 w-4 ${dark ? 'text-[var(--brand-ink)]' : 'text-[var(--brand-ink)]'}`} /> Account
       </h3>
       <dl className="space-y-3">
         {rows.map((row, i) => (

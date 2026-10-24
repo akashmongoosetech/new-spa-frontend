@@ -68,7 +68,7 @@ export const AdminSeoPage: React.FC = () => {
               type="text"
               value={metaTitle}
               onChange={(e) => setMetaTitle(e.target.value)}
-              className="w-full border border-gray-300 rounded-xl p-3 text-sm focus:border-[#2CB5A0] focus:outline-none"
+              className="w-full border border-gray-300 rounded-xl p-3 text-sm focus:border-[#BFA476] focus:outline-none"
             />
           </div>
 
@@ -78,7 +78,7 @@ export const AdminSeoPage: React.FC = () => {
               rows={3}
               value={metaDescription}
               onChange={(e) => setMetaDescription(e.target.value)}
-              className="w-full border border-gray-300 rounded-xl p-3 text-sm focus:border-[#2CB5A0] focus:outline-none"
+              className="w-full border border-gray-300 rounded-xl p-3 text-sm focus:border-[#BFA476] focus:outline-none"
             />
           </div>
 
@@ -88,7 +88,7 @@ export const AdminSeoPage: React.FC = () => {
               type="text"
               value={keywords}
               onChange={(e) => setKeywords(e.target.value)}
-              className="w-full border border-gray-300 rounded-xl p-3 text-sm focus:border-[#2CB5A0] focus:outline-none"
+              className="w-full border border-gray-300 rounded-xl p-3 text-sm focus:border-[#BFA476] focus:outline-none"
             />
           </div>
 
@@ -96,7 +96,7 @@ export const AdminSeoPage: React.FC = () => {
             type="submit"
             disabled={saving || !loaded}
             title={!loaded ? 'Load the saved SEO settings before saving.' : undefined}
-            className="px-6 py-3 bg-[#2CB5A0] text-white rounded-xl text-xs font-bold flex items-center gap-2 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
+            className="px-6 py-3 bg-brand-500 text-brand-950 rounded-xl text-xs font-bold flex items-center gap-2 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <Save className="w-4 h-4" />
             {saving ? 'Saving...' : 'Update Meta Settings'}

@@ -40,24 +40,24 @@ const ToastItem: React.FC<{ toast: ToastMessage; onClose: (id: string) => void }
       animate={{ opacity: 1, y: 0, scale: 1 }}
       exit={{ opacity: 0, x: 60, scale: 0.9 }}
       transition={{ duration: 0.25, ease: 'easeOut' }}
-      className={`pointer-events-auto p-4 rounded-2xl shadow-2xl border flex flex-col gap-2 backdrop-blur-xl relative overflow-hidden transition-all ${
+      className={`on-dark-brand pointer-events-auto p-4 rounded-2xl shadow-2xl border flex flex-col gap-2 backdrop-blur-xl relative overflow-hidden transition-all ${
         toast.type === 'admin_alert'
-          ? 'bg-[#121B1D]/95 border-[#2CB5A0] text-white shadow-[#2CB5A0]/20 ring-1 ring-[#2CB5A0]/30'
+          ? 'bg-[#1B1612]/95 border-[#BFA476] text-white shadow-[#BFA476]/20 ring-1 ring-[#BFA476]/30'
           : toast.type === 'success'
-          ? 'bg-[#131E1A]/95 border-[#2CB5A0]/80 text-white shadow-teal-950/40'
+          ? 'bg-[#1B1610]/95 border-[#BFA476]/80 text-white shadow-brand-950/40'
           : toast.type === 'error'
           ? 'bg-rose-950/95 border-rose-500/80 text-white shadow-rose-950/40'
-          : 'bg-[#182225]/95 border-amber-500/60 text-white shadow-amber-950/30'
+          : 'bg-[#241D16]/95 border-amber-500/60 text-white shadow-amber-950/30'
       }`}
     >
       <div className="flex items-start gap-3">
         {toast.type === 'admin_alert' && (
-          <div className="w-8 h-8 rounded-xl bg-linear-to-tr from-[#2CB5A0] to-emerald-400 text-black flex items-center justify-center shrink-0 shadow-md animate-bounce">
+          <div className="w-8 h-8 rounded-xl bg-linear-to-tr from-[#BFA476] to-emerald-400 text-black flex items-center justify-center shrink-0 shadow-md animate-bounce">
             <Bell className="w-4 h-4 text-black font-black" />
           </div>
         )}
         {toast.type === 'success' && (
-          <div className="w-8 h-8 rounded-xl bg-[#2CB5A0]/20 text-[#81E3D4] flex items-center justify-center shrink-0 border border-[#2CB5A0]/30">
+          <div className="w-8 h-8 rounded-xl bg-brand-500/20 text-[var(--brand-ink)] flex items-center justify-center shrink-0 border border-[#BFA476]/30">
             <CheckCircle2 className="w-4 h-4" />
           </div>
         )}
@@ -78,7 +78,7 @@ const ToastItem: React.FC<{ toast: ToastMessage; onClose: (id: string) => void }
               {toast.title}
             </h4>
             {toast.bookingRef && (
-              <span className="text-[10px] font-mono bg-white/10 px-2 py-0.5 rounded text-teal-300">
+              <span className="text-[10px] font-mono bg-white/10 px-2 py-0.5 rounded text-brand-300">
                 #{toast.bookingRef}
               </span>
             )}
@@ -97,7 +97,7 @@ const ToastItem: React.FC<{ toast: ToastMessage; onClose: (id: string) => void }
                   toast.onAction?.();
                   onClose(toast.id);
                 }}
-                className="px-3 py-1.5 rounded-lg bg-[#2CB5A0] hover:bg-[#259b89] text-black font-extrabold text-[11px] inline-flex items-center gap-1 shadow-md cursor-pointer transition-all"
+                className="px-3 py-1.5 rounded-lg bg-brand-500 hover:bg-brand-400 text-black font-extrabold text-[11px] inline-flex items-center gap-1 shadow-md cursor-pointer transition-all"
               >
                 <span>{toast.actionLabel}</span>
                 <ArrowRight className="w-3 h-3" />
@@ -125,7 +125,7 @@ const ToastItem: React.FC<{ toast: ToastMessage; onClose: (id: string) => void }
             transition={{ duration: duration / 1000, ease: 'linear' }}
             className={`h-full ${
               toast.type === 'admin_alert' || toast.type === 'success'
-                ? 'bg-[#2CB5A0]'
+                ? 'bg-brand-500'
                 : toast.type === 'error'
                 ? 'bg-rose-400'
                 : 'bg-amber-400'

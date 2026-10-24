@@ -5,7 +5,7 @@ import { api } from '../../services/api';
 import { showToast } from '../../utils/toastEvents';
 
 const inputClass =
-  'w-full border border-gray-300 rounded-xl p-3 text-sm focus:border-[#2CB5A0] focus:outline-none';
+  'w-full border border-gray-300 rounded-xl p-3 text-sm focus:border-[#BFA476] focus:outline-none';
 
 export const AdminChangePasswordPage: React.FC = () => {
   const navigate = useNavigate();
@@ -121,7 +121,7 @@ export const AdminChangePasswordPage: React.FC = () => {
           <button
             type="submit"
             disabled={loading || success}
-            className="px-6 py-3 bg-[#2CB5A0] text-white rounded-xl text-xs font-bold flex items-center gap-2 shadow-sm mt-4 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+            className="px-6 py-3 bg-brand-500 text-brand-950 rounded-xl text-xs font-bold flex items-center gap-2 shadow-sm mt-4 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
           >
             {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : success ? <LogOut className="w-4 h-4" /> : <Save className="w-4 h-4" />}
             {loading ? 'Saving...' : success ? 'Redirecting...' : 'Save New Password'}

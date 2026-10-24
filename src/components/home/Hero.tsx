@@ -29,7 +29,7 @@ export const Hero: React.FC<HeroProps> = ({
   const phoneNumber = settings?.phone || '+91-9171606807';
 
   return (
-    <section className="relative min-h-[92vh] flex items-center justify-center overflow-hidden bg-[#0F1416] text-white pt-16 pb-24">
+    <section className="on-dark-brand relative min-h-[92vh] flex items-center justify-center overflow-hidden bg-[#181410] text-white pt-16 pb-24">
       {/* Background Image Layer with Luxury Gradient Overlay */}
       <div className="absolute inset-0 z-0 select-none">
         <img
@@ -39,13 +39,13 @@ export const Hero: React.FC<HeroProps> = ({
           referrerPolicy="no-referrer"
         />
         {/* Layered vignette overlays for optical contrast */}
-        <div className="absolute inset-0 bg-linear-to-r from-[#0D1113]/95 via-[#0D1113]/80 to-[#0D1113]/60" />
-        <div className="absolute inset-0 bg-linear-to-t from-[#0D1113] via-transparent to-black/40" />
+        <div className="absolute inset-0 bg-linear-to-r from-[#15110D]/95 via-[#15110D]/80 to-[#15110D]/60" />
+        <div className="absolute inset-0 bg-linear-to-t from-[#15110D] via-transparent to-black/40" />
       </div>
 
       {/* Decorative Golden Glow Elements */}
-      <div className="absolute top-1/4 left-10 w-96 h-96 bg-[#2CB5A0]/15 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-10 right-10 w-96 h-96 bg-[#C7A36A]/10 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute top-1/4 left-10 w-96 h-96 bg-brand-500/15 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute bottom-10 right-10 w-96 h-96 bg-[#BFA476]/10 rounded-full blur-3xl pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
         {/* Main Content Column */}
@@ -55,10 +55,10 @@ export const Hero: React.FC<HeroProps> = ({
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-[#1C2628]/80 border border-[#2CB5A0]/35 backdrop-blur-md text-[#6FD3C4] text-xs sm:text-sm font-semibold tracking-wide shadow-lg"
+            className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-[#211B16]/80 border border-[#BFA476]/35 backdrop-blur-md text-[var(--brand-ink)] text-xs sm:text-sm font-semibold tracking-wide shadow-lg"
           >
-            <span className="flex h-2 w-2 rounded-full bg-[#2CB5A0] animate-pulse" />
-            <Sparkles className="w-4 h-4 text-[#C7A36A]" />
+            <span className="flex h-2 w-2 rounded-full bg-brand-500 animate-pulse" />
+            <Sparkles className="w-4 h-4 text-[var(--brand-ink)]" />
             <span>Tripod Wellness • Premier Men's Wellness & Spa</span>
           </motion.div>
 
@@ -71,12 +71,12 @@ export const Hero: React.FC<HeroProps> = ({
           >
             <h1 className="text-4xl sm:text-6xl lg:text-7xl font-serif font-extrabold leading-[1.1] tracking-tight text-white">
               Indulge in <br />
-              <span className="text-transparent bg-clip-text bg-linear-to-r from-[#2CB5A0] via-[#81E3D4] to-[#E3C99B]">
+              <span className="text-transparent bg-clip-text bg-linear-to-r from-[#BFA476] via-[#DDC8A5] to-[#DDC8A5]">
                 Tripod Wellness
               </span>{' '}
               Serenity
             </h1>
-            <p className="text-[#A3B8B5] text-lg sm:text-xl font-light max-w-2xl leading-relaxed pt-2">
+            <p className="text-[#C3AA7E] text-lg sm:text-xl font-light max-w-2xl leading-relaxed pt-2">
               Indore, Ujjain, Dewas exclusive sanctuary for executive men. Experience restorative Deep Tissue, Swedish Relaxation, Ayurvedic Abhyanga, and Hot Stone Therapy by certified male bodywork masters in private luxury suites.
             </p>
           </motion.div>
@@ -89,15 +89,15 @@ export const Hero: React.FC<HeroProps> = ({
             className="flex flex-wrap items-center justify-center lg:justify-start gap-y-2 gap-x-6 text-sm text-gray-300 font-medium"
           >
             <div className="flex items-center gap-2">
-              <CheckCircle2 className="w-4 h-4 text-[#2CB5A0]" />
+              <CheckCircle2 className="w-4 h-4 text-[var(--brand-ink)]" />
               <span>100% Licensed Male Practitioners</span>
             </div>
             <div className="flex items-center gap-2">
-              <CheckCircle2 className="w-4 h-4 text-[#2CB5A0]" />
+              <CheckCircle2 className="w-4 h-4 text-[var(--brand-ink)]" />
               <span>Private Hydrotherapy Suites</span>
             </div>
             <div className="flex items-center gap-2">
-              <CheckCircle2 className="w-4 h-4 text-[#2CB5A0]" />
+              <CheckCircle2 className="w-4 h-4 text-[var(--brand-ink)]" />
               <span>Indore, Ujjain & Dewas Locations</span>
             </div>
           </motion.div>
@@ -112,26 +112,26 @@ export const Hero: React.FC<HeroProps> = ({
             <button
               id="hero-book-now-main-btn"
               onClick={() => onOpenBooking()}
-              className="group relative w-full sm:w-auto px-9 py-4 rounded-2xl bg-linear-to-r from-[#2CB5A0] via-[#249685] to-[#1A6E61] text-white font-bold text-base shadow-xl hover:shadow-[#2CB5A0]/25 hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 flex items-center justify-center gap-3 cursor-pointer overflow-hidden"
+              className="group relative w-full sm:w-auto px-9 py-4 rounded-2xl bg-linear-to-r from-[#C3AA7E] via-[#BFA476] to-[#BFA476] text-brand-950 font-bold text-base shadow-xl hover:shadow-[#BFA476]/25 hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 flex items-center justify-center gap-3 cursor-pointer overflow-hidden"
             >
               <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity" />
-              <Calendar className="w-5 h-5 text-teal-100 group-hover:rotate-12 transition-transform" />
+              <Calendar className="w-5 h-5 text-brand-100 group-hover:rotate-12 transition-transform" />
               <span>Book Now</span>
-              <ArrowRight className="w-4 h-4 text-teal-200 group-hover:translate-x-1 transition-transform" />
+              <ArrowRight className="w-4 h-4 text-brand-200 group-hover:translate-x-1 transition-transform" />
             </button>
 
             <a
               href={`tel:${phoneNumber}`}
-              className="w-full sm:w-auto px-7 py-4 rounded-2xl border border-white/15 bg-black/40 hover:bg-black/60 backdrop-blur-md text-white font-semibold text-base transition-all duration-200 flex items-center justify-center gap-2.5 hover:border-[#2CB5A0]/50"
+              className="w-full sm:w-auto px-7 py-4 rounded-2xl border border-white/15 bg-black/40 hover:bg-black/60 backdrop-blur-md text-white font-semibold text-base transition-all duration-200 flex items-center justify-center gap-2.5 hover:border-[#BFA476]/50"
             >
-              <Phone className="w-5 h-5 text-[#2CB5A0]" />
+              <Phone className="w-5 h-5 text-[var(--brand-ink)]" />
               <span>Call Concierge</span>
             </a>
 
             {setActiveTab && (
               <button
                 onClick={() => setActiveTab('services')}
-                className="w-full sm:w-auto px-6 py-4 text-sm font-semibold text-[#81E3D4] hover:text-white transition-colors cursor-pointer underline underline-offset-4 decoration-teal-500/40 hover:decoration-teal-400"
+                className="w-full sm:w-auto px-6 py-4 text-sm font-semibold text-[var(--brand-ink)] hover:text-white transition-colors cursor-pointer underline underline-offset-4 decoration-brand-500/40 hover:decoration-brand-400"
               >
                 View All Therapies
               </button>
@@ -155,12 +155,12 @@ export const Hero: React.FC<HeroProps> = ({
               <span className="text-gray-400">(500+ Guest Reviews)</span>
             </div>
 
-            <div className="flex items-center gap-1.5 text-[#81E3D4]">
+            <div className="flex items-center gap-1.5 text-[var(--brand-ink)]">
               <ShieldCheck className="w-4 h-4" />
               <span>Clinical Sanitization</span>
             </div>
 
-            <div className="flex items-center gap-1.5 text-[#E3C99B]">
+            <div className="flex items-center gap-1.5 text-[var(--brand-ink)]">
               <Award className="w-4 h-4" />
               <span>Premium Organic Oils</span>
             </div>
@@ -174,14 +174,14 @@ export const Hero: React.FC<HeroProps> = ({
           transition={{ duration: 0.7, delay: 0.2 }}
           className="lg:col-span-5 relative"
         >
-          <div className="relative mx-auto max-w-md rounded-3xl overflow-hidden border border-white/15 bg-[#121A1C]/85 backdrop-blur-xl p-6 sm:p-7 shadow-2xl space-y-6">
+          <div className="relative mx-auto max-w-md rounded-3xl overflow-hidden border border-white/15 bg-[#1B1611]/85 backdrop-blur-xl p-6 sm:p-7 shadow-2xl space-y-6">
             {/* Top Badge */}
             <div className="flex items-center justify-between">
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#C7A36A]/20 border border-[#C7A36A]/40 text-[#E3C99B] text-xs font-bold uppercase tracking-wider">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#BFA476]/20 border border-[#BFA476]/40 text-[var(--brand-ink)] text-xs font-bold uppercase tracking-wider">
                 <Sparkles className="w-3 h-3" /> Signature Choice
               </span>
               <span className="text-xs text-gray-400 font-medium flex items-center gap-1">
-                <MapPin className="w-3.5 h-3.5 text-[#2CB5A0]" /> Indore • Ujjain • Dewas
+                <MapPin className="w-3.5 h-3.5 text-[var(--brand-ink)]" /> Indore • Ujjain • Dewas
               </span>
             </div>
 
@@ -195,7 +195,7 @@ export const Hero: React.FC<HeroProps> = ({
               />
               <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent" />
               <div className="absolute bottom-3 left-3 right-3 flex justify-between items-end">
-                <span className="px-3 py-1 rounded-lg bg-black/60 backdrop-blur-md text-xs font-semibold text-teal-200">
+                <span className="px-3 py-1 rounded-lg bg-black/60 backdrop-blur-md text-xs font-semibold text-brand-200">
                   <Clock className="w-3 h-3 inline mr-1" /> 60 - 90 Minutes
                 </span>
                 <span className="text-2xl font-serif font-extrabold text-white">
@@ -223,7 +223,7 @@ export const Hero: React.FC<HeroProps> = ({
               <button
                 id="hero-quick-book-btn"
                 onClick={() => onOpenBooking('srv-2')}
-                className="px-5 py-2.5 rounded-xl bg-[#2CB5A0] hover:bg-[#239584] text-white text-xs sm:text-sm font-bold shadow-md hover:scale-105 transition-all cursor-pointer flex items-center gap-1.5"
+                className="px-5 py-2.5 rounded-xl bg-brand-500 hover:bg-[#80663F] text-brand-950 text-xs sm:text-sm font-bold shadow-md hover:scale-105 transition-all cursor-pointer flex items-center gap-1.5"
               >
                 <span>Book Now</span>
                 <ArrowRight className="w-3.5 h-3.5" />

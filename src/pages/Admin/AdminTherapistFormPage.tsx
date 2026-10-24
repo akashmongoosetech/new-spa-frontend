@@ -105,7 +105,7 @@ export const AdminTherapistFormPage: React.FC = () => {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="e.g. Marcus Vance"
-                className="w-full border border-gray-300 rounded-xl py-3 px-4 text-sm focus:border-[#2CB5A0] focus:outline-none"
+                className="w-full border border-gray-300 rounded-xl py-3 px-4 text-sm focus:border-[#BFA476] focus:outline-none"
               />
             </div>
 
@@ -117,7 +117,7 @@ export const AdminTherapistFormPage: React.FC = () => {
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 placeholder="e.g. Master Deep Tissue Practitioner"
-                className="w-full border border-gray-300 rounded-xl py-3 px-4 text-sm focus:border-[#2CB5A0] focus:outline-none"
+                className="w-full border border-gray-300 rounded-xl py-3 px-4 text-sm focus:border-[#BFA476] focus:outline-none"
               />
             </div>
 
@@ -128,7 +128,7 @@ export const AdminTherapistFormPage: React.FC = () => {
                 required
                 value={exp}
                 onChange={(e) => setExp(Number(e.target.value))}
-                className="w-full border border-gray-300 rounded-xl py-3 px-4 text-sm focus:border-[#2CB5A0] focus:outline-none"
+                className="w-full border border-gray-300 rounded-xl py-3 px-4 text-sm focus:border-[#BFA476] focus:outline-none"
               />
             </div>
 
@@ -139,7 +139,7 @@ export const AdminTherapistFormPage: React.FC = () => {
                 value={imageUrl}
                 onChange={(e) => setImageUrl(e.target.value)}
                 placeholder="https://images.unsplash.com/..."
-                className="w-full border border-gray-300 rounded-xl py-3 px-4 text-sm focus:border-[#2CB5A0] focus:outline-none"
+                className="w-full border border-gray-300 rounded-xl py-3 px-4 text-sm focus:border-[#BFA476] focus:outline-none"
               />
             </div>
           </div>
@@ -151,7 +151,7 @@ export const AdminTherapistFormPage: React.FC = () => {
               value={bio}
               onChange={(e) => setBio(e.target.value)}
               placeholder="Detailed background, credentials, and therapeutic philosophy..."
-              className="w-full border border-gray-300 rounded-xl p-4 text-sm focus:border-[#2CB5A0] focus:outline-none"
+              className="w-full border border-gray-300 rounded-xl p-4 text-sm focus:border-[#BFA476] focus:outline-none"
             />
           </div>
 
@@ -166,7 +166,7 @@ export const AdminTherapistFormPage: React.FC = () => {
             <button
               type="submit"
               disabled={loading}
-              className="px-6 py-3 bg-[#2CB5A0] hover:bg-[#259b89] text-white rounded-xl text-xs font-bold flex items-center gap-2 shadow-sm disabled:opacity-50"
+              className="px-6 py-3 bg-brand-500 hover:bg-brand-400 text-brand-950 rounded-xl text-xs font-bold flex items-center gap-2 shadow-sm disabled:opacity-50"
             >
               <Save className="w-4 h-4" />
               {loading ? 'Saving...' : 'Save Therapist Record'}

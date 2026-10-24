@@ -129,7 +129,7 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
       )}
 
       <aside
-        className={`fixed left-0 top-0 bottom-0 z-50 bg-[#121212] border-r border-gray-800 text-gray-300 transition-all duration-300 flex flex-col justify-between ${
+        className={`on-dark-brand fixed left-0 top-0 bottom-0 z-50 bg-[#17130F] border-r border-gray-800 text-gray-300 transition-all duration-300 flex flex-col justify-between ${
           mobileOpen ? 'translate-x-0' : '-translate-x-full'
         } lg:translate-x-0 w-64 ${isCollapsed ? 'lg:w-20' : 'lg:w-64'}`}
       >
@@ -138,12 +138,12 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
           <div className="h-20 px-5 flex items-center justify-between border-b border-gray-800/80">
             {!isCollapsed && (
               <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-xl bg-white p-0.5 flex items-center justify-center shadow-lg shadow-[#2CB5A0]/20 overflow-hidden">
+                <div className="w-9 h-9 rounded-xl bg-white p-0.5 flex items-center justify-center shadow-lg shadow-[#BFA476]/20 overflow-hidden">
                   <BrandLogo variant="icon" className="w-full h-full object-contain rounded-lg" />
                 </div>
                 <div>
                   <h1 className="font-bold text-white text-base tracking-wide leading-tight">TRIPOD WELLNESS</h1>
-                  <p className="text-[10px] text-[#2CB5A0] uppercase font-semibold tracking-wider">CRM Control Hub</p>
+                  <p className="text-[10px] text-[var(--brand-ink)] uppercase font-semibold tracking-wider">CRM Control Hub</p>
                 </div>
               </div>
             )}
@@ -154,7 +154,7 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
             )}
             <button
               onClick={() => (mobileOpen ? onCloseMobile() : setCollapsed(!collapsed))}
-              className={`p-1.5 rounded-lg bg-gray-800/60 hover:bg-gray-700 text-gray-400 hover:text-white transition-colors cursor-pointer ${
+              className={`p-1.5 rounded-lg bg-[#2A231B]/60 hover:bg-[#332A20] text-gray-400 hover:text-white transition-colors cursor-pointer ${
                 mobileOpen ? 'flex lg:hidden' : 'hidden lg:flex'
               }`}
               title={mobileOpen ? 'Close Menu' : collapsed ? 'Expand Sidebar' : 'Collapse Sidebar'}
@@ -165,16 +165,16 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
 
           {/* User Badge */}
           {currentUser && !isCollapsed && (
-            <div className="p-4 mx-3 my-3 rounded-2xl bg-linear-to-r from-gray-900 to-gray-800/90 border border-gray-800 flex items-center gap-3">
+            <div className="p-4 mx-3 my-3 rounded-2xl bg-linear-to-r from-[#241D16] to-[#201A14]/90 border border-gray-800 flex items-center gap-3">
               {currentUser?.avatarUrl ? (
               <img
                 src={currentUser.avatarUrl}
                 alt={currentUser.name}
-                className="w-10 h-10 rounded-full object-cover ring-2 ring-[#2CB5A0]"
+                className="w-10 h-10 rounded-full object-cover ring-2 ring-[#BFA476]"
               />
             ) : (
-              <div className="w-10 h-10 rounded-full bg-[#2CB5A0] ring-2 ring-[#2CB5A0]/40 flex items-center justify-center shrink-0">
-                <span className="text-sm font-bold text-white">
+              <div className="w-10 h-10 rounded-full bg-brand-500 ring-2 ring-[#BFA476]/40 flex items-center justify-center shrink-0">
+                <span className="text-sm font-bold text-brand-950">
                   {(currentUser.name || 'A')
                     .trim()
                     .split(/\s+/)
@@ -187,7 +187,7 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
             )}
               <div className="overflow-hidden">
                 <h4 className="font-semibold text-white text-xs truncate">{currentUser.name}</h4>
-                <span className="inline-block px-2 py-0.5 mt-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider bg-[#2CB5A0]/20 text-[#2CB5A0]">
+                <span className="inline-block px-2 py-0.5 mt-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider bg-brand-500/20 text-[var(--brand-ink)]">
                   {normalizeRole(currentUser.role).replace(/_/g, ' ')}
                 </span>
               </div>
@@ -210,8 +210,8 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
                   }}
                   className={`w-full flex items-center gap-3 px-3.5 py-3 rounded-xl font-medium text-xs transition-all cursor-pointer ${
                     isActive
-                      ? 'bg-[#2CB5A0] text-black font-bold shadow-lg shadow-[#2CB5A0]/20 scale-[1.02]'
-                      : 'text-gray-400 hover:bg-gray-800/80 hover:text-white'
+                      ? 'bg-brand-500 text-black font-bold shadow-lg shadow-[#BFA476]/20 scale-[1.02]'
+                      : 'text-gray-400 hover:bg-[#2A231B]/80 hover:text-white'
                   }`}
                   title={isCollapsed ? item.label : undefined}
                 >

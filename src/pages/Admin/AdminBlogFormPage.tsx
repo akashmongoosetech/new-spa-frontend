@@ -209,7 +209,7 @@ export const AdminBlogFormPage: React.FC = () => {
           {/* BLOG INFORMATION */}
           <fieldset className="space-y-6">
             <legend className="text-sm font-bold uppercase text-gray-700 border-b pb-2 mb-4 flex items-center gap-2">
-              <Globe className="w-4 h-4 text-[#2CB5A0]" />
+              <Globe className="w-4 h-4 text-[var(--brand-ink)]" />
               BLOG INFORMATION
             </legend>
 
@@ -220,7 +220,7 @@ export const AdminBlogFormPage: React.FC = () => {
                 required
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                className="w-full border border-gray-300 rounded-xl py-3 px-4 text-sm focus:border-[#2CB5A0] focus:outline-none"
+                className="w-full border border-gray-300 rounded-xl py-3 px-4 text-sm focus:border-[#BFA476] focus:outline-none"
                 placeholder="e.g., Traditional Indian Wedding Food vs Modern Wedding Menus"
               />
             </div>
@@ -231,7 +231,7 @@ export const AdminBlogFormPage: React.FC = () => {
                 type="text"
                 value={slug}
                 onChange={(e) => setSlug(e.target.value)}
-                className="w-full border border-gray-300 rounded-xl py-3 px-4 text-sm focus:border-[#2CB5A0] focus:outline-none font-mono text-xs"
+                className="w-full border border-gray-300 rounded-xl py-3 px-4 text-sm focus:border-[#BFA476] focus:outline-none font-mono text-xs"
                 placeholder="auto-generated-from-title"
               />
               <p className="text-[10px] text-gray-400 mt-1">Auto-generated from title. Leave blank to auto-generate.</p>
@@ -242,7 +242,7 @@ export const AdminBlogFormPage: React.FC = () => {
               <select
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
-                className="w-full border border-gray-300 rounded-xl py-3 px-4 text-sm focus:border-[#2CB5A0] focus:outline-none bg-white"
+                className="w-full border border-gray-300 rounded-xl py-3 px-4 text-sm focus:border-[#BFA476] focus:outline-none bg-white"
               >
                 <option value="Wellness & Health">Wellness & Health</option>
                 <option value="Therapy Guide">Therapy Guide</option>
@@ -259,15 +259,15 @@ export const AdminBlogFormPage: React.FC = () => {
                 value={tagsInput}
                 onChange={(e) => handleTagsChange(e.target.value)}
                 placeholder="Indian Wedding, Catering, Wedding Food, Event Catering"
-                className="w-full border border-gray-300 rounded-xl py-3 px-4 text-sm focus:border-[#2CB5A0] focus:outline-none"
+                className="w-full border border-gray-300 rounded-xl py-3 px-4 text-sm focus:border-[#BFA476] focus:outline-none"
               />
               <p className="text-[10px] text-gray-400 mt-1">Comma-separated. Press Enter after each tag.</p>
               {tags.length > 0 && (
                 <div className="flex flex-wrap gap-1.5 mt-2">
                   {tags.map((tag, i) => (
-                    <span key={i} className="px-2 py-0.5 bg-[#2CB5A0]/10 text-[#2CB5A0] text-[10px] font-medium rounded-full flex items-center gap-1">
+                    <span key={i} className="px-2 py-0.5 bg-brand-500/10 text-[var(--brand-ink)] text-[10px] font-medium rounded-full flex items-center gap-1">
                       {tag}
-                      <button type="button" onClick={() => { const newTags = [...tags]; newTags.splice(i, 1); setTags(newTags); setTagsInput(newTags.join(', ')); }} className="text-[#2CB5A0] hover:text-rose-500">×</button>
+                      <button type="button" onClick={() => { const newTags = [...tags]; newTags.splice(i, 1); setTags(newTags); setTagsInput(newTags.join(', ')); }} className="text-[var(--brand-ink)] hover:text-rose-500">×</button>
                     </span>
                   ))}
                 </div>
@@ -281,7 +281,7 @@ export const AdminBlogFormPage: React.FC = () => {
                   type="text"
                   value={therapistName}
                   onChange={(e) => setTherapistName(e.target.value)}
-                  className="w-full border border-gray-300 rounded-xl py-3 px-4 text-sm focus:border-[#2CB5A0] focus:outline-none"
+                  className="w-full border border-gray-300 rounded-xl py-3 px-4 text-sm focus:border-[#BFA476] focus:outline-none"
                   placeholder="e.g., Rajesh Kumar"
                 />
               </div>
@@ -291,7 +291,7 @@ export const AdminBlogFormPage: React.FC = () => {
                   type="url"
                   value={therapistAvatarUrl}
                   onChange={(e) => setTherapistAvatarUrl(e.target.value)}
-                  className="w-full border border-gray-300 rounded-xl py-3 px-4 text-sm focus:border-[#2CB5A0] focus:outline-none"
+                  className="w-full border border-gray-300 rounded-xl py-3 px-4 text-sm focus:border-[#BFA476] focus:outline-none"
                   placeholder="https://example.com/avatar.jpg"
                 />
               </div>
@@ -303,7 +303,7 @@ export const AdminBlogFormPage: React.FC = () => {
                 type="text"
                 value={readingTime}
                 onChange={(e) => setReadingTime(e.target.value)}
-                className="w-full border border-gray-300 rounded-xl py-3 px-4 text-sm focus:border-[#2CB5A0] focus:outline-none"
+                className="w-full border border-gray-300 rounded-xl py-3 px-4 text-sm focus:border-[#BFA476] focus:outline-none"
                 placeholder="e.g., 5 min read (auto-calculated if left empty)"
               />
             </div>
@@ -312,7 +312,7 @@ export const AdminBlogFormPage: React.FC = () => {
           {/* IMAGES */}
           <fieldset className="space-y-6">
             <legend className="text-sm font-bold uppercase text-gray-700 border-b pb-2 mb-4 flex items-center gap-2">
-              <Image className="w-4 h-4 text-[#2CB5A0]" />
+              <Image className="w-4 h-4 text-[var(--brand-ink)]" />
               IMAGES
             </legend>
 
@@ -322,7 +322,7 @@ export const AdminBlogFormPage: React.FC = () => {
                 type="url"
                 value={imageUrl}
                 onChange={(e) => setImageUrl(e.target.value)}
-                className="w-full border border-gray-300 rounded-xl py-3 px-4 text-sm focus:border-[#2CB5A0] focus:outline-none"
+                className="w-full border border-gray-300 rounded-xl py-3 px-4 text-sm focus:border-[#BFA476] focus:outline-none"
                 placeholder="https://images.unsplash.com/..."
               />
               {imageUrl && (
@@ -337,7 +337,7 @@ export const AdminBlogFormPage: React.FC = () => {
           {/* CONTENT */}
           <fieldset className="space-y-6">
             <legend className="text-sm font-bold uppercase text-gray-700 border-b pb-2 mb-4 flex items-center gap-2">
-              <Clock className="w-4 h-4 text-[#2CB5A0]" />
+              <Clock className="w-4 h-4 text-[var(--brand-ink)]" />
               CONTENT
             </legend>
 
@@ -359,7 +359,7 @@ export const AdminBlogFormPage: React.FC = () => {
               {!isEdit && !summaryEditedRef.current && generatedExcerpt && (
                 <div className="mt-3 p-3 bg-gray-50 border border-gray-200 rounded-lg">
                   <div className="flex items-center gap-2 mb-1">
-                    <Zap className="w-3.5 h-3.5 text-[#2CB5A0]" />
+                    <Zap className="w-3.5 h-3.5 text-[var(--brand-ink)]" />
                     <span className="text-[10px] font-medium text-gray-600">Generated Excerpt Preview</span>
                     <span className="text-[10px] text-gray-400 ml-auto">{generatedExcerpt.length}/200 chars</span>
                   </div>
@@ -383,7 +383,7 @@ export const AdminBlogFormPage: React.FC = () => {
           {/* SEO SETTINGS */}
           <fieldset className="space-y-6">
             <legend className="text-sm font-bold uppercase text-gray-700 border-b pb-2 mb-4 flex items-center gap-2">
-              <Tag className="w-4 h-4 text-[#2CB5A0]" />
+              <Tag className="w-4 h-4 text-[var(--brand-ink)]" />
               SEO SETTINGS
             </legend>
 
@@ -394,7 +394,7 @@ export const AdminBlogFormPage: React.FC = () => {
                 value={seoMetaTitle}
                 onChange={(e) => setSeoMetaTitle(e.target.value)}
                 maxLength={60}
-                className="w-full border border-gray-300 rounded-xl py-3 px-4 text-sm focus:border-[#2CB5A0] focus:outline-none"
+                className="w-full border border-gray-300 rounded-xl py-3 px-4 text-sm focus:border-[#BFA476] focus:outline-none"
                 placeholder="Leave empty to use article title"
               />
               <p className="text-[10px] text-gray-400 mt-1">Max 60 characters. {seoMetaTitle.length}/60</p>
@@ -407,7 +407,7 @@ export const AdminBlogFormPage: React.FC = () => {
                 value={seoMetaDescription}
                 onChange={(e) => setSeoMetaDescription(e.target.value)}
                 maxLength={160}
-                className="w-full border border-gray-300 rounded-xl p-4 text-sm focus:border-[#2CB5A0] focus:outline-none"
+                className="w-full border border-gray-300 rounded-xl p-4 text-sm focus:border-[#BFA476] focus:outline-none"
                 placeholder="Leave empty to use article summary"
               />
               <p className="text-[10px] text-gray-400 mt-1">Max 160 characters. {seoMetaDescription.length}/160</p>
@@ -419,7 +419,7 @@ export const AdminBlogFormPage: React.FC = () => {
                 type="text"
                 value={seoKeywordsInput}
                 onChange={(e) => handleSeoKeywordsChange(e.target.value)}
-                className="w-full border border-gray-300 rounded-xl py-3 px-4 text-sm focus:border-[#2CB5A0] focus:outline-none"
+                className="w-full border border-gray-300 rounded-xl py-3 px-4 text-sm focus:border-[#BFA476] focus:outline-none"
                 placeholder="Indian wedding catering, wedding food menu, modern wedding catering"
               />
               <p className="text-[10px] text-gray-400 mt-1">Comma-separated keywords.</p>
@@ -439,7 +439,7 @@ export const AdminBlogFormPage: React.FC = () => {
           {/* PUBLISHING */}
           <fieldset className="space-y-6">
             <legend className="text-sm font-bold uppercase text-gray-700 border-b pb-2 mb-4 flex items-center gap-2">
-              <Star className="w-4 h-4 text-[#2CB5A0]" />
+              <Star className="w-4 h-4 text-[var(--brand-ink)]" />
               PUBLISHING
             </legend>
 
@@ -449,7 +449,7 @@ export const AdminBlogFormPage: React.FC = () => {
                 <select
                   value={status}
                   onChange={(e) => setStatus(e.target.value as any)}
-                  className="w-full border border-gray-300 rounded-xl py-3 px-4 text-sm focus:border-[#2CB5A0] focus:outline-none bg-white"
+                  className="w-full border border-gray-300 rounded-xl py-3 px-4 text-sm focus:border-[#BFA476] focus:outline-none bg-white"
                 >
                   <option value="active">Active</option>
                   <option value="inactive">Inactive</option>
@@ -463,7 +463,7 @@ export const AdminBlogFormPage: React.FC = () => {
                     type="checkbox"
                     checked={featureOnHomePage}
                     onChange={(e) => setFeatureOnHomePage(e.target.checked)}
-                    className="w-4 h-4 text-[#2CB5A0] border-gray-300 rounded focus:ring-[#2CB5A0]"
+                    className="w-4 h-4 text-[var(--brand-ink)] border-gray-300 rounded focus:ring-[#BFA476]"
                   />
                   <span className="text-xs font-bold uppercase text-gray-700">Feature on Home Page</span>
                 </label>
@@ -477,7 +477,7 @@ export const AdminBlogFormPage: React.FC = () => {
                 type="text"
                 value={author}
                 onChange={(e) => setAuthor(e.target.value)}
-                className="w-full border border-gray-300 rounded-xl py-3 px-4 text-sm focus:border-[#2CB5A0] focus:outline-none"
+                className="w-full border border-gray-300 rounded-xl py-3 px-4 text-sm focus:border-[#BFA476] focus:outline-none"
               />
             </div>
           </fieldset>
@@ -493,7 +493,7 @@ export const AdminBlogFormPage: React.FC = () => {
             <button
               type="submit"
               disabled={loading || fetching}
-              className="px-6 py-3 bg-[#2CB5A0] hover:bg-[#259b89] text-white rounded-xl text-xs font-bold flex items-center gap-2 shadow-sm disabled:opacity-50"
+              className="px-6 py-3 bg-brand-500 hover:bg-brand-400 text-brand-950 rounded-xl text-xs font-bold flex items-center gap-2 shadow-sm disabled:opacity-50"
             >
               {loading && <Loader2 className="w-4 h-4 animate-spin" />}
               <Save className="w-4 h-4" />

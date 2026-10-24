@@ -60,7 +60,7 @@ export const AdminTestimonialsPage: React.FC = () => {
 
       <form onSubmit={handleAdd} className="bg-white rounded-2xl border border-gray-200 p-5 shadow-sm space-y-3">
         <h3 className="text-sm font-bold text-gray-900 flex items-center gap-2">
-          <Plus className="w-4 h-4 text-[#2CB5A0]" /> Add New Testimonial
+          <Plus className="w-4 h-4 text-[var(--brand-ink)]" /> Add New Testimonial
         </h3>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           <input
@@ -69,14 +69,14 @@ export const AdminTestimonialsPage: React.FC = () => {
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder="Client name"
-            className="border border-gray-300 rounded-xl px-3 py-2.5 text-xs outline-none focus:border-[#2CB5A0]"
+            className="border border-gray-300 rounded-xl px-3 py-2.5 text-xs outline-none focus:border-[#BFA476]"
           />
           <input
             type="text"
             value={role}
             onChange={(e) => setRole(e.target.value)}
             placeholder="Role / title (optional)"
-            className="border border-gray-300 rounded-xl px-3 py-2.5 text-xs outline-none focus:border-[#2CB5A0]"
+            className="border border-gray-300 rounded-xl px-3 py-2.5 text-xs outline-none focus:border-[#BFA476]"
           />
           <select
             value={rating}
@@ -94,9 +94,9 @@ export const AdminTestimonialsPage: React.FC = () => {
           value={comment}
           onChange={(e) => setComment(e.target.value)}
           placeholder="Testimonial comment..."
-          className="w-full border border-gray-300 rounded-xl px-3 py-2.5 text-xs outline-none focus:border-[#2CB5A0]"
+          className="w-full border border-gray-300 rounded-xl px-3 py-2.5 text-xs outline-none focus:border-[#BFA476]"
         />
-        <button type="submit" className="px-4 py-2.5 bg-[#2CB5A0] hover:bg-[#259b89] text-white rounded-xl text-xs font-bold cursor-pointer">
+        <button type="submit" className="px-4 py-2.5 bg-brand-500 hover:bg-brand-400 text-brand-950 rounded-xl text-xs font-bold cursor-pointer">
           Add Testimonial
         </button>
       </form>
@@ -125,7 +125,7 @@ export const AdminTestimonialsPage: React.FC = () => {
                       showToast({ type: 'error', title: 'Update Failed', message: err?.message || 'Failed to update.' });
                     }
                   }}
-                  className="px-2 py-1 text-[11px] font-bold rounded-lg border border-gray-200 text-gray-600 hover:border-[#2CB5A0] cursor-pointer"
+                  className="px-2 py-1 text-[11px] font-bold rounded-lg border border-gray-200 text-gray-600 hover:border-[#BFA476] cursor-pointer"
                   title="Toggle approval"
                 >
                   {t.approved ? 'Approved' : 'Pending'}

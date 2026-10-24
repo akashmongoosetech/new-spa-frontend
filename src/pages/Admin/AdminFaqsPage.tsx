@@ -126,7 +126,7 @@ export const AdminFaqsPage: React.FC = () => {
         </div>
         <button
           onClick={() => { setEditingId(null); setQuestion(''); setAnswer(''); setCategory('general'); setShowAddModal(true); }}
-          className="px-4 py-2.5 bg-[#2CB5A0] hover:bg-[#259b89] text-white rounded-xl text-xs font-bold flex items-center gap-2 shadow-sm cursor-pointer shrink-0"
+          className="px-4 py-2.5 bg-brand-500 hover:bg-brand-400 text-brand-950 rounded-xl text-xs font-bold flex items-center gap-2 shadow-sm cursor-pointer shrink-0"
         >
           <Plus className="w-4 h-4" />
           Add New Question
@@ -150,7 +150,7 @@ export const AdminFaqsPage: React.FC = () => {
             <div key={faq.id} className="p-5 flex items-start justify-between gap-4">
               <div className="space-y-1 min-w-0 flex-1">
                 <div className="flex items-center gap-2 flex-wrap">
-                  <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-[#2CB5A0]/10 text-[#2CB5A0]">
+                  <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-brand-500/10 text-[var(--brand-ink)]">
                     {faq.category || 'general'}
                   </span>
                   <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full ${
@@ -159,7 +159,7 @@ export const AdminFaqsPage: React.FC = () => {
                     {faq.isPublished ? 'Published' : 'Hidden'}
                   </span>
                   <h3 className="text-sm font-bold text-gray-900 flex items-center gap-2">
-                    <HelpCircle className="w-4 h-4 text-[#2CB5A0] shrink-0" />
+                    <HelpCircle className="w-4 h-4 text-[var(--brand-ink)] shrink-0" />
                     <span>{faq.question}</span>
                   </h3>
                 </div>
@@ -187,7 +187,7 @@ export const AdminFaqsPage: React.FC = () => {
                 </button>
                 <button
                   onClick={() => openEditModal(faq)}
-                  className="p-2 rounded-lg text-gray-300 hover:text-[#2CB5A0] hover:bg-[#2CB5A0]/10 transition-colors cursor-pointer shrink-0"
+                  className="p-2 rounded-lg text-gray-300 hover:text-[var(--brand-ink)] hover:bg-brand-500/10 transition-colors cursor-pointer shrink-0"
                   title="Edit FAQ"
                   aria-label={`Edit FAQ: ${faq.question}`}
                 >
@@ -224,7 +224,7 @@ export const AdminFaqsPage: React.FC = () => {
               required
               value={question}
               onChange={(e) => setQuestion(e.target.value)}
-              className="w-full px-3.5 py-2.5 rounded-xl border font-semibold outline-none focus:ring-2 focus:ring-[#2CB5A0]"
+              className="w-full px-3.5 py-2.5 rounded-xl border font-semibold outline-none focus:ring-2 focus:ring-[#BFA476]"
               placeholder="e.g. Do you offer couples massage sessions?"
             />
           </div>
@@ -238,7 +238,7 @@ export const AdminFaqsPage: React.FC = () => {
               required
               value={answer}
               onChange={(e) => setAnswer(e.target.value)}
-              className="w-full p-3 rounded-xl border outline-none focus:ring-2 focus:ring-[#2CB5A0]"
+              className="w-full p-3 rounded-xl border outline-none focus:ring-2 focus:ring-[#BFA476]"
               placeholder="Write the answer shown to visitors..."
             />
           </div>
@@ -250,7 +250,7 @@ export const AdminFaqsPage: React.FC = () => {
               id="faq-category"
               value={category}
               onChange={(e) => setCategory(e.target.value)}
-              className="w-full px-3.5 py-2.5 rounded-xl border bg-white outline-none focus:ring-2 focus:ring-[#2CB5A0]"
+              className="w-full px-3.5 py-2.5 rounded-xl border bg-white outline-none focus:ring-2 focus:ring-[#BFA476]"
             >
               <option value="general">General</option>
               <option value="booking">Booking & Appointments</option>
@@ -269,7 +269,7 @@ export const AdminFaqsPage: React.FC = () => {
             <button
               type="submit"
               disabled={saving}
-              className="px-6 py-2.5 rounded-xl bg-[#2CB5A0] hover:bg-[#259b89] text-white font-bold cursor-pointer shadow-md shadow-[#2CB5A0]/20 disabled:opacity-50"
+              className="px-6 py-2.5 rounded-xl bg-brand-500 hover:bg-brand-400 text-brand-950 font-bold cursor-pointer shadow-md shadow-[#BFA476]/20 disabled:opacity-50"
             >
               {saving ? 'Saving...' : showEditModal ? 'Save Changes' : 'Add Question'}
             </button>

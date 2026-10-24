@@ -70,7 +70,7 @@ export const SettingsModule: React.FC = () => {
         <button
           type="button"
           onClick={fetchSettings}
-          className="px-4 py-2 rounded-xl bg-[#2CB5A0] text-white text-xs font-bold"
+          className="px-4 py-2 rounded-xl bg-brand-500 text-brand-950 text-xs font-bold"
         >
           Retry
         </button>
@@ -87,7 +87,7 @@ export const SettingsModule: React.FC = () => {
           <p className="text-xs text-gray-500">Configure global business profile, SMTP mailing server, SEO meta tags, and security protocols.</p>
         </div>
         {savedMsg && (
-          <div className="px-4 py-2 rounded-xl bg-teal-50 text-[#2CB5A0] font-bold text-xs flex items-center gap-2">
+          <div className="px-4 py-2 rounded-xl bg-brand-50 text-[var(--brand-ink)] font-bold text-xs flex items-center gap-2">
             <CheckCircle2 className="w-4 h-4" /> Settings Saved Successfully!
           </div>
         )}
@@ -118,7 +118,7 @@ export const SettingsModule: React.FC = () => {
                 isActive ? 'bg-[#1A1A1A] text-white shadow-md' : 'text-gray-500 hover:text-gray-800 hover:bg-gray-50'
               }`}
             >
-              <Icon className={`w-4 h-4 ${isActive ? 'text-[#2CB5A0]' : 'text-gray-400'}`} />
+              <Icon className={`w-4 h-4 ${isActive ? 'text-[var(--brand-ink)]' : 'text-gray-400'}`} />
               {tab.label}
             </button>
           );
@@ -137,7 +137,7 @@ export const SettingsModule: React.FC = () => {
                   type="text"
                   value={settings.businessName}
                   onChange={(e) => setSettings({ ...settings, businessName: e.target.value })}
-                  className="w-full px-3.5 py-2.5 rounded-xl border outline-none focus:ring-2 focus:ring-[#2CB5A0]"
+                  className="w-full px-3.5 py-2.5 rounded-xl border outline-none focus:ring-2 focus:ring-[#BFA476]"
                 />
               </div>
               <div>
@@ -356,7 +356,7 @@ export const SettingsModule: React.FC = () => {
                 type="checkbox"
                 checked={settings.autoApproveBookings}
                 onChange={(e) => setSettings({ ...settings, autoApproveBookings: e.target.checked })}
-                className="w-4 h-4 text-[#2CB5A0] rounded-md"
+                className="w-4 h-4 text-[var(--brand-ink)] rounded-md"
               />
               Automatically approve all incoming bookings without pending review
             </label>
@@ -397,11 +397,11 @@ export const SettingsModule: React.FC = () => {
               <div className="flex items-center gap-3">
                 <input
                   type="color"
-                  value={settings.primaryColor || '#2CB5A0'}
+                  value={settings.primaryColor || '#BFA476'}
                   onChange={(e) => setSettings({ ...settings, primaryColor: e.target.value })}
                   className="w-12 h-10 rounded-lg cursor-pointer border"
                 />
-                <span className="font-mono text-gray-800">{settings.primaryColor || '#2CB5A0'}</span>
+                <span className="font-mono text-gray-800">{settings.primaryColor || '#BFA476'}</span>
               </div>
             </div>
           </div>
@@ -411,7 +411,7 @@ export const SettingsModule: React.FC = () => {
           <button
             type="submit"
             disabled={saving}
-            className="px-6 py-2.5 rounded-xl bg-[#2CB5A0] hover:bg-teal-600 text-white font-bold flex items-center gap-2 cursor-pointer shadow-md shadow-[#2CB5A0]/20 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="px-6 py-2.5 rounded-xl bg-brand-500 hover:bg-brand-500 text-brand-950 font-bold flex items-center gap-2 cursor-pointer shadow-md shadow-[#BFA476]/20 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <Save className="w-4 h-4" /> {saving ? 'Saving...' : 'Save System Settings'}
           </button>

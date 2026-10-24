@@ -158,7 +158,7 @@ export const ScheduleManager: React.FC = () => {
           <p className="text-xs text-gray-500">Manage spa business hours, holiday closures, emergency lockdowns, and available time slots.</p>
         </div>
         {saveSuccess && (
-          <div className="px-4 py-2 rounded-xl bg-teal-50 text-[#2CB5A0] font-bold text-xs flex items-center gap-2">
+          <div className="px-4 py-2 rounded-xl bg-brand-50 text-[var(--brand-ink)] font-bold text-xs flex items-center gap-2">
             <CheckCircle2 className="w-4 h-4" /> Schedule Updated!
           </div>
         )}
@@ -207,7 +207,7 @@ export const ScheduleManager: React.FC = () => {
         {/* Working Hours & Time Slots */}
         <div className="bg-white p-6 rounded-3xl border border-gray-100 shadow-xs space-y-5">
           <div className="flex items-center gap-3 border-b pb-3">
-            <Clock className="w-5 h-5 text-[#2CB5A0]" />
+            <Clock className="w-5 h-5 text-[var(--brand-ink)]" />
             <h3 className="font-extrabold text-gray-900 text-sm">Working Hours & Available Slots</h3>
           </div>
 
@@ -245,7 +245,7 @@ export const ScheduleManager: React.FC = () => {
               {config.timeSlots.map((slot, i) => (
                 <span
                   key={i}
-                  className="px-3 py-1.5 rounded-xl bg-teal-50 border border-teal-100 text-[#2CB5A0] font-bold text-xs flex items-center gap-2"
+                  className="px-3 py-1.5 rounded-xl bg-brand-50 border border-brand-100 text-[var(--brand-ink)] font-bold text-xs flex items-center gap-2"
                 >
                   {slot}
                   <button onClick={() => handleRemoveTimeSlot(slot)} className="text-gray-400 hover:text-rose-600 cursor-pointer">
@@ -276,7 +276,7 @@ export const ScheduleManager: React.FC = () => {
         {/* Holidays & Blackout Dates */}
         <div className="bg-white p-6 rounded-3xl border border-gray-100 shadow-xs space-y-5">
           <div className="flex items-center gap-3 border-b pb-3">
-            <CalendarIcon className="w-5 h-5 text-[#2CB5A0]" />
+            <CalendarIcon className="w-5 h-5 text-[var(--brand-ink)]" />
             <h3 className="font-extrabold text-gray-900 text-sm">Holidays & Blackout Dates</h3>
           </div>
 
@@ -315,7 +315,7 @@ export const ScheduleManager: React.FC = () => {
               />
               <button
                 type="submit"
-                className="col-span-1 py-2 bg-[#2CB5A0] hover:bg-teal-600 text-white font-bold rounded-xl cursor-pointer"
+                className="col-span-1 py-2 bg-brand-500 hover:bg-brand-500 text-brand-950 font-bold rounded-xl cursor-pointer"
               >
                 Add
               </button>

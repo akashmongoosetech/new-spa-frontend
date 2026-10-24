@@ -62,7 +62,7 @@ export const Modal: React.FC<ModalProps> = ({
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity"
+            className="fixed inset-0 bg-[#120F0B]/70 backdrop-blur-sm transition-opacity"
           />
 
           {/* Modal Card */}
@@ -74,7 +74,7 @@ export const Modal: React.FC<ModalProps> = ({
             role="dialog"
             aria-modal="true"
             aria-label={title || 'Modal dialog'}
-            className={`relative w-full ${widthClass} bg-white rounded-2xl shadow-2xl border border-teal-100 overflow-hidden z-10 my-8`}
+            className={`relative w-full ${widthClass} bg-white rounded-2xl shadow-2xl border border-brand-100 overflow-hidden z-10 my-8`}
           >
             {title && (
               <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between bg-slate-50/50">

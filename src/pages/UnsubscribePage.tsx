@@ -32,7 +32,7 @@ export const UnsubscribePage: React.FC = () => {
     <div className="min-h-[70vh] bg-[#FAFAFA] flex items-center justify-center px-4 py-16">
       <SEO title="Unsubscribe | Tripod Wellness" description="Manage your Tripod Wellness newsletter subscription." />
       <div className="w-full max-w-md rounded-2xl border border-gray-100 bg-white p-8 shadow-xl text-center">
-        <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-[#2CB5A0]/10 text-[#2CB5A0]">
+        <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-brand-500/10 text-[var(--brand-ink)]">
           {status === 'done' ? <CheckCircle2 className="h-7 w-7" /> : status === 'error' ? <AlertCircle className="h-7 w-7 text-rose-500" /> : <MailX className="h-7 w-7" />}
         </div>
 
@@ -53,7 +53,7 @@ export const UnsubscribePage: React.FC = () => {
               type="button"
               onClick={handleUnsubscribe}
               disabled={status === 'sending'}
-              className="mt-6 w-full rounded-xl bg-[#2CB5A0] px-4 py-3 text-sm font-bold text-white shadow-sm transition-colors hover:bg-[#259b89] disabled:cursor-not-allowed disabled:opacity-50"
+              className="mt-6 w-full rounded-xl bg-brand-500 px-4 py-3 text-sm font-bold text-brand-950 shadow-sm transition-colors hover:bg-brand-400 disabled:cursor-not-allowed disabled:opacity-50"
             >
               {status === 'sending' ? 'Unsubscribing…' : 'Unsubscribe'}
             </button>
@@ -71,7 +71,7 @@ export const UnsubscribePage: React.FC = () => {
           <p className="mt-3 text-sm leading-relaxed text-rose-700">{message}</p>
         )}
 
-        <Link to="/" className="mt-7 inline-flex items-center gap-2 text-xs font-semibold text-[#2CB5A0] hover:underline">
+        <Link to="/" className="mt-7 inline-flex items-center gap-2 text-xs font-semibold text-[var(--brand-ink)] hover:underline">
           <ArrowLeft className="h-3.5 w-3.5" /> Back to Tripod Wellness
         </Link>
       </div>

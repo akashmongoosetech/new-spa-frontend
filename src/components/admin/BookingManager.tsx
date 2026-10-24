@@ -162,7 +162,7 @@ export const BookingManager: React.FC<BookingManagerProps> = ({
           </button>
           <button
             onClick={onOpenCreateBooking}
-            className="px-4 py-2.5 rounded-xl bg-[#2CB5A0] hover:bg-teal-600 text-white font-bold text-xs flex items-center gap-2 cursor-pointer shadow-md shadow-[#2CB5A0]/20"
+            className="px-4 py-2.5 rounded-xl bg-brand-500 hover:bg-brand-500 text-brand-950 font-bold text-xs flex items-center gap-2 cursor-pointer shadow-md shadow-[#BFA476]/20"
           >
             <Plus className="w-4 h-4" /> New Booking
           </button>
@@ -209,7 +209,7 @@ export const BookingManager: React.FC<BookingManagerProps> = ({
             className="px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-gray-700 outline-none"
           />
           {dateFilter && (
-            <button onClick={() => setDateFilter('')} className="text-xs text-[#2CB5A0] font-bold hover:underline cursor-pointer">
+            <button onClick={() => setDateFilter('')} className="text-xs text-[var(--brand-ink)] font-bold hover:underline cursor-pointer">
               Clear Date
             </button>
           )}
@@ -284,7 +284,7 @@ export const BookingManager: React.FC<BookingManagerProps> = ({
                       <p className="text-[10px] text-gray-400">{b.phone}</p>
                     </td>
                     <td className="py-4 px-6">
-                      <p className="font-bold text-[#2CB5A0]">{b.serviceTitle}</p>
+                      <p className="font-bold text-[var(--brand-ink)]">{b.serviceTitle}</p>
                       <p className="text-[10px] text-gray-400">{b.durationMinutes} Mins</p>
                     </td>
                     <td className="py-4 px-6">
@@ -313,7 +313,7 @@ export const BookingManager: React.FC<BookingManagerProps> = ({
                           setActiveBooking(b);
                           setShowConfirmationModal(true);
                         }}
-                        className="p-1.5 rounded-lg bg-teal-50 text-[#2CB5A0] hover:bg-teal-100 cursor-pointer"
+                        className="p-1.5 rounded-lg bg-brand-50 text-[var(--brand-ink)] hover:bg-brand-100 cursor-pointer"
                         title="View Confirmation & Reschedule/Cancel Modal"
                       >
                         <Eye className="w-4 h-4" />
@@ -369,7 +369,7 @@ export const BookingManager: React.FC<BookingManagerProps> = ({
               <select
                 value={editStatus}
                 onChange={(e: any) => setEditStatus(e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-xl border text-xs font-semibold focus:ring-2 focus:ring-[#2CB5A0] outline-none"
+                className="w-full px-3.5 py-2.5 rounded-xl border text-xs font-semibold focus:ring-2 focus:ring-[#BFA476] outline-none"
               >
                 <option value="pending">Pending</option>
                 <option value="confirmed">Confirmed</option>
@@ -384,7 +384,7 @@ export const BookingManager: React.FC<BookingManagerProps> = ({
               <select
                 value={editTherapistId}
                 onChange={(e) => setEditTherapistId(e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-xl border text-xs font-semibold focus:ring-2 focus:ring-[#2CB5A0] outline-none"
+                className="w-full px-3.5 py-2.5 rounded-xl border text-xs font-semibold focus:ring-2 focus:ring-[#BFA476] outline-none"
               >
                 {therapists.map((t) => (
                   <option key={t.id} value={t.id}>
@@ -440,7 +440,7 @@ export const BookingManager: React.FC<BookingManagerProps> = ({
               </button>
               <button
                 onClick={handleSaveEdit}
-                className="px-5 py-2 rounded-xl bg-[#2CB5A0] text-xs font-bold text-white cursor-pointer shadow-md"
+                className="px-5 py-2 rounded-xl bg-brand-500 text-xs font-bold text-brand-950 cursor-pointer shadow-md"
               >
                 Save Changes
               </button>

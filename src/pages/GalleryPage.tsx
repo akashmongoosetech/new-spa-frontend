@@ -195,7 +195,7 @@ export const GalleryPage: React.FC<GalleryPageProps> = ({ photos, onOpenBooking 
   }, [lightboxIndex, handleNext, handlePrev]);
 
   return (
-    <div className="py-12 bg-[#0C1214] text-gray-100 min-h-screen font-sans">
+    <div className="on-dark-brand py-12 bg-[#120F0B] text-gray-100 min-h-screen font-sans">
       <SEO
         title="Sanctuary Suite & Facility Gallery | Tripod Wellness"
         description="Take a high-resolution visual tour of our hospital-grade disinfected VIP therapy suites, hydrotherapy lounges, and professional massage equipment."
@@ -204,7 +204,7 @@ export const GalleryPage: React.FC<GalleryPageProps> = ({ photos, onOpenBooking 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 space-y-10">
         {/* Header Section */}
         <div className="text-center max-w-3xl mx-auto space-y-4">
-          <span className="inline-flex items-center gap-1.5 text-[11px] font-extrabold uppercase tracking-widest text-[#2CB5A0] bg-[#2CB5A0]/15 px-4 py-1.5 rounded-full border border-[#2CB5A0]/30 shadow-md">
+          <span className="inline-flex items-center gap-1.5 text-[11px] font-extrabold uppercase tracking-widest text-[var(--brand-ink)] bg-brand-500/15 px-4 py-1.5 rounded-full border border-[#BFA476]/30 shadow-md">
             <Sparkles className="w-3.5 h-3.5" />
             <span>Interactive Visual Sanctuary Tour</span>
           </span>
@@ -230,8 +230,8 @@ export const GalleryPage: React.FC<GalleryPageProps> = ({ photos, onOpenBooking 
                 }}
                 className={`px-4 py-2.5 rounded-2xl text-xs font-bold transition-all cursor-pointer flex items-center gap-2 border ${
                   isSelected
-                    ? 'bg-linear-to-r from-[#2CB5A0] to-[#1A6E61] text-white border-transparent shadow-lg shadow-[#2CB5A0]/20 scale-105'
-                    : 'bg-[#141C1E] border-white/10 text-gray-400 hover:text-white hover:bg-[#182225] hover:border-white/20'
+                    ? 'bg-linear-to-r from-[#C3AA7E] to-[#BFA476] text-brand-950 border-transparent shadow-lg shadow-[#BFA476]/20 scale-105'
+                    : 'bg-[#201A14] border-white/10 text-gray-400 hover:text-white hover:bg-[#241D16] hover:border-white/20'
                 }`}
               >
                 <span>{c.label}</span>
@@ -266,7 +266,7 @@ export const GalleryPage: React.FC<GalleryPageProps> = ({ photos, onOpenBooking 
               role="button"
               tabIndex={0}
               aria-label={`View ${photo.title} in fullscreen`}
-              className="group relative h-80 rounded-3xl overflow-hidden cursor-pointer border border-white/10 bg-[#141C1E] shadow-xl focus:outline-none focus:ring-2 focus:ring-[#2CB5A0]/60"
+              className="group relative h-80 rounded-3xl overflow-hidden cursor-pointer border border-white/10 bg-[#201A14] shadow-xl focus:outline-none focus:ring-2 focus:ring-[#BFA476]/60"
             >
               <img
                 src={photo.url}
@@ -277,18 +277,18 @@ export const GalleryPage: React.FC<GalleryPageProps> = ({ photos, onOpenBooking 
 
               {/* Top Category Badge */}
               <div className="absolute top-4 left-4 z-10">
-                <span className="text-[10px] font-extrabold uppercase tracking-wider text-black bg-[#E3C99B] px-3 py-1 rounded-full shadow-md">
+                <span className="text-[10px] font-extrabold uppercase tracking-wider text-black bg-[#DDC8A5] px-3 py-1 rounded-full shadow-md">
                   {photo.categoryLabel}
                 </span>
               </div>
 
               {/* Bottom Glass Overlay */}
               <div className="absolute inset-0 bg-linear-to-t from-[#0C1214] via-[#0C1214]/40 to-transparent opacity-85 group-hover:opacity-95 transition-opacity p-6 flex flex-col justify-end text-white">
-                <div className="flex items-center gap-2 text-[#81E3D4] text-xs font-bold mb-1 transform translate-y-2 group-hover:translate-y-0 transition-transform">
+                <div className="flex items-center gap-2 text-[var(--brand-ink)] text-xs font-bold mb-1 transform translate-y-2 group-hover:translate-y-0 transition-transform">
                   <Maximize2 className="w-3.5 h-3.5" />
                   <span>Click for Fullscreen Lightbox</span>
                 </div>
-                <h3 className="font-serif font-bold text-lg text-white group-hover:text-[#81E3D4] transition-colors leading-snug">
+                <h3 className="font-serif font-bold text-lg text-white group-hover:text-[var(--brand-ink)] transition-colors leading-snug">
                   {photo.title}
                 </h3>
                 <p className="text-xs text-gray-300 mt-1 line-clamp-1">
@@ -308,9 +308,9 @@ export const GalleryPage: React.FC<GalleryPageProps> = ({ photos, onOpenBooking 
         </motion.div>
 
         {/* Bottom Banner */}
-        <div className="p-8 rounded-3xl bg-linear-to-r from-[#142023] via-[#1A2C30] to-[#142023] border border-[#2CB5A0]/30 shadow-2xl flex flex-col md:flex-row items-center justify-between gap-6">
+        <div className="p-8 rounded-3xl bg-linear-to-r from-[#1D1813] via-[#2A231B] to-[#1D1813] border border-[#BFA476]/30 shadow-2xl flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="space-y-2 text-center md:text-left">
-            <span className="text-xs font-bold uppercase tracking-wider text-[#2CB5A0] bg-[#2CB5A0]/15 px-3 py-1 rounded-full border border-[#2CB5A0]/30">
+            <span className="text-xs font-bold uppercase tracking-wider text-[var(--brand-ink)] bg-brand-500/15 px-3 py-1 rounded-full border border-[#BFA476]/30">
               Private Spa Suite Reservations
             </span>
             <h3 className="text-2xl font-serif font-bold text-white">
@@ -324,7 +324,7 @@ export const GalleryPage: React.FC<GalleryPageProps> = ({ photos, onOpenBooking 
           <button
             id="gallery-book-now-btn"
             onClick={() => onOpenBooking && onOpenBooking()}
-            className="px-8 py-4 rounded-2xl bg-linear-to-r from-[#2CB5A0] to-[#1A6E61] hover:brightness-110 text-white font-bold text-sm shadow-xl flex items-center gap-2 shrink-0 cursor-pointer transition-all"
+            className="px-8 py-4 rounded-2xl bg-linear-to-r from-[#C3AA7E] to-[#BFA476] hover:brightness-110 text-brand-950 font-bold text-sm shadow-xl flex items-center gap-2 shrink-0 cursor-pointer transition-all"
           >
             <Calendar className="w-4 h-4" />
             <span>Book Private Suite Session</span>
@@ -358,7 +358,7 @@ export const GalleryPage: React.FC<GalleryPageProps> = ({ photos, onOpenBooking 
             <button
               id="lightbox-prev-btn"
               onClick={handlePrev}
-              className="absolute left-4 top-1/2 -translate-y-1/2 z-40 w-12 h-12 rounded-full bg-white/10 hover:bg-[#2CB5A0] text-white flex items-center justify-center transition-all cursor-pointer border border-white/20 hover:border-transparent shadow-xl"
+              className="absolute left-4 top-1/2 -translate-y-1/2 z-40 w-12 h-12 rounded-full bg-white/10 hover:bg-brand-500 text-white hover:text-brand-950 flex items-center justify-center transition-all cursor-pointer border border-white/20 hover:border-transparent shadow-xl"
               aria-label="Previous photo"
             >
               <ChevronLeft className="w-6 h-6" />
@@ -368,14 +368,14 @@ export const GalleryPage: React.FC<GalleryPageProps> = ({ photos, onOpenBooking 
             <button
               id="lightbox-next-btn"
               onClick={handleNext}
-              className="absolute right-4 top-1/2 -translate-y-1/2 z-40 w-12 h-12 rounded-full bg-white/10 hover:bg-[#2CB5A0] text-white flex items-center justify-center transition-all cursor-pointer border border-white/20 hover:border-transparent shadow-xl"
+              className="absolute right-4 top-1/2 -translate-y-1/2 z-40 w-12 h-12 rounded-full bg-white/10 hover:bg-brand-500 text-white hover:text-brand-950 flex items-center justify-center transition-all cursor-pointer border border-white/20 hover:border-transparent shadow-xl"
               aria-label="Next photo"
             >
               <ChevronRight className="w-6 h-6" />
             </button>
 
             {/* Lightbox Main Container */}
-            <div className="w-full max-w-6xl max-h-[92vh] bg-[#121A1C] rounded-3xl border border-white/15 overflow-hidden flex flex-col lg:flex-row shadow-2xl relative">
+            <div className="w-full max-w-6xl max-h-[92vh] bg-[#1B1611] rounded-3xl border border-white/15 overflow-hidden flex flex-col lg:flex-row shadow-2xl relative">
               {/* Photo Display Viewport */}
               <div className="flex-1 bg-black flex items-center justify-center relative min-h-75 lg:min-h-[550px] p-4">
                 <motion.img
@@ -394,16 +394,16 @@ export const GalleryPage: React.FC<GalleryPageProps> = ({ photos, onOpenBooking 
               </div>
 
               {/* Photo Details Sidebar */}
-              <div className="w-full lg:w-96 p-6 sm:p-8 bg-[#141E20] border-t lg:border-t-0 lg:border-l border-white/10 flex flex-col justify-between overflow-y-auto max-h-[40vh] lg:max-h-[92vh]">
+              <div className="w-full lg:w-96 p-6 sm:p-8 bg-[#201A14] border-t lg:border-t-0 lg:border-l border-white/10 flex flex-col justify-between overflow-y-auto max-h-[40vh] lg:max-h-[92vh]">
                 <div className="space-y-6">
                   <div>
-                    <span className="text-[10px] font-extrabold uppercase tracking-widest text-black bg-[#E3C99B] px-3 py-1 rounded-full inline-block mb-3">
+                    <span className="text-[10px] font-extrabold uppercase tracking-widest text-black bg-[#DDC8A5] px-3 py-1 rounded-full inline-block mb-3">
                       {currentPhoto.categoryLabel}
                     </span>
                     <h2 className="text-2xl font-serif font-bold text-white leading-snug">
                       {currentPhoto.title}
                     </h2>
-                    <p className="text-xs text-[#81E3D4] font-medium mt-1">
+                    <p className="text-xs text-[var(--brand-ink)] font-medium mt-1">
                       {currentPhoto.subtitle}
                     </p>
                   </div>
@@ -420,7 +420,7 @@ export const GalleryPage: React.FC<GalleryPageProps> = ({ photos, onOpenBooking 
                     <div className="space-y-2">
                       {currentPhoto.highlights.map((h, i) => (
                         <div key={i} className="flex items-center gap-2 text-xs text-gray-200">
-                          <CheckCircle2 className="w-4 h-4 text-[#2CB5A0] shrink-0" />
+                          <CheckCircle2 className="w-4 h-4 text-[var(--brand-ink)] shrink-0" />
                           <span>{h}</span>
                         </div>
                       ))}
@@ -437,7 +437,7 @@ export const GalleryPage: React.FC<GalleryPageProps> = ({ photos, onOpenBooking 
                     </div>
                     <div className="flex items-center justify-between text-gray-300">
                       <span className="text-gray-400 font-medium flex items-center gap-1">
-                        <MapPin className="w-4 h-4 text-[#E3C99B]" /> Suite Dimensions:
+                        <MapPin className="w-4 h-4 text-[var(--brand-ink)]" /> Suite Dimensions:
                       </span>
                       <span className="font-bold text-white font-mono">{currentPhoto.dimensions}</span>
                     </div>
@@ -452,7 +452,7 @@ export const GalleryPage: React.FC<GalleryPageProps> = ({ photos, onOpenBooking 
                       setLightboxIndex(null);
                       if (onOpenBooking) onOpenBooking();
                     }}
-                    className="w-full py-3.5 rounded-2xl bg-linear-to-r from-[#2CB5A0] to-[#1A6E61] hover:brightness-110 text-white font-bold text-xs shadow-xl flex items-center justify-center gap-2 cursor-pointer transition-all"
+                    className="w-full py-3.5 rounded-2xl bg-linear-to-r from-[#C3AA7E] to-[#BFA476] hover:brightness-110 text-brand-950 font-bold text-xs shadow-xl flex items-center justify-center gap-2 cursor-pointer transition-all"
                   >
                     <Calendar className="w-4 h-4" />
                     <span>Book Session in This Suite</span>

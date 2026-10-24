@@ -46,7 +46,7 @@ export const TipTapEditor: React.FC<TipTapEditorProps> = ({
       Placeholder.configure({ placeholder: placeholder || 'Start writing...' }),
       Link.configure({
         openOnClick: false,
-        HTMLAttributes: { class: 'text-[#2CB5A0] underline hover:text-[#259b89]' },
+        HTMLAttributes: { class: 'text-[var(--brand-ink)] underline hover:text-[var(--brand-ink)]' },
       }),
       Image.configure({ HTMLAttributes: { class: 'max-w-full h-auto rounded-lg' } }),
       Table.configure({ resizable: true }),
@@ -87,7 +87,7 @@ export const TipTapEditor: React.FC<TipTapEditorProps> = ({
               else editor.chain().focus().setParagraph().run();
             }}
             disabled={disabled}
-            className="px-2 py-1 text-xs border border-gray-300 rounded bg-white focus:outline-none focus:ring-1 focus:ring-[#2CB5A0]"
+            className="px-2 py-1 text-xs border border-gray-300 rounded bg-white focus:outline-none focus:ring-1 focus:ring-[#BFA476]"
           >
             <option value="">Paragraph</option>
             <option value="1">Heading 1</option>
@@ -103,7 +103,7 @@ export const TipTapEditor: React.FC<TipTapEditorProps> = ({
           <button
             onClick={() => editor.chain().focus().toggleBold().run()}
             disabled={disabled || !editor.can().chain().focus().toggleBold().run()}
-            className={`px-2 py-1 text-xs rounded ${editor.isActive('bold') ? 'bg-[#2CB5A0] text-white' : 'text-gray-600 hover:bg-gray-100'}`}
+            className={`px-2 py-1 text-xs rounded ${editor.isActive('bold') ? 'bg-brand-500 text-brand-950' : 'text-gray-600 hover:bg-gray-100'}`}
             title="Bold"
           >
             <strong>B</strong>
@@ -111,7 +111,7 @@ export const TipTapEditor: React.FC<TipTapEditorProps> = ({
           <button
             onClick={() => editor.chain().focus().toggleItalic().run()}
             disabled={disabled || !editor.can().chain().focus().toggleItalic().run()}
-            className={`px-2 py-1 text-xs rounded ${editor.isActive('italic') ? 'bg-[#2CB5A0] text-white' : 'text-gray-600 hover:bg-gray-100'}`}
+            className={`px-2 py-1 text-xs rounded ${editor.isActive('italic') ? 'bg-brand-500 text-brand-950' : 'text-gray-600 hover:bg-gray-100'}`}
             title="Italic"
           >
             <em>I</em>
@@ -119,7 +119,7 @@ export const TipTapEditor: React.FC<TipTapEditorProps> = ({
           <button
             onClick={() => editor.chain().focus().toggleUnderline().run()}
             disabled={disabled || !editor.can().chain().focus().toggleUnderline().run()}
-            className={`px-2 py-1 text-xs rounded ${editor.isActive('underline') ? 'bg-[#2CB5A0] text-white' : 'text-gray-600 hover:bg-gray-100'}`}
+            className={`px-2 py-1 text-xs rounded ${editor.isActive('underline') ? 'bg-brand-500 text-brand-950' : 'text-gray-600 hover:bg-gray-100'}`}
             title="Underline"
           >
             <u>U</u>
@@ -127,7 +127,7 @@ export const TipTapEditor: React.FC<TipTapEditorProps> = ({
           <button
             onClick={() => editor.chain().focus().toggleStrike().run()}
             disabled={disabled || !editor.can().chain().focus().toggleStrike().run()}
-            className={`px-2 py-1 text-xs rounded ${editor.isActive('strike') ? 'bg-[#2CB5A0] text-white' : 'text-gray-600 hover:bg-gray-100'}`}
+            className={`px-2 py-1 text-xs rounded ${editor.isActive('strike') ? 'bg-brand-500 text-brand-950' : 'text-gray-600 hover:bg-gray-100'}`}
             title="Strikethrough"
           >
             <s>S</s>
@@ -135,7 +135,7 @@ export const TipTapEditor: React.FC<TipTapEditorProps> = ({
           <button
             onClick={() => editor.chain().focus().toggleHighlight().run()}
             disabled={disabled || !editor.can().chain().focus().toggleHighlight().run()}
-            className={`px-2 py-1 text-xs rounded ${editor.isActive('highlight') ? 'bg-[#2CB5A0] text-white' : 'text-gray-600 hover:bg-gray-100'}`}
+            className={`px-2 py-1 text-xs rounded ${editor.isActive('highlight') ? 'bg-brand-500 text-brand-950' : 'text-gray-600 hover:bg-gray-100'}`}
             title="Highlight"
           >
             <mark>H</mark>
@@ -146,7 +146,7 @@ export const TipTapEditor: React.FC<TipTapEditorProps> = ({
           <button
             onClick={() => editor.chain().focus().setTextAlign('left').run()}
             disabled={disabled || !editor.can().chain().focus().setTextAlign('left').run()}
-            className={`px-2 py-1 text-xs rounded ${editor.isActive({ textAlign: 'left' }) ? 'bg-[#2CB5A0] text-white' : 'text-gray-600 hover:bg-gray-100'}`}
+            className={`px-2 py-1 text-xs rounded ${editor.isActive({ textAlign: 'left' }) ? 'bg-brand-500 text-brand-950' : 'text-gray-600 hover:bg-gray-100'}`}
             title="Align Left"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4h13M3 8h13M3 12h13M3 16h13" /></svg>
@@ -154,7 +154,7 @@ export const TipTapEditor: React.FC<TipTapEditorProps> = ({
           <button
             onClick={() => editor.chain().focus().setTextAlign('center').run()}
             disabled={disabled || !editor.can().chain().focus().setTextAlign('center').run()}
-            className={`px-2 py-1 text-xs rounded ${editor.isActive({ textAlign: 'center' }) ? 'bg-[#2CB5A0] text-white' : 'text-gray-600 hover:bg-gray-100'}`}
+            className={`px-2 py-1 text-xs rounded ${editor.isActive({ textAlign: 'center' }) ? 'bg-brand-500 text-brand-950' : 'text-gray-600 hover:bg-gray-100'}`}
             title="Align Center"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 4h6M9 8h6M9 12h6M9 16h6" /></svg>
@@ -162,7 +162,7 @@ export const TipTapEditor: React.FC<TipTapEditorProps> = ({
           <button
             onClick={() => editor.chain().focus().setTextAlign('right').run()}
             disabled={disabled || !editor.can().chain().focus().setTextAlign('right').run()}
-            className={`px-2 py-1 text-xs rounded ${editor.isActive({ textAlign: 'right' }) ? 'bg-[#2CB5A0] text-white' : 'text-gray-600 hover:bg-gray-100'}`}
+            className={`px-2 py-1 text-xs rounded ${editor.isActive({ textAlign: 'right' }) ? 'bg-brand-500 text-brand-950' : 'text-gray-600 hover:bg-gray-100'}`}
             title="Align Right"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 4h13M8 8h13M8 12h13M8 16h13" /></svg>
@@ -170,7 +170,7 @@ export const TipTapEditor: React.FC<TipTapEditorProps> = ({
           <button
             onClick={() => editor.chain().focus().setTextAlign('justify').run()}
             disabled={disabled || !editor.can().chain().focus().setTextAlign('justify').run()}
-            className={`px-2 py-1 text-xs rounded ${editor.isActive({ textAlign: 'justify' }) ? 'bg-[#2CB5A0] text-white' : 'text-gray-600 hover:bg-gray-100'}`}
+            className={`px-2 py-1 text-xs rounded ${editor.isActive({ textAlign: 'justify' }) ? 'bg-brand-500 text-brand-950' : 'text-gray-600 hover:bg-gray-100'}`}
             title="Justify"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4h18M3 8h18M3 12h18M3 16h18" /></svg>
@@ -181,7 +181,7 @@ export const TipTapEditor: React.FC<TipTapEditorProps> = ({
           <button
             onClick={() => editor.chain().focus().toggleBulletList().run()}
             disabled={disabled || !editor.can().chain().focus().toggleBulletList().run()}
-            className={`px-2 py-1 text-xs rounded ${editor.isActive('bulletList') ? 'bg-[#2CB5A0] text-white' : 'text-gray-600 hover:bg-gray-100'}`}
+            className={`px-2 py-1 text-xs rounded ${editor.isActive('bulletList') ? 'bg-brand-500 text-brand-950' : 'text-gray-600 hover:bg-gray-100'}`}
             title="Bullet List"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 11h14M5 11l-1.5 1.5M5 11l-1.5 -1.5M5 6h14M5 6l-1.5 1.5M5 6l-1.5 -1.5M5 16h14M5 16l-1.5 1.5M5 16l-1.5 -1.5" /></svg>
@@ -189,7 +189,7 @@ export const TipTapEditor: React.FC<TipTapEditorProps> = ({
           <button
             onClick={() => editor.chain().focus().toggleOrderedList().run()}
             disabled={disabled || !editor.can().chain().focus().toggleOrderedList().run()}
-            className={`px-2 py-1 text-xs rounded ${editor.isActive('orderedList') ? 'bg-[#2CB5A0] text-white' : 'text-gray-600 hover:bg-gray-100'}`}
+            className={`px-2 py-1 text-xs rounded ${editor.isActive('orderedList') ? 'bg-brand-500 text-brand-950' : 'text-gray-600 hover:bg-gray-100'}`}
             title="Numbered List"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 9h18M3 15h18M3 3h18M3 21h18" /></svg>
@@ -197,7 +197,7 @@ export const TipTapEditor: React.FC<TipTapEditorProps> = ({
           <button
             onClick={() => editor.chain().focus().toggleTaskList().run()}
             disabled={disabled || !editor.can().chain().focus().toggleTaskList().run()}
-            className={`px-2 py-1 text-xs rounded ${editor.isActive('taskList') ? 'bg-[#2CB5A0] text-white' : 'text-gray-600 hover:bg-gray-100'}`}
+            className={`px-2 py-1 text-xs rounded ${editor.isActive('taskList') ? 'bg-brand-500 text-brand-950' : 'text-gray-600 hover:bg-gray-100'}`}
             title="Task List"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" /></svg>
@@ -208,7 +208,7 @@ export const TipTapEditor: React.FC<TipTapEditorProps> = ({
           <button
             onClick={() => editor.chain().focus().toggleBlockquote().run()}
             disabled={disabled || !editor.can().chain().focus().toggleBlockquote().run()}
-            className={`px-2 py-1 text-xs rounded ${editor.isActive('blockquote') ? 'bg-[#2CB5A0] text-white' : 'text-gray-600 hover:bg-gray-100'}`}
+            className={`px-2 py-1 text-xs rounded ${editor.isActive('blockquote') ? 'bg-brand-500 text-brand-950' : 'text-gray-600 hover:bg-gray-100'}`}
             title="Blockquote"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" /></svg>
@@ -216,7 +216,7 @@ export const TipTapEditor: React.FC<TipTapEditorProps> = ({
           <button
             onClick={() => editor.chain().focus().toggleCodeBlock().run()}
             disabled={disabled || !editor.can().chain().focus().toggleCodeBlock().run()}
-            className={`px-2 py-1 text-xs rounded ${editor.isActive('codeBlock') ? 'bg-[#2CB5A0] text-white' : 'text-gray-600 hover:bg-gray-100'}`}
+            className={`px-2 py-1 text-xs rounded ${editor.isActive('codeBlock') ? 'bg-brand-500 text-brand-950' : 'text-gray-600 hover:bg-gray-100'}`}
             title="Code Block"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" /></svg>
@@ -245,7 +245,7 @@ export const TipTapEditor: React.FC<TipTapEditorProps> = ({
               editor.chain().focus().extendMarkRange('link').setLink({ href: trimmed }).run();
             }}
             disabled={disabled || !editor.can().chain().focus().setLink({ href: '#' }).run()}
-            className={`px-2 py-1 text-xs rounded ${editor.isActive('link') ? 'bg-[#2CB5A0] text-white' : 'text-gray-600 hover:bg-gray-100'}`}
+            className={`px-2 py-1 text-xs rounded ${editor.isActive('link') ? 'bg-brand-500 text-brand-950' : 'text-gray-600 hover:bg-gray-100'}`}
             title="Add Link"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" /></svg>

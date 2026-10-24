@@ -23,7 +23,7 @@ export const TherapistsPage: React.FC = () => {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-3xl mx-auto mb-12">
-          <span className="text-xs font-bold tracking-widest text-[#2CB5A0] uppercase">Licensed Specialists</span>
+          <span className="text-xs font-bold tracking-widest text-[var(--brand-ink)] uppercase">Licensed Specialists</span>
           <h1 className="text-3xl sm:text-4xl font-serif font-bold text-gray-900 mt-2 mb-4">
             Our Elite Male Therapy Staff
           </h1>
@@ -54,7 +54,7 @@ export const TherapistsPage: React.FC = () => {
                 <div className="p-6 space-y-4">
                   <div>
                     <h3 className="text-xl font-serif font-bold text-gray-900">{therapist.name}</h3>
-                    <p className="text-xs font-semibold text-[#2CB5A0] uppercase tracking-wider mt-1">
+                    <p className="text-xs font-semibold text-[var(--brand-ink)] uppercase tracking-wider mt-1">
                       {therapist.title} &bull; {therapist.experienceYears} Yrs Exp.
                     </p>
                   </div>
@@ -76,14 +76,14 @@ export const TherapistsPage: React.FC = () => {
               <div className="p-6 pt-0 flex items-center gap-3">
                 <Link
                   to={`/therapists/${therapist.id}`}
-                  className="flex-1 text-center py-2.5 border border-gray-200 hover:border-[#2CB5A0] text-gray-800 hover:text-[#2CB5A0] rounded-xl text-xs font-bold transition-colors flex items-center justify-center gap-1"
+                  className="flex-1 text-center py-2.5 border border-gray-200 hover:border-[#BFA476] text-gray-800 hover:text-[var(--brand-ink)] rounded-xl text-xs font-bold transition-colors flex items-center justify-center gap-1"
                 >
                   View Profile
                   <ArrowRight className="w-3.5 h-3.5" />
                 </Link>
                 <button
                   onClick={() => context.onOpenBooking?.()}
-                  className="flex-1 py-2.5 bg-[#1A1A1A] hover:bg-[#2CB5A0] text-white rounded-xl text-xs font-bold transition-colors flex items-center justify-center gap-1 shadow-sm"
+                  className="flex-1 py-2.5 bg-[#1A1A1A] hover:bg-brand-500 text-white hover:text-brand-950 rounded-xl text-xs font-bold transition-colors flex items-center justify-center gap-1 shadow-sm"
                 >
                   <Calendar className="w-3.5 h-3.5" />
                   Book Session

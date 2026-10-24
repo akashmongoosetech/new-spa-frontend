@@ -136,7 +136,7 @@ export const ServiceManager: React.FC<ServiceManagerProps> = ({ services, onRefr
         </div>
         <button
           onClick={handleOpenAdd}
-          className="px-4 py-2.5 rounded-xl bg-[#2CB5A0] hover:bg-teal-600 text-white font-bold text-xs flex items-center gap-2 cursor-pointer shadow-md shadow-[#2CB5A0]/20"
+          className="px-4 py-2.5 rounded-xl bg-brand-500 hover:bg-brand-500 text-brand-950 font-bold text-xs flex items-center gap-2 cursor-pointer shadow-md shadow-[#BFA476]/20"
         >
           <Plus className="w-4 h-4" /> Add New Service
         </button>
@@ -171,7 +171,7 @@ export const ServiceManager: React.FC<ServiceManagerProps> = ({ services, onRefr
                     </span>
                   )}
                 </div>
-                <div className="absolute bottom-3 right-3 px-3 py-1 rounded-full bg-[#2CB5A0] text-black font-extrabold text-sm shadow-md">
+                <div className="absolute bottom-3 right-3 px-3 py-1 rounded-full bg-brand-500 text-black font-extrabold text-sm shadow-md">
                   ₹{s.price}
                 </div>
               </div>
@@ -180,7 +180,7 @@ export const ServiceManager: React.FC<ServiceManagerProps> = ({ services, onRefr
                 <div className="flex items-center justify-between">
                   <h3 className="font-extrabold text-gray-900 text-base">{s.title}</h3>
                   <span className="text-xs font-bold text-gray-500 flex items-center gap-1">
-                    <Clock className="w-3.5 h-3.5 text-[#2CB5A0]" /> {s.durationMinutes} m
+                    <Clock className="w-3.5 h-3.5 text-[var(--brand-ink)]" /> {s.durationMinutes} m
                   </span>
                 </div>
 
@@ -190,7 +190,7 @@ export const ServiceManager: React.FC<ServiceManagerProps> = ({ services, onRefr
                 <div className="space-y-1 pt-1">
                   {(s.includedItems || []).slice(0, 3).map((item, i) => (
                     <div key={i} className="flex items-center gap-2 text-[11px] text-gray-600">
-                      <Check className="w-3 h-3 text-[#2CB5A0] shrink-0" />
+                      <Check className="w-3 h-3 text-[var(--brand-ink)] shrink-0" />
                       <span className="truncate">{item}</span>
                     </div>
                   ))}
@@ -243,7 +243,7 @@ export const ServiceManager: React.FC<ServiceManagerProps> = ({ services, onRefr
               required
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="w-full px-3.5 py-2.5 rounded-xl border font-semibold outline-none focus:ring-2 focus:ring-[#2CB5A0]"
+              className="w-full px-3.5 py-2.5 rounded-xl border font-semibold outline-none focus:ring-2 focus:ring-[#BFA476]"
               placeholder="e.g. Royal Swedish Relaxation Massage"
             />
           </div>
@@ -308,7 +308,7 @@ export const ServiceManager: React.FC<ServiceManagerProps> = ({ services, onRefr
               required
               value={fullDescription}
               onChange={(e) => setFullDescription(e.target.value)}
-              className="w-full p-3 rounded-xl border outline-none focus:ring-2 focus:ring-[#2CB5A0]"
+              className="w-full p-3 rounded-xl border outline-none focus:ring-2 focus:ring-[#BFA476]"
             ></textarea>
           </div>
 
@@ -340,7 +340,7 @@ export const ServiceManager: React.FC<ServiceManagerProps> = ({ services, onRefr
                 type="checkbox"
                 checked={featured}
                 onChange={(e) => setFeatured(e.target.checked)}
-                className="w-4 h-4 text-[#2CB5A0] rounded-md"
+                className="w-4 h-4 text-[var(--brand-ink)] rounded-md"
               />
               Show as Featured Service
             </label>
@@ -349,7 +349,7 @@ export const ServiceManager: React.FC<ServiceManagerProps> = ({ services, onRefr
                 type="checkbox"
                 checked={active}
                 onChange={(e) => setActive(e.target.checked)}
-                className="w-4 h-4 text-[#2CB5A0] rounded-md"
+                className="w-4 h-4 text-[var(--brand-ink)] rounded-md"
               />
               Active Service Status
             </label>
@@ -366,7 +366,7 @@ export const ServiceManager: React.FC<ServiceManagerProps> = ({ services, onRefr
             <button
               type="submit"
               disabled={saving}
-              className="px-6 py-2.5 rounded-xl bg-[#2CB5A0] hover:bg-teal-600 text-white font-bold cursor-pointer shadow-md shadow-[#2CB5A0]/20 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="px-6 py-2.5 rounded-xl bg-brand-500 hover:bg-brand-500 text-brand-950 font-bold cursor-pointer shadow-md shadow-[#BFA476]/20 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {saving ? 'Saving...' : 'Save Service'}
             </button>

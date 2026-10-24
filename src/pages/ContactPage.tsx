@@ -50,7 +50,7 @@ export const ContactPage: React.FC<ContactPageProps> = ({ settings }) => {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 space-y-12">
         <div className="text-center max-w-2xl mx-auto space-y-3">
-          <span className="text-xs font-bold uppercase tracking-widest text-[#2CB5A0] bg-teal-50 px-3 py-1 rounded-full">
+          <span className="text-xs font-bold uppercase tracking-widest text-[var(--brand-ink)] bg-brand-50 px-3 py-1 rounded-full">
             Concierge Desk
           </span>
           <h1 className="text-4xl font-serif font-bold text-gray-900">
@@ -71,7 +71,7 @@ export const ContactPage: React.FC<ContactPageProps> = ({ settings }) => {
 
               <div className="space-y-4 text-xs text-gray-700">
                 <div className="flex items-start gap-3">
-                  <MapPin className="w-5 h-5 text-[#2CB5A0] shrink-0 mt-0.5" />
+                  <MapPin className="w-5 h-5 text-[var(--brand-ink)] shrink-0 mt-0.5" />
                   <div>
                     <span className="font-bold text-gray-900 block">Locations and Availability</span>
                     <span>{settings.address}</span>
@@ -79,23 +79,23 @@ export const ContactPage: React.FC<ContactPageProps> = ({ settings }) => {
                 </div>
 
                 <div className="flex items-center gap-3">
-                  <Phone className="w-5 h-5 text-[#2CB5A0] shrink-0" />
+                  <Phone className="w-5 h-5 text-[var(--brand-ink)] shrink-0" />
                   <div>
                     <span className="font-bold text-gray-900 block">Mobile</span>
-                    <a href={`tel:${settings.phone}`} className="hover:text-[#2CB5A0]">{settings.phone}</a>
+                    <a href={`tel:${settings.phone}`} className="hover:text-[var(--brand-ink)]">{settings.phone}</a>
                   </div>
                 </div>
 
                 <div className="flex items-center gap-3">
-                  <Mail className="w-5 h-5 text-[#2CB5A0] shrink-0" />
+                  <Mail className="w-5 h-5 text-[var(--brand-ink)] shrink-0" />
                   <div>
                     <span className="font-bold text-gray-900 block">Concierge Email</span>
-                    <a href={`mailto:${settings.email}`} className="hover:text-[#2CB5A0]">{settings.email}</a>
+                    <a href={`mailto:${settings.email}`} className="hover:text-[var(--brand-ink)]">{settings.email}</a>
                   </div>
                 </div>
 
                 <div className="flex items-center gap-3">
-                  <Clock className="w-5 h-5 text-[#C7A36A] shrink-0" />
+                  <Clock className="w-5 h-5 text-[var(--brand-ink)] shrink-0" />
                   <div>
                     <span className="font-bold text-gray-900 block">Operating Hours</span>
                     <span>{settings.workingHours}</span>
@@ -117,16 +117,16 @@ export const ContactPage: React.FC<ContactPageProps> = ({ settings }) => {
             </div>
 
             {/* Google Maps Container */}
-            <div className="bg-slate-900 rounded-3xl overflow-hidden h-60 border border-gray-800 relative flex items-center justify-center p-6 text-center">
+            <div className="on-dark-brand bg-[#1B1611] rounded-3xl overflow-hidden h-60 border border-[#BFA476]/15 relative flex items-center justify-center p-6 text-center">
               <div className="space-y-2 text-white">
-                <MapPin className="w-8 h-8 text-[#2CB5A0] mx-auto animate-bounce" />
+                <MapPin className="w-8 h-8 text-[var(--brand-ink)] mx-auto animate-bounce" />
                 <h4 className="font-serif font-bold text-base">Indore, Ujjain & Dewas Location</h4>
                 <p className="text-xs text-gray-400">{settings.address}</p>
                 <a
                   href={settings.googleMapsUrl}
                   target="_blank"
                   rel="noreferrer"
-                  className="inline-block mt-2 px-4 py-2 rounded-xl bg-[#2CB5A0] text-white font-bold text-xs hover:bg-[#259b89]"
+                  className="inline-block mt-2 px-4 py-2 rounded-xl bg-brand-500 text-brand-950 font-bold text-xs hover:bg-brand-400"
                 >
                   Open Google Maps Directions
                 </a>
@@ -145,8 +145,8 @@ export const ContactPage: React.FC<ContactPageProps> = ({ settings }) => {
               </p>
 
               {sentSuccess ? (
-                <div className="p-6 rounded-2xl bg-teal-50 border border-[#2CB5A0] text-[#1A1A1A] space-y-2 text-center">
-                  <CheckCircle2 className="w-10 h-10 text-[#2CB5A0] mx-auto" />
+                <div className="p-6 rounded-2xl bg-brand-50 border border-[#BFA476] text-[#1A1A1A] space-y-2 text-center">
+                  <CheckCircle2 className="w-10 h-10 text-[var(--brand-ink)] mx-auto" />
                   <h4 className="font-serif font-bold text-lg">Inquiry Dispatched Successfully!</h4>
                   <p className="text-xs text-gray-600">
                     Thank you. We have sent a confirmation email copy to your inbox.
@@ -164,7 +164,7 @@ export const ContactPage: React.FC<ContactPageProps> = ({ settings }) => {
                         required
                         value={name}
                         onChange={(e) => setName(e.target.value)}
-                        className="w-full px-4 py-2.5 rounded-xl border text-xs focus:outline-none focus:border-[#2CB5A0]"
+                        className="w-full px-4 py-2.5 rounded-xl border text-xs focus:outline-none focus:border-[#BFA476]"
                         placeholder="Arthur Pendelton"
                       />
                     </div>
@@ -175,7 +175,7 @@ export const ContactPage: React.FC<ContactPageProps> = ({ settings }) => {
                         required
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        className="w-full px-4 py-2.5 rounded-xl border text-xs focus:outline-none focus:border-[#2CB5A0]"
+                        className="w-full px-4 py-2.5 rounded-xl border text-xs focus:outline-none focus:border-[#BFA476]"
                         placeholder="arthur@example.com"
                       />
                     </div>
@@ -188,7 +188,7 @@ export const ContactPage: React.FC<ContactPageProps> = ({ settings }) => {
                         type="tel"
                         value={phone}
                         onChange={(e) => setPhone(e.target.value)}
-                        className="w-full px-4 py-2.5 rounded-xl border text-xs focus:outline-none focus:border-[#2CB5A0]"
+                        className="w-full px-4 py-2.5 rounded-xl border text-xs focus:outline-none focus:border-[#BFA476]"
                         placeholder="+1 (310) 555-0000"
                       />
                     </div>
@@ -198,7 +198,7 @@ export const ContactPage: React.FC<ContactPageProps> = ({ settings }) => {
                         type="text"
                         value={subject}
                         onChange={(e) => setSubject(e.target.value)}
-                        className="w-full px-4 py-2.5 rounded-xl border text-xs focus:outline-none focus:border-[#2CB5A0]"
+                        className="w-full px-4 py-2.5 rounded-xl border text-xs focus:outline-none focus:border-[#BFA476]"
                         placeholder="Group Reservation Query"
                       />
                     </div>
@@ -211,7 +211,7 @@ export const ContactPage: React.FC<ContactPageProps> = ({ settings }) => {
                       required
                       value={message}
                       onChange={(e) => setMessage(e.target.value)}
-                      className="w-full px-4 py-2.5 rounded-xl border text-xs focus:outline-none focus:border-[#2CB5A0]"
+                      className="w-full px-4 py-2.5 rounded-xl border text-xs focus:outline-none focus:border-[#BFA476]"
                       placeholder="Write your inquiry or question here..."
                     />
                   </div>
@@ -219,7 +219,7 @@ export const ContactPage: React.FC<ContactPageProps> = ({ settings }) => {
                   <button
                     type="submit"
                     disabled={submitting}
-                    className="w-full py-3.5 rounded-xl bg-[#2CB5A0] hover:bg-[#259b89] text-white font-bold text-xs shadow-md transition-colors cursor-pointer flex items-center justify-center gap-2"
+                    className="w-full py-3.5 rounded-xl bg-brand-500 hover:bg-brand-400 text-brand-950 font-bold text-xs shadow-md transition-colors cursor-pointer flex items-center justify-center gap-2"
                   >
                     <span>{submitting ? 'Sending Message...' : 'Submit Concierge Message'}</span>
                     <Send className="w-4 h-4" />

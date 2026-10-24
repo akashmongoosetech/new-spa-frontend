@@ -23,7 +23,7 @@ export const ReportsView: React.FC = () => {
       title: 'Appointments & Bookings Report',
       description: 'Complete list of guest reservations, therapist assignments, date/time slots, total revenue, and payment status.',
       icon: Calendar,
-      color: 'bg-teal-50 text-[#2CB5A0]',
+      color: 'bg-brand-50 text-[var(--brand-ink)]',
     },
     {
       id: 'contacts',
@@ -84,7 +84,7 @@ export const ReportsView: React.FC = () => {
                 disabled={downloading === r.id}
                 className="w-full py-2.5 rounded-xl bg-[#1A1A1A] hover:bg-black text-white text-xs font-bold flex items-center justify-center gap-2 cursor-pointer shadow-md transition-colors disabled:opacity-50"
               >
-                <Download className="w-4 h-4 text-[#2CB5A0]" />
+                <Download className="w-4 h-4 text-[var(--brand-ink)]" />
                 {downloading === r.id ? 'Downloading...' : 'Export CSV Report'}
               </button>
             </div>

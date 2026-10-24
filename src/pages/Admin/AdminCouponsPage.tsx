@@ -100,7 +100,7 @@ export const AdminCouponsPage: React.FC = () => {
           value={code}
           onChange={(e) => setCode(e.target.value.toUpperCase())}
           placeholder="CODE e.g. TRIPOD10"
-          className="border border-gray-300 rounded-xl px-3 py-2.5 text-xs uppercase outline-none focus:border-[#2CB5A0]"
+          className="border border-gray-300 rounded-xl px-3 py-2.5 text-xs uppercase outline-none focus:border-[#BFA476]"
         />
         <select
           value={discountType}
@@ -117,7 +117,7 @@ export const AdminCouponsPage: React.FC = () => {
           value={discountValue}
           onChange={(e) => setDiscountValue(Number(e.target.value))}
           placeholder={discountType === 'percentage' ? 'Discount %' : 'Discount ₹'}
-          className="border border-gray-300 rounded-xl px-3 py-2.5 text-xs outline-none focus:border-[#2CB5A0]"
+          className="border border-gray-300 rounded-xl px-3 py-2.5 text-xs outline-none focus:border-[#BFA476]"
         />
         <input
           type="number"
@@ -125,18 +125,18 @@ export const AdminCouponsPage: React.FC = () => {
           value={minBookingAmount}
           onChange={(e) => setMinBookingAmount(Number(e.target.value))}
           placeholder="Min booking ₹"
-          className="border border-gray-300 rounded-xl px-3 py-2.5 text-xs outline-none focus:border-[#2CB5A0]"
+          className="border border-gray-300 rounded-xl px-3 py-2.5 text-xs outline-none focus:border-[#BFA476]"
         />
         <input
           type="date"
           value={validUntil}
           onChange={(e) => setValidUntil(e.target.value)}
-          className="border border-gray-300 rounded-xl px-3 py-2.5 text-xs outline-none focus:border-[#2CB5A0]"
+          className="border border-gray-300 rounded-xl px-3 py-2.5 text-xs outline-none focus:border-[#BFA476]"
         />
         <button
           type="submit"
           disabled={saving}
-          className="px-4 py-2.5 bg-[#2CB5A0] hover:bg-[#259b89] text-white rounded-xl text-xs font-bold flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+          className="px-4 py-2.5 bg-brand-500 hover:bg-brand-400 text-brand-950 rounded-xl text-xs font-bold flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
         >
           <Plus className="w-4 h-4" />
           {saving ? 'Creating...' : 'Create Coupon'}

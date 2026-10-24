@@ -144,7 +144,7 @@ export const UserManagement: React.FC<UserManagementProps> = ({ currentUser, sea
       case 'super_admin':
         return 'bg-purple-100 text-purple-700 border-purple-200';
       case 'admin':
-        return 'bg-teal-100 text-[#2CB5A0] border-teal-200';
+        return 'bg-brand-100 text-[var(--brand-ink)] border-brand-200';
       case 'manager':
         return 'bg-blue-100 text-blue-700 border-blue-200';
       case 'receptionist':
@@ -165,7 +165,7 @@ export const UserManagement: React.FC<UserManagementProps> = ({ currentUser, sea
         {isSuperAdmin && (
           <button
             onClick={handleOpenAdd}
-            className="px-4 py-2.5 rounded-xl bg-[#2CB5A0] hover:bg-teal-600 text-white font-bold text-xs flex items-center gap-2 cursor-pointer shadow-md shadow-[#2CB5A0]/20"
+            className="px-4 py-2.5 rounded-xl bg-brand-500 hover:bg-brand-500 text-brand-950 font-bold text-xs flex items-center gap-2 cursor-pointer shadow-md shadow-[#BFA476]/20"
           >
             <Plus className="w-4 h-4" /> Add Staff Account
           </button>
@@ -180,7 +180,7 @@ export const UserManagement: React.FC<UserManagementProps> = ({ currentUser, sea
       <div className="bg-white rounded-3xl border border-gray-100 shadow-xs overflow-hidden">
         <div className="p-4 border-b bg-gray-50 flex items-center justify-between text-xs">
           <h3 className="font-extrabold text-gray-900 flex items-center gap-2">
-            <ShieldCheck className="w-4 h-4 text-[#2CB5A0]" /> Staff Accounts ({filteredUsers.length})
+            <ShieldCheck className="w-4 h-4 text-[var(--brand-ink)]" /> Staff Accounts ({filteredUsers.length})
           </h3>
         </div>
 
@@ -208,10 +208,10 @@ export const UserManagement: React.FC<UserManagementProps> = ({ currentUser, sea
                 <tr key={u.id} className="hover:bg-gray-50/80 transition-colors">
                   <td className="py-4 px-6 flex items-center gap-3">
                     {u.avatarUrl ? (
-                      <img src={u.avatarUrl} alt={u.name} className="w-8 h-8 rounded-full object-cover ring-2 ring-[#2CB5A0]" />
+                      <img src={u.avatarUrl} alt={u.name} className="w-8 h-8 rounded-full object-cover ring-2 ring-[#BFA476]" />
                     ) : (
-                      <div className="w-8 h-8 rounded-full bg-[#2CB5A0] ring-2 ring-[#2CB5A0]/40 flex items-center justify-center shrink-0">
-                        <span className="text-[10px] font-bold text-white">
+                      <div className="w-8 h-8 rounded-full bg-brand-500 ring-2 ring-[#BFA476]/40 flex items-center justify-center shrink-0">
+                        <span className="text-[10px] font-bold text-brand-950">
                           {(u.name || 'A')
                             .trim()
                             .split(/\s+/)
@@ -278,7 +278,7 @@ export const UserManagement: React.FC<UserManagementProps> = ({ currentUser, sea
       {/* Login Activity Logs */}
       <div className="bg-white rounded-3xl border border-gray-100 shadow-xs p-6 space-y-4">
         <h3 className="font-extrabold text-gray-900 text-sm flex items-center gap-2">
-          <Clock className="w-4 h-4 text-[#2CB5A0]" /> Recent Security Login Activity
+          <Clock className="w-4 h-4 text-[var(--brand-ink)]" /> Recent Security Login Activity
         </h3>
 
         <div className="overflow-x-auto">
@@ -336,7 +336,7 @@ export const UserManagement: React.FC<UserManagementProps> = ({ currentUser, sea
               required
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full px-3.5 py-2.5 rounded-xl border font-semibold outline-none focus:ring-2 focus:ring-[#2CB5A0]"
+              className="w-full px-3.5 py-2.5 rounded-xl border font-semibold outline-none focus:ring-2 focus:ring-[#BFA476]"
             />
           </div>
 
@@ -347,7 +347,7 @@ export const UserManagement: React.FC<UserManagementProps> = ({ currentUser, sea
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-3.5 py-2.5 rounded-xl border font-semibold outline-none focus:ring-2 focus:ring-[#2CB5A0]"
+              className="w-full px-3.5 py-2.5 rounded-xl border font-semibold outline-none focus:ring-2 focus:ring-[#BFA476]"
             />
           </div>
 
@@ -358,7 +358,7 @@ export const UserManagement: React.FC<UserManagementProps> = ({ currentUser, sea
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
               placeholder="Optional"
-              className="w-full px-3.5 py-2.5 rounded-xl border font-semibold outline-none focus:ring-2 focus:ring-[#2CB5A0]"
+              className="w-full px-3.5 py-2.5 rounded-xl border font-semibold outline-none focus:ring-2 focus:ring-[#BFA476]"
             />
           </div>
 
@@ -438,7 +438,7 @@ export const UserManagement: React.FC<UserManagementProps> = ({ currentUser, sea
             <button
               type="submit"
               disabled={saving}
-              className="px-6 py-2.5 rounded-xl bg-[#2CB5A0] hover:bg-teal-600 text-white font-bold cursor-pointer shadow-md shadow-[#2CB5A0]/20 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="px-6 py-2.5 rounded-xl bg-brand-500 hover:bg-brand-500 text-brand-950 font-bold cursor-pointer shadow-md shadow-[#BFA476]/20 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {saving ? 'Saving...' : 'Save Staff User'}
             </button>

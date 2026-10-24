@@ -86,9 +86,9 @@ export const HomePage: React.FC<HomePageProps> = ({
 
       {/* STATS COUNTUP BAR */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 -mt-12 relative z-20">
-        <div className="bg-white rounded-3xl shadow-xl border border-teal-100 p-8 grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+        <div className="bg-white rounded-3xl shadow-xl border border-brand-100 p-8 grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
           <div className="space-y-1">
-            <span className="block text-3xl sm:text-4xl font-serif font-extrabold text-[#2CB5A0]">
+            <span className="block text-3xl sm:text-4xl font-serif font-extrabold text-[var(--brand-ink)]">
               99.4%
             </span>
             <span className="block text-xs font-bold text-gray-500 uppercase tracking-wider">
@@ -104,7 +104,7 @@ export const HomePage: React.FC<HomePageProps> = ({
             </span>
           </div>
           <div className="space-y-1">
-            <span className="block text-3xl sm:text-4xl font-serif font-extrabold text-[#C7A36A]">
+            <span className="block text-3xl sm:text-4xl font-serif font-extrabold text-[var(--brand-ink)]">
               4,800+
             </span>
             <span className="block text-xs font-bold text-gray-500 uppercase tracking-wider">
@@ -112,7 +112,7 @@ export const HomePage: React.FC<HomePageProps> = ({
             </span>
           </div>
           <div className="space-y-1">
-            <span className="block text-3xl sm:text-4xl font-serif font-extrabold text-[#2CB5A0]">
+            <span className="block text-3xl sm:text-4xl font-serif font-extrabold text-[var(--brand-ink)]">
               100%
             </span>
             <span className="block text-xs font-bold text-gray-500 uppercase tracking-wider">
@@ -125,7 +125,7 @@ export const HomePage: React.FC<HomePageProps> = ({
       {/* SERVICES PREVIEW TABS */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 py-10">
         <div className="text-center max-w-2xl mx-auto space-y-3 mb-10">
-          <span className="text-xs font-bold uppercase tracking-widest text-[#2CB5A0] bg-teal-50 px-3 py-1 rounded-full">
+          <span className="text-xs font-bold uppercase tracking-widest text-[var(--brand-ink)] bg-brand-50 px-3 py-1 rounded-full">
             Signature Treatments
           </span>
           <h2 className="text-3xl sm:text-4xl font-serif font-bold text-gray-900">
@@ -178,7 +178,7 @@ export const HomePage: React.FC<HomePageProps> = ({
                     {settings.currencySymbol || '₹'}{srv.price}
                   </div>
                   {srv.featured && (
-                    <div className="absolute top-4 left-4 bg-[#C7A36A] text-white px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider">
+                    <div className="absolute top-4 left-4 bg-[#BFA476] text-brand-950 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider">
                       Popular
                     </div>
                   )}
@@ -186,13 +186,13 @@ export const HomePage: React.FC<HomePageProps> = ({
 
                 <div className="p-6 space-y-3">
                   <div className="flex items-center gap-2 text-xs font-semibold text-gray-500">
-                    <Clock className="w-3.5 h-3.5 text-[#2CB5A0]" />
+                    <Clock className="w-3.5 h-3.5 text-[var(--brand-ink)]" />
                     <span>{srv.durationMinutes} Minutes Session</span>
                     <span>•</span>
                     <span className="text-amber-600 font-bold">★ {srv.rating}</span>
                   </div>
 
-                  <h3 className="text-xl font-serif font-bold text-gray-900 group-hover:text-[#2CB5A0] transition-colors">
+                  <h3 className="text-xl font-serif font-bold text-gray-900 group-hover:text-[var(--brand-ink)] transition-colors">
                     {srv.title}
                   </h3>
 
@@ -207,7 +207,7 @@ export const HomePage: React.FC<HomePageProps> = ({
                     <ul className="space-y-1 text-xs text-gray-700">
                       {(srv.benefits || []).slice(0, 2).map((b, idx) => (
                         <li key={idx} className="flex items-center gap-1.5">
-                          <CheckCircle2 className="w-3.5 h-3.5 text-[#2CB5A0] shrink-0" />
+                          <CheckCircle2 className="w-3.5 h-3.5 text-[var(--brand-ink)] shrink-0" />
                           <span>{b}</span>
                         </li>
                       ))}
@@ -220,7 +220,7 @@ export const HomePage: React.FC<HomePageProps> = ({
                 <button
                   id={`home-book-service-${srv.id}`}
                   onClick={() => onOpenBooking(srv.id)}
-                  className="w-full py-3 rounded-2xl bg-teal-50 hover:bg-[#2CB5A0] text-[#2CB5A0] hover:text-white font-bold text-xs transition-all flex items-center justify-center gap-2 cursor-pointer shadow-sm"
+                  className="w-full py-3 rounded-2xl bg-brand-50 hover:bg-brand-500 text-[var(--brand-ink)] hover:text-brand-950 font-bold text-xs transition-all flex items-center justify-center gap-2 cursor-pointer shadow-sm"
                 >
                   <Calendar className="w-4 h-4" />
                   <span>Book This Therapy</span>
@@ -245,7 +245,7 @@ export const HomePage: React.FC<HomePageProps> = ({
       <section className="bg-white py-16 border-y border-gray-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <div className="text-center max-w-2xl mx-auto space-y-3 mb-12">
-            <span className="text-xs font-bold uppercase tracking-widest text-[#2CB5A0] bg-teal-50 px-3 py-1 rounded-full">
+            <span className="text-xs font-bold uppercase tracking-widest text-[var(--brand-ink)] bg-brand-50 px-3 py-1 rounded-full">
               Licensed Practitioners
             </span>
             <h2 className="text-3xl sm:text-4xl font-serif font-bold text-gray-900">
@@ -269,7 +269,7 @@ export const HomePage: React.FC<HomePageProps> = ({
                 />
                 <div>
                   <h3 className="font-serif font-bold text-lg text-gray-900">{th.name}</h3>
-                  <p className="text-xs text-[#2CB5A0] font-semibold mt-0.5">{th.title}</p>
+                  <p className="text-xs text-[var(--brand-ink)] font-semibold mt-0.5">{th.title}</p>
                 </div>
                 <p className="text-xs text-gray-600 leading-relaxed line-clamp-3">
                   {th.bio}
@@ -284,7 +284,7 @@ export const HomePage: React.FC<HomePageProps> = ({
                 <button
                   id={`book-therapist-${th.id}`}
                   onClick={() => onOpenBooking()}
-                  className="w-full py-2.5 rounded-xl bg-[#1A1A1A] hover:bg-[#2CB5A0] text-white font-bold text-xs transition-colors cursor-pointer"
+                  className="w-full py-2.5 rounded-xl bg-[#1A1A1A] hover:bg-brand-500 text-white hover:text-brand-950 font-bold text-xs transition-colors cursor-pointer"
                 >
                   Book with {(th.name || '').split(' ')[0]}
                 </button>
@@ -297,7 +297,7 @@ export const HomePage: React.FC<HomePageProps> = ({
       {/* HOW IT WORKS */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 py-10">
         <div className="text-center max-w-2xl mx-auto space-y-3 mb-12">
-          <span className="text-xs font-bold uppercase tracking-widest text-[#2CB5A0] bg-teal-50 px-3 py-1 rounded-full">
+          <span className="text-xs font-bold uppercase tracking-widest text-[var(--brand-ink)] bg-brand-50 px-3 py-1 rounded-full">
             Effortless Journey
           </span>
           <h2 className="text-3xl sm:text-4xl font-serif font-bold text-gray-900">
@@ -323,8 +323,8 @@ export const HomePage: React.FC<HomePageProps> = ({
               desc: 'Experience customized massage pressure designed to eliminate muscle fatigue and leave you deeply renewed.'
             }
           ].map((item, idx) => (
-            <div key={idx} className="bg-white rounded-3xl p-8 border border-teal-50 shadow-sm relative space-y-4">
-              <span className="text-4xl font-serif font-extrabold text-teal-100 block">
+            <div key={idx} className="bg-white rounded-3xl p-8 border border-brand-50 shadow-sm relative space-y-4">
+              <span className="text-4xl font-serif font-extrabold text-brand-100 block">
                 {item.step}
               </span>
               <h3 className="text-xl font-serif font-bold text-gray-900">{item.title}</h3>
@@ -343,7 +343,7 @@ export const HomePage: React.FC<HomePageProps> = ({
       {/* FAQ ACCORDION SECTION */}
       <section className="max-w-4xl mx-auto px-4 sm:px-6 py-10">
         <div className="text-center space-y-3 mb-10">
-          <span className="text-xs font-bold uppercase tracking-widest text-[#2CB5A0] bg-teal-50 px-3 py-1 rounded-full">
+          <span className="text-xs font-bold uppercase tracking-widest text-[var(--brand-ink)] bg-brand-50 px-3 py-1 rounded-full">
             Got Questions?
           </span>
           <h2 className="text-3xl font-serif font-bold text-gray-900">
@@ -365,7 +365,7 @@ export const HomePage: React.FC<HomePageProps> = ({
                   className="w-full p-5 text-left font-bold text-gray-900 text-sm flex justify-between items-center gap-4 hover:bg-gray-50 cursor-pointer"
                 >
                   <span>{faq.q}</span>
-                  {isOpen ? <ChevronUp className="w-5 h-5 text-[#2CB5A0]" /> : <ChevronDown className="w-5 h-5 text-gray-400" />}
+                  {isOpen ? <ChevronUp className="w-5 h-5 text-[var(--brand-ink)]" /> : <ChevronDown className="w-5 h-5 text-gray-400" />}
                 </button>
                 {isOpen && (
                   <div className="px-5 pb-5 text-xs text-gray-600 leading-relaxed border-t border-gray-100 pt-3">
@@ -380,10 +380,10 @@ export const HomePage: React.FC<HomePageProps> = ({
 
       {/* CONTACT MAP & CALL TO ACTION */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 pb-12">
-        <div className="bg-linear-to-r from-teal-900 via-slate-900 to-gray-900 text-white rounded-3xl p-8 sm:p-12 shadow-2xl relative overflow-hidden">
+        <div className="on-dark-brand bg-linear-to-r from-brand-950 via-[#201A14] to-[#120F0B] text-white rounded-3xl p-8 sm:p-12 shadow-2xl relative overflow-hidden">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
             <div className="lg:col-span-8 space-y-4">
-              <span className="text-xs font-bold text-[#6FD3C4] uppercase tracking-widest">
+              <span className="text-xs font-bold text-[var(--brand-ink)] uppercase tracking-widest">
                 Ready for Deep Relaxation?
               </span>
               <h2 className="text-3xl sm:text-4xl font-serif font-bold text-white">
@@ -397,7 +397,7 @@ export const HomePage: React.FC<HomePageProps> = ({
               <button
                 id="footer-cta-book-btn"
                 onClick={() => onOpenBooking()}
-                className="w-full py-4 rounded-2xl bg-[#2CB5A0] hover:bg-[#259b89] text-white font-bold text-sm shadow-lg text-center cursor-pointer flex items-center justify-center gap-2"
+                className="w-full py-4 rounded-2xl bg-brand-500 hover:bg-brand-400 text-brand-950 font-bold text-sm shadow-lg text-center cursor-pointer flex items-center justify-center gap-2"
               >
                 <Calendar className="w-5 h-5" />
                 <span>Reserve Appointment</span>
@@ -406,7 +406,7 @@ export const HomePage: React.FC<HomePageProps> = ({
                 href={`tel:${settings.phone}`}
                 className="w-full py-3.5 rounded-2xl border border-gray-700 text-gray-300 hover:text-white font-semibold text-xs text-center flex items-center justify-center gap-2 hover:bg-white/5"
               >
-                <Phone className="w-4 h-4 text-[#2CB5A0]" />
+                <Phone className="w-4 h-4 text-[var(--brand-ink)]" />
                 <span>Direct Line: {settings.phone}</span>
               </a>
             </div>

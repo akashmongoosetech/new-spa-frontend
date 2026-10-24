@@ -36,7 +36,7 @@ export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
   // Background style if full screen
   const containerBg =
     variant === 'dark'
-      ? 'bg-[#0E1117] text-white'
+      ? 'bg-[#17130F] text-white'
       : variant === 'light'
       ? 'bg-white text-gray-900'
       : 'bg-[#FAF8F5] text-[#1C1917]'; // Brand pearl/cream
@@ -51,29 +51,29 @@ export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
       <div className={`relative ${currentSize.container} flex items-center justify-center`}>
         {/* Outer glowing pulsing aura */}
         <div
-          className={`absolute inset-0 rounded-full bg-[#C5A059]/20 blur-md animate-pulse`}
+          className={`absolute inset-0 rounded-full bg-[#BFA476]/20 blur-md animate-pulse`}
           style={{ animationDuration: '2s' }}
         />
 
         {/* Outer subtle static ring */}
-        <div className={`absolute inset-0 rounded-full border border-[#C5A059]/20`} />
+        <div className={`absolute inset-0 rounded-full border border-[#BFA476]/20`} />
 
         {/* Primary spinning gradient ring */}
         <div
-          className={`absolute inset-0 rounded-full ${currentSize.outerRing} border-t-[#C5A059] border-r-[#DFC896] border-b-[#9E7B3A] border-l-transparent animate-spin`}
+          className={`absolute inset-0 rounded-full ${currentSize.outerRing} border-t-[#BFA476] border-r-[#C3AA7E] border-b-[#80663F] border-l-transparent animate-spin`}
           style={{ animationDuration: '0.85s' }}
         />
 
         {/* Secondary counter-spinning inner accent ring */}
         <div
-          className={`absolute inset-2 rounded-full border-2 border-b-[#E5B85A] border-l-[#C5A059] border-t-transparent border-r-transparent animate-spin`}
+          className={`absolute inset-2 rounded-full border-2 border-b-[#C3AA7E] border-l-[#BFA476] border-t-transparent border-r-transparent animate-spin`}
           style={{ animationDirection: 'reverse', animationDuration: '1.4s' }}
         />
 
         {/* Center glowing brand ornament / dot */}
         <div className="relative flex items-center justify-center">
           <div
-            className={`${currentSize.innerDot} rounded-full bg-linear-to-tr from-[#9E7B3A] via-[#C5A059] to-[#DFC896] shadow-[0_0_12px_rgba(197,160,89,0.8)] animate-pulse`}
+            className={`${currentSize.innerDot} rounded-full bg-linear-to-tr from-[#80663F] via-[#BFA476] to-[#C3AA7E] shadow-[0_0_12px_rgba(197,160,89,0.8)] animate-pulse`}
           />
         </div>
       </div>
@@ -82,12 +82,12 @@ export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
       {(label || sublabel) && (
         <div className="flex flex-col items-center gap-1 max-w-xs">
           {label && (
-            <p className="font-serif text-sm md:text-base font-medium tracking-wider text-[#352212] dark:text-[#EEDFBE] animate-pulse">
+            <p className="font-serif text-sm md:text-base font-medium tracking-wider text-[#2E2417] dark:text-[#EADCC4] animate-pulse">
               {label}
             </p>
           )}
           {sublabel && (
-            <p className="text-xs tracking-widest uppercase text-[#886232] dark:text-[#C5A059] font-sans opacity-80">
+            <p className="text-xs tracking-widest uppercase text-[#80663F] dark:text-[#BFA476] font-sans opacity-80">
               {sublabel}
             </p>
           )}

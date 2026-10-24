@@ -119,7 +119,7 @@ export const AdminBlogsPage: React.FC = () => {
         </div>
         <Link
           to="/admin/blogs/add"
-          className="px-4 py-2.5 bg-[#2CB5A0] hover:bg-[#259b89] text-white rounded-xl text-xs font-bold flex items-center gap-2 shadow-sm shrink-0"
+          className="px-4 py-2.5 bg-brand-500 hover:bg-brand-400 text-brand-950 rounded-xl text-xs font-bold flex items-center gap-2 shadow-sm shrink-0"
         >
           <Plus className="w-4 h-4" />
           Compose New Article
@@ -136,14 +136,14 @@ export const AdminBlogsPage: React.FC = () => {
               value={searchQuery}
               onChange={(e) => { setSearchQuery(e.target.value); setCurrentPage(1); }}
               placeholder="Search by title, slug, author, therapist, tags..."
-              className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-200 text-xs focus:outline-none focus:border-[#2CB5A0] focus:ring-1 focus:ring-[#2CB5A0]"
+              className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-200 text-xs focus:outline-none focus:border-[#BFA476] focus:ring-1 focus:ring-[#BFA476]"
             />
           </div>
           <div className="flex gap-2">
             <select
               value={statusFilter}
               onChange={(e) => { setStatusFilter(e.target.value as any); setCurrentPage(1); }}
-              className="px-3 py-2.5 rounded-xl border border-gray-200 text-xs bg-white focus:outline-none focus:border-[#2CB5A0]"
+              className="px-3 py-2.5 rounded-xl border border-gray-200 text-xs bg-white focus:outline-none focus:border-[#BFA476]"
             >
               <option value="all">All Status</option>
               <option value="active">Active</option>
@@ -152,7 +152,7 @@ export const AdminBlogsPage: React.FC = () => {
             <select
               value={featureFilter}
               onChange={(e) => { setFeatureFilter(e.target.value as any); setCurrentPage(1); }}
-              className="px-3 py-2.5 rounded-xl border border-gray-200 text-xs bg-white focus:outline-none focus:border-[#2CB5A0]"
+              className="px-3 py-2.5 rounded-xl border border-gray-200 text-xs bg-white focus:outline-none focus:border-[#BFA476]"
             >
               <option value="all">All</option>
               <option value="featured">Featured on Home</option>
@@ -164,7 +164,7 @@ export const AdminBlogsPage: React.FC = () => {
 
       {loading ? (
         <div className="bg-white rounded-2xl border border-gray-200 p-12 text-center">
-          <Loader2 className="w-8 h-8 text-[#2CB5A0] animate-spin mx-auto mb-2" />
+          <Loader2 className="w-8 h-8 text-[var(--brand-ink)] animate-spin mx-auto mb-2" />
           <p className="text-gray-500 text-sm">Loading articles...</p>
         </div>
       ) : filteredBlogs.length === 0 ? (
@@ -205,7 +205,7 @@ export const AdminBlogsPage: React.FC = () => {
                     <td className="p-4">{getStatusBadge(b)}</td>
                     <td className="p-4">
                       {b.featureOnHomePage ? (
-                        <span title="Featured on Homepage"><Star className="w-4 h-4 text-[#C7A36A] mx-auto" /></span>
+                        <span title="Featured on Homepage"><Star className="w-4 h-4 text-[var(--brand-ink)] mx-auto" /></span>
                       ) : (
                         <span className="text-gray-300 text-center block">—</span>
                       )}
@@ -216,14 +216,14 @@ export const AdminBlogsPage: React.FC = () => {
                       <Link
                         to={`/blog/${b.slug}`}
                         target="_blank"
-                        className="p-1.5 text-gray-500 hover:text-[#2CB5A0] inline-block"
+                        className="p-1.5 text-gray-500 hover:text-[var(--brand-ink)] inline-block"
                         title="View on site"
                       >
                         <Globe className="w-4 h-4" />
                       </Link>
                       <Link
                         to={`/admin/blogs/edit/${b.id}`}
-                        className="p-1.5 text-gray-500 hover:text-[#2CB5A0] inline-block"
+                        className="p-1.5 text-gray-500 hover:text-[var(--brand-ink)] inline-block"
                         title="Edit"
                       >
                         <Edit2 className="w-4 h-4" />
@@ -237,7 +237,7 @@ export const AdminBlogsPage: React.FC = () => {
                       </button>
                       <button
                         onClick={() => handleToggleFeature(b)}
-                        className={`p-1.5 inline-block ${b.featureOnHomePage ? 'text-[#C7A36A]' : 'text-gray-500'} hover:text-[#C7A36A]`}
+                        className={`p-1.5 inline-block ${b.featureOnHomePage ? 'text-[var(--brand-ink)]' : 'text-gray-500'} hover:text-[var(--brand-ink)]`}
                         title={b.featureOnHomePage ? 'Remove from Home' : 'Feature on Home'}
                       >
                         <Star className={b.featureOnHomePage ? 'w-4 h-4 fill-current' : 'w-4 h-4'} />

@@ -19,7 +19,7 @@ export const LegalPages: React.FC<LegalPagesProps> = ({ type }) => {
 
       <div className="max-w-4xl mx-auto px-4 sm:px-6 space-y-8">
         <div className="text-center space-y-3">
-          <span className="text-xs font-bold uppercase tracking-widest text-[#2CB5A0] bg-teal-50 px-3 py-1 rounded-full">
+          <span className="text-xs font-bold uppercase tracking-widest text-[var(--brand-ink)] bg-brand-50 px-3 py-1 rounded-full">
             Legal Compliance
           </span>
           <h1 className="text-3xl font-serif font-bold text-gray-900">

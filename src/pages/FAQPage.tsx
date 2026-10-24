@@ -32,7 +32,7 @@ export const FAQPage: React.FC<FAQPageProps> = ({ faqs }) => {
 
       <div className="max-w-4xl mx-auto px-4 sm:px-6 space-y-8">
         <div className="text-center space-y-3">
-          <span className="text-xs font-bold uppercase tracking-widest text-[#2CB5A0] bg-teal-50 px-3 py-1 rounded-full">
+          <span className="text-xs font-bold uppercase tracking-widest text-[var(--brand-ink)] bg-brand-50 px-3 py-1 rounded-full">
             Help Center
           </span>
           <h1 className="text-4xl font-serif font-bold text-gray-900">
@@ -51,7 +51,7 @@ export const FAQPage: React.FC<FAQPageProps> = ({ faqs }) => {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Type your question e.g., cancellation, showers, male therapists..."
-            className="w-full pl-11 pr-4 py-3 rounded-2xl border border-gray-200 text-xs focus:outline-none focus:border-[#2CB5A0] shadow-sm bg-white"
+            className="w-full pl-11 pr-4 py-3 rounded-2xl border border-gray-200 text-xs focus:outline-none focus:border-[#BFA476] shadow-sm bg-white"
           />
         </div>
 
@@ -62,7 +62,7 @@ export const FAQPage: React.FC<FAQPageProps> = ({ faqs }) => {
               key={c}
               onClick={() => setSelectedCategory(c)}
               className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-colors cursor-pointer uppercase tracking-wider ${
-                selectedCategory === c ? 'bg-[#2CB5A0] text-white' : 'bg-white border text-gray-600 hover:bg-gray-50'
+                selectedCategory === c ? 'bg-brand-500 text-brand-950' : 'bg-white border text-gray-600 hover:bg-gray-50'
               }`}
             >
               {c}
@@ -83,10 +83,10 @@ export const FAQPage: React.FC<FAQPageProps> = ({ faqs }) => {
                   className="w-full p-5 text-left font-bold text-gray-900 text-sm flex justify-between items-center gap-4 hover:bg-gray-50 cursor-pointer"
                 >
                   <span className="flex items-center gap-2">
-                    <HelpCircle className="w-4 h-4 text-[#2CB5A0] shrink-0" />
+                    <HelpCircle className="w-4 h-4 text-[var(--brand-ink)] shrink-0" />
                     {faq.question}
                   </span>
-                  {isOpen ? <ChevronUp className="w-5 h-5 text-[#2CB5A0]" /> : <ChevronDown className="w-5 h-5 text-gray-400" />}
+                  {isOpen ? <ChevronUp className="w-5 h-5 text-[var(--brand-ink)]" /> : <ChevronDown className="w-5 h-5 text-gray-400" />}
                 </button>
                 {isOpen && (
                   <div

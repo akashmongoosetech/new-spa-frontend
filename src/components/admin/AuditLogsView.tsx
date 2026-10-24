@@ -93,7 +93,7 @@ export const AuditLogsView: React.FC = () => {
                     {new Date(log.timestamp).toLocaleString()}
                   </td>
                   <td className="py-3.5 px-6 font-bold text-gray-900">{log.action}</td>
-                  <td className="py-3.5 px-6 font-semibold text-[#2CB5A0]">{log.user}</td>
+                  <td className="py-3.5 px-6 font-semibold text-[var(--brand-ink)]">{log.user}</td>
                   <td className="py-3.5 px-6 text-gray-600 max-w-sm truncate">{log.details}</td>
                   <td className="py-3.5 px-6 font-mono text-gray-400 text-[10px]">{log.ipAddress || '127.0.0.1'}</td>
                 </tr>

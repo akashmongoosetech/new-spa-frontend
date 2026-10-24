@@ -21,14 +21,14 @@ interface ProfileCoverProps {
 
 const rolePill: Record<string, string> = {
   super_admin: 'border-amber-300/40 bg-amber-400/15 text-amber-200',
-  admin: 'border-[#2CB5A0]/40 bg-[#2CB5A0]/15 text-[#6FD3C4]',
+  admin: 'border-[#BFA476]/40 bg-brand-500/15 text-[var(--brand-ink)]',
   manager: 'border-sky-300/40 bg-sky-400/15 text-sky-200',
   receptionist: 'border-violet-300/40 bg-violet-400/15 text-violet-200',
 };
 
 const rolePillLight: Record<string, string> = {
   super_admin: 'border-amber-200 bg-amber-100 text-amber-800',
-  admin: 'border-teal-200 bg-teal-100 text-teal-800',
+  admin: 'border-brand-200 bg-brand-100 text-brand-800',
   manager: 'border-sky-200 bg-sky-100 text-sky-800',
   receptionist: 'border-violet-200 bg-violet-100 text-violet-800',
 };
@@ -65,14 +65,14 @@ export const ProfileCover: React.FC<ProfileCoverProps> = ({
       aria-label="Profile header"
       className={
         dark
-          ? 'overflow-hidden rounded-2xl border border-white/10 bg-[#161a23]/90 shadow-xl shadow-black/30'
+          ? 'on-dark-brand overflow-hidden rounded-2xl border border-white/10 bg-[#1E1913]/90 shadow-xl shadow-black/30'
           : 'overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm'
       }
     >
       <div aria-hidden className="relative h-28 overflow-hidden sm:h-36">
-        <div className="absolute inset-0 bg-gradient-to-r from-[#0D1113] via-[#122823] to-[#0F2A26]" />
-        <div className="absolute -left-10 -top-16 h-48 w-48 rounded-full bg-[#2CB5A0]/25 blur-3xl" />
-        <div className="absolute -right-8 -bottom-20 h-56 w-56 rounded-full bg-[#C7A36A]/20 blur-3xl" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#15110D] via-[#1B1610] to-[#1D1811]" />
+        <div className="absolute -left-10 -top-16 h-48 w-48 rounded-full bg-brand-500/25 blur-3xl" />
+        <div className="absolute -right-8 -bottom-20 h-56 w-56 rounded-full bg-[#BFA476]/20 blur-3xl" />
         <div
           className="absolute inset-0 opacity-[0.15]"
           style={{
@@ -90,14 +90,14 @@ export const ProfileCover: React.FC<ProfileCoverProps> = ({
               <img
                 src={user.avatarUrl}
                 alt={`${user.name || 'Staff member'} profile photo`}
-                className="h-20 w-20 rounded-full bg-white/10 object-cover p-1 ring-2 ring-[#C7A36A] sm:h-24 sm:w-24"
+                className="h-20 w-20 rounded-full bg-white/10 object-cover p-1 ring-2 ring-[#BFA476] sm:h-24 sm:w-24"
               />
             ) : (
               <div
                 aria-hidden
-                className="flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-[#2CB5A0]/30 to-[#C7A36A]/30 p-1 ring-2 ring-[#C7A36A] sm:h-24 sm:w-24"
+                className="flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-[#BFA476]/30 to-[#BFA476]/30 p-1 ring-2 ring-[#BFA476] sm:h-24 sm:w-24"
               >
-                <span className="font-serif text-2xl font-bold text-[#e8d5a8]">
+                <span className="font-serif text-2xl font-bold text-[#DDC8A5]">
                   {getInitials(user.name)}
                 </span>
               </div>
@@ -148,7 +148,7 @@ export const ProfileCover: React.FC<ProfileCoverProps> = ({
               type="button"
               onClick={() => fileRef.current?.click()}
               disabled={uploading}
-              className="inline-flex min-h-[44px] flex-1 items-center justify-center gap-2 rounded-xl bg-[#2CB5A0] px-4 py-2.5 text-xs font-bold text-white shadow-lg shadow-[#2CB5A0]/25 transition-colors hover:bg-[#259b89] disabled:opacity-50 sm:flex-none"
+              className="inline-flex min-h-[44px] flex-1 items-center justify-center gap-2 rounded-xl bg-brand-500 px-4 py-2.5 text-xs font-bold text-brand-950 shadow-lg shadow-[#BFA476]/25 transition-colors hover:bg-brand-400 disabled:opacity-50 sm:flex-none"
             >
               {uploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Camera className="h-4 w-4" />}
               {uploading ? 'Uploading…' : 'Upload Photo'}
@@ -180,7 +180,7 @@ export const ProfileCover: React.FC<ProfileCoverProps> = ({
           aria-expanded={showUrlForm}
           onClick={() => setShowUrlForm((v) => !v)}
           className={`mt-3 inline-flex min-h-[36px] items-center gap-1.5 text-xs font-bold transition-colors ${
-            dark ? 'text-[#6FD3C4] hover:text-white' : 'text-[#158c7c] hover:text-[#0f6b5e]'
+            dark ? 'text-[var(--brand-ink)] hover:text-white' : 'text-[#80663F] hover:text-[#665032]'
           }`}
         >
           <Link2 className="h-3.5 w-3.5" />
@@ -210,10 +210,10 @@ export const ProfileCover: React.FC<ProfileCoverProps> = ({
                     onSaveAvatarUrl();
                   }
                 }}
-                className={`min-h-[44px] flex-1 rounded-xl border p-3 text-sm focus:outline-none focus:ring-1 focus:ring-[#2CB5A0] ${
+                className={`min-h-[44px] flex-1 rounded-xl border p-3 text-sm focus:outline-none focus:ring-1 focus:ring-[#BFA476] ${
                   dark
-                    ? 'border-white/10 bg-black/40 text-white placeholder:text-gray-500 focus:border-[#2CB5A0]'
-                    : 'border-gray-300 bg-white text-gray-900 placeholder:text-gray-400 focus:border-[#2CB5A0]'
+                    ? 'border-white/10 bg-black/40 text-white placeholder:text-gray-500 focus:border-[#BFA476]'
+                    : 'border-gray-300 bg-white text-gray-900 placeholder:text-gray-400 focus:border-[#BFA476]'
                 }`}
               />
               <div className="flex gap-2">
@@ -221,7 +221,7 @@ export const ProfileCover: React.FC<ProfileCoverProps> = ({
                   type="button"
                   onClick={onSaveAvatarUrl}
                   disabled={savingUrl || !previewUrl}
-                  className="inline-flex min-h-[44px] items-center justify-center gap-1.5 rounded-xl bg-[#2CB5A0] px-4 py-2.5 text-xs font-bold text-white transition-colors hover:bg-[#259b89] disabled:opacity-50"
+                  className="inline-flex min-h-[44px] items-center justify-center gap-1.5 rounded-xl bg-brand-500 px-4 py-2.5 text-xs font-bold text-brand-950 transition-colors hover:bg-brand-400 disabled:opacity-50"
                 >
                   {savingUrl ? <Loader2 className="h-4 w-4 animate-spin" /> : <Check className="h-4 w-4" />}
                   {savingUrl ? 'Saving…' : 'Save'}
@@ -247,7 +247,7 @@ export const ProfileCover: React.FC<ProfileCoverProps> = ({
                   src={previewUrl}
                   alt="Image link preview"
                   onError={() => setPreviewOk(false)}
-                  className="h-12 w-12 rounded-full object-cover ring-1 ring-[#C7A36A]"
+                  className="h-12 w-12 rounded-full object-cover ring-1 ring-[#BFA476]"
                 />
               ) : null}
               <p className={`text-[11px] ${dark ? 'text-gray-500' : 'text-gray-400'}`}>

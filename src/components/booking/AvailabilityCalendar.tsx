@@ -108,9 +108,9 @@ export const AvailabilityCalendar: React.FC<AvailabilityCalendarProps> = ({
                 onClick={() => onSelectTimeSlot(slot.time)}
                 className={`py-3 px-3.5 rounded-xl text-xs font-bold border transition-all flex items-center justify-between cursor-pointer ${
                   isSelected
-                    ? 'bg-[#2CB5A0] text-white border-transparent shadow-lg shadow-[#2CB5A0]/25 scale-[1.02]'
+                    ? 'bg-brand-500 text-brand-950 border-transparent shadow-lg shadow-[#BFA476]/25 scale-[1.02]'
                     : slot.available
-                    ? 'bg-[#182225] border-white/10 text-gray-200 hover:border-[#2CB5A0] hover:bg-[#1E2C2F]'
+                    ? 'bg-[#241D16] border-white/10 text-gray-200 hover:border-[#BFA476] hover:bg-[#2C251D]'
                     : 'bg-white/5 border-white/5 text-gray-600 cursor-not-allowed line-through opacity-60'
                 }`}
               >
@@ -131,13 +131,13 @@ export const AvailabilityCalendar: React.FC<AvailabilityCalendarProps> = ({
   return (
     <div className="space-y-6 font-sans">
       {/* Date Horizontal Carousel Picker */}
-      <div className="bg-[#121A1C] p-4 sm:p-5 rounded-2xl border border-white/10 shadow-lg">
+      <div className="bg-[#1B1611] p-4 sm:p-5 rounded-2xl border border-white/10 shadow-lg">
         <div className="flex items-center justify-between mb-3.5">
           <label className="text-xs font-bold uppercase tracking-wider text-gray-300 flex items-center gap-2">
-            <CalendarIcon className="w-4 h-4 text-[#2CB5A0]" />
+            <CalendarIcon className="w-4 h-4 text-[var(--brand-ink)]" />
             <span>1. Select Preferred Date</span>
           </label>
-          <span className="text-xs text-[#81E3D4] font-semibold bg-[#2CB5A0]/15 px-3 py-1 rounded-full border border-[#2CB5A0]/30">
+          <span className="text-xs text-[var(--brand-ink)] font-semibold bg-brand-500/15 px-3 py-1 rounded-full border border-[#BFA476]/30">
             {selectedDate}
           </span>
         </div>
@@ -153,27 +153,27 @@ export const AvailabilityCalendar: React.FC<AvailabilityCalendarProps> = ({
                 onClick={() => onSelectDate(item.dateStr)}
                 className={`flex-shrink-0 w-20 py-3.5 px-2 rounded-2xl border text-center transition-all cursor-pointer relative ${
                   isSelected
-                    ? 'bg-linear-to-b from-[#2CB5A0] to-[#1A6E61] text-white border-transparent shadow-lg shadow-[#2CB5A0]/20 scale-105'
-                    : 'bg-[#182225] border-white/10 text-gray-300 hover:border-[#2CB5A0]/50 hover:bg-[#1E2C2F]'
+                    ? 'bg-linear-to-b from-[#C3AA7E] to-[#BFA476] text-brand-950 border-transparent shadow-lg shadow-[#BFA476]/20 scale-105'
+                    : 'bg-[#241D16] border-white/10 text-gray-300 hover:border-[#BFA476]/50 hover:bg-[#2C251D]'
                 }`}
               >
                 {item.isToday && (
-                  <span className={`absolute -top-2 left-1/2 -translate-x-1/2 text-[9px] font-extrabold px-2 py-0.5 rounded-full ${isSelected ? 'bg-[#E3C99B] text-black' : 'bg-[#2CB5A0] text-white'}`}>
+                  <span className={`absolute -top-2 left-1/2 -translate-x-1/2 text-[9px] font-extrabold px-2 py-0.5 rounded-full ${isSelected ? 'bg-[#DDC8A5] text-black' : 'bg-brand-500 text-brand-950'}`}>
                     Today
                   </span>
                 )}
                 {item.isTomorrow && (
-                  <span className={`absolute -top-2 left-1/2 -translate-x-1/2 text-[9px] font-extrabold px-2 py-0.5 rounded-full ${isSelected ? 'bg-[#E3C99B] text-black' : 'bg-gray-700 text-gray-200'}`}>
+                  <span className={`absolute -top-2 left-1/2 -translate-x-1/2 text-[9px] font-extrabold px-2 py-0.5 rounded-full ${isSelected ? 'bg-[#DDC8A5] text-black' : 'bg-gray-700 text-gray-200'}`}>
                     Tomorrow
                   </span>
                 )}
-                <span className={`block text-[11px] font-bold uppercase ${isSelected ? 'text-teal-100' : 'text-gray-400'}`}>
+                <span className={`block text-[11px] font-bold uppercase ${isSelected ? 'text-brand-100' : 'text-gray-400'}`}>
                   {item.dayName}
                 </span>
                 <span className="block text-2xl font-serif font-extrabold my-0.5 text-white">
                   {item.dayNum}
                 </span>
-                <span className={`block text-[10px] font-medium ${isSelected ? 'text-teal-100' : 'text-gray-400'}`}>
+                <span className={`block text-[10px] font-medium ${isSelected ? 'text-brand-100' : 'text-gray-400'}`}>
                   {item.monthName}
                 </span>
               </button>
@@ -183,14 +183,14 @@ export const AvailabilityCalendar: React.FC<AvailabilityCalendarProps> = ({
       </div>
 
       {/* Time Slots Grid */}
-      <div className="bg-[#121A1C] p-4 sm:p-5 rounded-2xl border border-white/10 shadow-lg">
+      <div className="bg-[#1B1611] p-4 sm:p-5 rounded-2xl border border-white/10 shadow-lg">
         <div className="flex items-center justify-between mb-4">
           <label className="text-xs font-bold uppercase tracking-wider text-gray-300 flex items-center gap-2">
-            <Clock className="w-4 h-4 text-[#2CB5A0]" />
+            <Clock className="w-4 h-4 text-[var(--brand-ink)]" />
             <span>2. Select Time Slot</span>
           </label>
           {loading ? (
-            <span className="text-xs text-[#81E3D4] animate-pulse flex items-center gap-1">
+            <span className="text-xs text-[var(--brand-ink)] animate-pulse flex items-center gap-1">
               Checking real-time slots...
             </span>
           ) : (

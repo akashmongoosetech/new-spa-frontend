@@ -25,8 +25,8 @@ export const ForgotPasswordPage: React.FC = () => {
 
   if (sent) {
     return (
-      <div className="bg-gray-900/80 border border-gray-800 rounded-2xl p-8 shadow-2xl backdrop-blur-md text-center space-y-4">
-        <div className="w-14 h-14 bg-[#2CB5A0]/20 text-[#2CB5A0] rounded-full flex items-center justify-center mx-auto">
+      <div className="bg-[#201A14]/90 border border-[#BFA476]/15 rounded-2xl p-8 shadow-2xl backdrop-blur-md text-center space-y-4">
+        <div className="w-14 h-14 bg-brand-500/20 text-[var(--brand-ink)] rounded-full flex items-center justify-center mx-auto">
           <CheckCircle2 className="w-8 h-8" />
         </div>
         <h2 className="text-xl font-serif font-bold text-white">Reset Link Dispatched</h2>
@@ -35,7 +35,7 @@ export const ForgotPasswordPage: React.FC = () => {
         </p>
         <Link
           to="/admin-login"
-          className="block w-full py-3 bg-[#2CB5A0] text-white rounded-xl text-xs font-bold transition-all shadow-md mt-4"
+          className="block w-full py-3 bg-brand-500 text-brand-950 rounded-xl text-xs font-bold transition-all shadow-md mt-4"
         >
           Return to Admin Login
         </Link>
@@ -44,7 +44,7 @@ export const ForgotPasswordPage: React.FC = () => {
   }
 
   return (
-    <div className="bg-gray-900/80 border border-gray-800 rounded-2xl p-6 sm:p-8 shadow-2xl backdrop-blur-md">
+    <div className="bg-[#201A14]/90 border border-[#BFA476]/15 rounded-2xl p-6 sm:p-8 shadow-2xl backdrop-blur-md">
       <h2 className="text-xl font-serif font-bold text-white mb-2 text-center">Reset Access Password</h2>
       <p className="text-xs text-gray-400 text-center mb-6">Enter your registered email to receive a secure recovery token</p>
 
@@ -65,7 +65,7 @@ export const ForgotPasswordPage: React.FC = () => {
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full bg-gray-950/80 border border-gray-800 focus:border-[#2CB5A0] rounded-xl py-3 pl-10 pr-4 text-sm text-white focus:outline-none"
+              className="w-full bg-[#17130F]/80 border border-[#BFA476]/15 focus:border-[#BFA476] rounded-xl py-3 pl-10 pr-4 text-sm text-white focus:outline-none"
               placeholder="you@example.com"
             />
           </div>
@@ -74,13 +74,13 @@ export const ForgotPasswordPage: React.FC = () => {
         <button
           type="submit"
           disabled={loading}
-          className="w-full py-3.5 bg-[#2CB5A0] hover:bg-[#259b89] text-white rounded-xl text-sm font-bold tracking-wide transition-all shadow-lg shadow-[#2CB5A0]/20 mt-4"
+          className="w-full py-3.5 bg-brand-500 hover:bg-brand-400 text-brand-950 rounded-xl text-sm font-bold tracking-wide transition-all shadow-lg shadow-[#BFA476]/20 mt-4"
         >
           {loading ? 'Sending...' : 'Send Reset Link'}
         </button>
       </form>
 
-      <div className="mt-6 pt-6 border-t border-gray-800 text-center">
+      <div className="mt-6 pt-6 border-t border-[#BFA476]/15 text-center">
         <Link to="/admin-login" className="inline-flex items-center gap-1.5 text-xs text-gray-400 hover:text-white">
           <ArrowLeft className="w-3.5 h-3.5" />
           Back to Login

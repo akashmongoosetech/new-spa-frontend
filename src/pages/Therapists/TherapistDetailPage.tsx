@@ -33,7 +33,7 @@ export const TherapistDetailPage: React.FC = () => {
 
       <Link
         to="/therapists"
-        className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-[#2CB5A0] mb-8 font-medium transition-colors"
+        className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-[var(--brand-ink)] mb-8 font-medium transition-colors"
       >
         <ArrowLeft className="w-4 h-4" />
         Back to Therapists Directory
@@ -42,7 +42,7 @@ export const TherapistDetailPage: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         <div className="md:col-span-1">
           <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-xl sticky top-28 text-center space-y-6">
-            <div className="w-36 h-36 mx-auto rounded-full overflow-hidden border-4 border-[#2CB5A0]/20 shadow-lg">
+            <div className="w-36 h-36 mx-auto rounded-full overflow-hidden border-4 border-[#BFA476]/20 shadow-lg">
               <img
                 src={therapist.photoUrl || therapist.imageUrl}
                 alt={therapist.name}
@@ -52,7 +52,7 @@ export const TherapistDetailPage: React.FC = () => {
 
             <div>
               <h1 className="text-2xl font-serif font-bold text-gray-900">{therapist.name}</h1>
-              <p className="text-xs font-semibold text-[#2CB5A0] uppercase tracking-wider mt-1">
+              <p className="text-xs font-semibold text-[var(--brand-ink)] uppercase tracking-wider mt-1">
                 {therapist.title}
               </p>
             </div>
@@ -64,18 +64,18 @@ export const TherapistDetailPage: React.FC = () => {
 
             <div className="text-left text-xs text-gray-600 space-y-2.5 border-t pt-4">
               <div className="flex items-center gap-2">
-                <Award className="w-4 h-4 text-[#2CB5A0]" />
+                <Award className="w-4 h-4 text-[var(--brand-ink)]" />
                 <span>{therapist.experienceYears} Years Clinical & Spa Experience</span>
               </div>
               <div className="flex items-center gap-2">
-                <ShieldCheck className="w-4 h-4 text-[#2CB5A0]" />
+                <ShieldCheck className="w-4 h-4 text-[var(--brand-ink)]" />
                 <span>State Licensed & Background Verified</span>
               </div>
             </div>
 
             <button
               onClick={() => context.onOpenBooking?.()}
-              className="w-full py-3.5 bg-[#2CB5A0] hover:bg-[#259b89] text-white rounded-xl font-bold text-sm tracking-wide transition-all shadow-md flex items-center justify-center gap-2"
+              className="w-full py-3.5 bg-brand-500 hover:bg-brand-400 text-brand-950 rounded-xl font-bold text-sm tracking-wide transition-all shadow-md flex items-center justify-center gap-2"
             >
               <Calendar className="w-4 h-4" />
               Book Session with {therapist.name.split(' ')[0]}
@@ -96,7 +96,7 @@ export const TherapistDetailPage: React.FC = () => {
                 {(therapist.specialties || []).map((spec: string, i: number) => (
                   <span
                     key={i}
-                    className="px-3 py-1.5 bg-[#2CB5A0]/10 text-[#2CB5A0] rounded-lg text-xs font-semibold flex items-center gap-1.5"
+                    className="px-3 py-1.5 bg-brand-500/10 text-[var(--brand-ink)] rounded-lg text-xs font-semibold flex items-center gap-1.5"
                   >
                     <CheckCircle2 className="w-3.5 h-3.5" />
                     {spec}

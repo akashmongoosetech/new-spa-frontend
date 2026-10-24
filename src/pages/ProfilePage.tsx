@@ -92,7 +92,7 @@ export const ProfilePage: React.FC<ProfileModalProps> = ({ modalMode = false, on
   };
 
   return (
-    <div className="w-full space-y-6">
+    <div className={`w-full space-y-6 ${dark ? 'on-dark-brand' : ''}`}>
       {modalMode ? (
         <div
           className={`flex items-center justify-between border-b pb-4 ${
@@ -111,8 +111,8 @@ export const ProfilePage: React.FC<ProfileModalProps> = ({ modalMode = false, on
         </div>
       ) : (
         <div className="space-y-3 text-center sm:text-left">
-          <span className="inline-flex items-center gap-2 rounded-full border border-[#2CB5A0]/35 bg-[#1C2628]/80 px-4 py-1.5 text-[11px] font-bold uppercase tracking-widest text-[#6FD3C4]">
-            <Sparkles className="h-3.5 w-3.5 text-[#C7A36A]" />
+          <span className="inline-flex items-center gap-2 rounded-full border border-[#BFA476]/35 bg-[#211B16]/80 px-4 py-1.5 text-[11px] font-bold uppercase tracking-widest text-[var(--brand-ink)]">
+            <Sparkles className="h-3.5 w-3.5 text-[var(--brand-ink)]" />
             Sanctuary Console
           </span>
           <h1 className="font-serif text-3xl font-bold text-white sm:text-4xl">
@@ -167,7 +167,7 @@ export const ProfilePage: React.FC<ProfileModalProps> = ({ modalMode = false, on
               <button
                 type="submit"
                 disabled={saving}
-                className="inline-flex min-h-[44px] w-full items-center justify-center gap-2 rounded-xl bg-[#2CB5A0] px-6 py-3 text-xs font-bold text-white shadow-lg shadow-[#2CB5A0]/25 transition-colors hover:bg-[#259b89] disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto sm:shadow-sm"
+                className="inline-flex min-h-[44px] w-full items-center justify-center gap-2 rounded-xl bg-brand-500 px-6 py-3 text-xs font-bold text-brand-950 shadow-lg shadow-[#BFA476]/25 transition-colors hover:bg-brand-400 disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto sm:shadow-sm"
               >
                 {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
                 {saving ? 'Saving…' : 'Save Changes'}
@@ -177,7 +177,7 @@ export const ProfilePage: React.FC<ProfileModalProps> = ({ modalMode = false, on
 
           <section aria-label="Change password" className={`${cardClass(tone)} space-y-4 p-5 sm:p-6`}>
             <h3 className={sectionTitleClass(tone)}>
-              <Key className={`h-4 w-4 ${dark ? 'text-[#C7A36A]' : 'text-[#2CB5A0]'}`} />
+              <Key className={`h-4 w-4 ${dark ? 'text-[var(--brand-ink)]' : 'text-[var(--brand-ink)]'}`} />
               Change Password
             </h3>
             <form onSubmit={handleChangePassword}>
@@ -241,8 +241,8 @@ export const ProfilePage: React.FC<ProfileModalProps> = ({ modalMode = false, on
                   disabled={changingPassword}
                   className={`inline-flex min-h-[44px] w-full items-center justify-center gap-2 rounded-xl border px-6 py-3 text-xs font-bold shadow-sm transition-colors disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto ${
                     dark
-                      ? 'border-white/10 bg-white/[0.04] text-gray-200 hover:border-[#2CB5A0]/50 hover:text-[#6FD3C4]'
-                      : 'border-gray-200 bg-white text-gray-700 hover:border-[#2CB5A0] hover:text-[#158c7c]'
+                      ? 'border-white/10 bg-white/[0.04] text-gray-200 hover:border-[#BFA476]/50 hover:text-[var(--brand-ink)]'
+                      : 'border-gray-200 bg-white text-gray-700 hover:border-[#BFA476] hover:text-[#80663F]'
                   }`}
                 >
                   {changingPassword ? (

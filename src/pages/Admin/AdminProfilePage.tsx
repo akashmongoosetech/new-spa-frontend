@@ -64,7 +64,7 @@ export const AdminProfilePage: React.FC = () => {
             <button
               type="submit"
               disabled={saving}
-              className="inline-flex min-h-[44px] w-full items-center justify-center gap-2 rounded-xl bg-[#2CB5A0] px-6 py-3 text-xs font-bold text-white shadow-lg shadow-[#2CB5A0]/25 transition-colors hover:bg-[#259b89] disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto sm:shadow-sm"
+              className="inline-flex min-h-[44px] w-full items-center justify-center gap-2 rounded-xl bg-brand-500 px-6 py-3 text-xs font-bold text-brand-950 shadow-lg shadow-[#BFA476]/25 transition-colors hover:bg-brand-400 disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto sm:shadow-sm"
             >
               {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
               {saving ? 'Saving…' : 'Save Changes'}

@@ -264,7 +264,7 @@ export const BookingConfirmationModal: React.FC<BookingConfirmationModalProps> =
             <div className="bg-linear-to-r from-[#1A1A1A] to-[#2B2B2B] text-white p-5 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-sm border border-gray-800">
               <div className="space-y-1">
                 <div className="flex items-center gap-2">
-                  <span className="text-[10px] uppercase font-bold text-teal-400 tracking-wider">
+                  <span className="text-[10px] uppercase font-bold text-brand-400 tracking-wider">
                     Tripod Wellness Reservation
                   </span>
                   <button
@@ -284,8 +284,8 @@ export const BookingConfirmationModal: React.FC<BookingConfirmationModalProps> =
             {/* Core Appointment Details Cards */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {/* Therapist & Service */}
-              <div className="p-4 rounded-2xl bg-teal-50/60 border border-teal-100/80 space-y-3">
-                <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#2CB5A0]">
+              <div className="p-4 rounded-2xl bg-brand-50/60 border border-brand-100/80 space-y-3">
+                <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[var(--brand-ink)]">
                   <User className="w-4 h-4" />
                   <span>Therapist & Service</span>
                 </div>
@@ -303,7 +303,7 @@ export const BookingConfirmationModal: React.FC<BookingConfirmationModalProps> =
 
               {/* Date, Time & Location */}
               <div className="p-4 rounded-2xl bg-amber-50/50 border border-amber-100/80 space-y-3">
-                <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#C7A36A]">
+                <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[var(--brand-ink)]">
                   <Calendar className="w-4 h-4" />
                   <span>Schedule & Location</span>
                 </div>
@@ -315,7 +315,7 @@ export const BookingConfirmationModal: React.FC<BookingConfirmationModalProps> =
                     </strong>
                   </div>
                   <div className="pt-1 flex items-center gap-1.5 text-gray-600">
-                    <MapPin className="w-3.5 h-3.5 text-[#2CB5A0] shrink-0" />
+                    <MapPin className="w-3.5 h-3.5 text-[var(--brand-ink)] shrink-0" />
                     <span className="text-[11px]">Indore, Ujjain, Dewas</span>
                   </div>
                 </div>
@@ -335,7 +335,7 @@ export const BookingConfirmationModal: React.FC<BookingConfirmationModalProps> =
 
               <div>
                 <span className="text-gray-400 font-medium block text-[11px]">Total Rate:</span>
-                <strong className="text-[#2CB5A0] font-bold text-base font-mono">
+                <strong className="text-[var(--brand-ink)] font-bold text-base font-mono">
                   ₹{booking.totalPaid || 1999}
                 </strong>
                 <span className="text-gray-500 block text-[11px] capitalize">
@@ -356,7 +356,7 @@ export const BookingConfirmationModal: React.FC<BookingConfirmationModalProps> =
 
             {/* Arrival Notice */}
             <div className="p-3.5 rounded-xl bg-slate-100 border border-slate-200/80 flex items-start gap-3 text-xs text-slate-700">
-              <ShieldCheck className="w-5 h-5 text-[#2CB5A0] shrink-0 mt-0.5" />
+              <ShieldCheck className="w-5 h-5 text-[var(--brand-ink)] shrink-0 mt-0.5" />
               <div>
                 <strong className="font-semibold block text-slate-900">Pre-Session Protocols</strong>
                 <span>Please arrive 10 minutes prior to your session. Complimentary private executive showers, steam room access, and organic refreshments are included with your reservation.</span>
@@ -371,7 +371,7 @@ export const BookingConfirmationModal: React.FC<BookingConfirmationModalProps> =
                     <button
                       id="reschedule-appt-btn"
                       onClick={() => setViewState('reschedule')}
-                      className="px-4 py-2.5 rounded-xl bg-teal-50 text-[#2CB5A0] border border-teal-200 hover:bg-teal-100 font-bold text-xs flex items-center gap-1.5 transition-colors cursor-pointer"
+                      className="px-4 py-2.5 rounded-xl bg-brand-50 text-[var(--brand-ink)] border border-brand-200 hover:bg-brand-100 font-bold text-xs flex items-center gap-1.5 transition-colors cursor-pointer"
                     >
                       <RotateCcw className="w-4 h-4" />
                       <span>Reschedule</span>
@@ -513,11 +513,11 @@ export const BookingConfirmationModal: React.FC<BookingConfirmationModalProps> =
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="p-5 rounded-2xl bg-teal-50/60 border border-teal-200 space-y-4"
+            className="p-5 rounded-2xl bg-brand-50/60 border border-brand-200 space-y-4"
           >
-            <div className="flex items-center gap-3 text-teal-900">
-              <div className="w-10 h-10 rounded-full bg-teal-100 flex items-center justify-center shrink-0">
-                <RotateCcw className="w-5 h-5 text-[#2CB5A0]" />
+            <div className="flex items-center gap-3 text-brand-900">
+              <div className="w-10 h-10 rounded-full bg-brand-100 flex items-center justify-center shrink-0">
+                <RotateCcw className="w-5 h-5 text-[var(--brand-ink)]" />
               </div>
               <div>
                 <h4 className="font-serif font-bold text-lg text-[#1A1A1A]">Reschedule Appointment</h4>
@@ -527,11 +527,11 @@ export const BookingConfirmationModal: React.FC<BookingConfirmationModalProps> =
               </div>
             </div>
 
-            <div className="space-y-4 bg-white p-4 rounded-xl border border-teal-100 text-xs">
+            <div className="space-y-4 bg-white p-4 rounded-xl border border-brand-100 text-xs">
               {/* Date Picker */}
               <div>
                 <label className="font-bold text-gray-800 mb-1 flex items-center gap-1">
-                  <Calendar className="w-4 h-4 text-[#2CB5A0]" />
+                  <Calendar className="w-4 h-4 text-[var(--brand-ink)]" />
                   <span>Select New Appointment Date:</span>
                 </label>
                 <input
@@ -539,14 +539,14 @@ export const BookingConfirmationModal: React.FC<BookingConfirmationModalProps> =
                   min={localDateInputValue()}
                   value={newDate}
                   onChange={(e) => setNewDate(e.target.value)}
-                  className="w-full p-2.5 rounded-xl border border-gray-200 focus:outline-none focus:border-[#2CB5A0] font-semibold text-gray-800"
+                  className="w-full p-2.5 rounded-xl border border-gray-200 focus:outline-none focus:border-[#BFA476] font-semibold text-gray-800"
                 />
               </div>
 
               {/* Time Slot Picker (live availability; falls back to standard slots offline) */}
               <div>
                 <label className="font-bold text-gray-800 mb-1 flex items-center gap-1">
-                  <Clock className="w-4 h-4 text-[#2CB5A0]" />
+                  <Clock className="w-4 h-4 text-[var(--brand-ink)]" />
                   <span>Select Preferred Time Slot:</span>
                 </label>
                 {slotsLoading ? (
@@ -565,7 +565,7 @@ export const BookingConfirmationModal: React.FC<BookingConfirmationModalProps> =
                           className={`p-2 rounded-xl text-xs font-semibold text-center border transition-all cursor-pointer ${
                             isSelected
                               ? 'bg-[#1A1A1A] text-white border-[#1A1A1A] shadow-xs'
-                              : 'bg-gray-50 text-gray-700 border-gray-200 hover:border-teal-300'
+                              : 'bg-gray-50 text-gray-700 border-gray-200 hover:border-brand-300'
                           }`}
                         >
                           {formatSlot12h(slot)}
@@ -580,13 +580,13 @@ export const BookingConfirmationModal: React.FC<BookingConfirmationModalProps> =
               {therapists.length > 0 && (
                 <div>
                   <label className="font-bold text-gray-800 mb-1 flex items-center gap-1">
-                    <User className="w-4 h-4 text-[#2CB5A0]" />
+                    <User className="w-4 h-4 text-[var(--brand-ink)]" />
                     <span>Therapist Preference:</span>
                   </label>
                   <select
                     value={newTherapistId}
                     onChange={(e) => setNewTherapistId(e.target.value)}
-                    className="w-full p-2.5 rounded-xl border border-gray-200 focus:outline-none focus:border-[#2CB5A0] bg-white font-medium text-gray-800"
+                    className="w-full p-2.5 rounded-xl border border-gray-200 focus:outline-none focus:border-[#BFA476] bg-white font-medium text-gray-800"
                   >
                     <option value="any">First Available Senior Therapist</option>
                     {therapists.map((th) => (
@@ -612,7 +612,7 @@ export const BookingConfirmationModal: React.FC<BookingConfirmationModalProps> =
                 type="button"
                 onClick={handleConfirmReschedule}
                 disabled={rescheduleLoading}
-                className="px-6 py-2.5 rounded-xl bg-[#2CB5A0] hover:bg-[#259b89] text-white text-xs font-bold flex items-center gap-1.5 shadow-md disabled:opacity-50 cursor-pointer"
+                className="px-6 py-2.5 rounded-xl bg-brand-500 hover:bg-brand-400 text-brand-950 text-xs font-bold flex items-center gap-1.5 shadow-md disabled:opacity-50 cursor-pointer"
               >
                 {rescheduleLoading ? (
                   <span>Rescheduling Slot...</span>

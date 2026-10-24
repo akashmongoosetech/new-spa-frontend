@@ -128,10 +128,10 @@ export const TestimonialCarousel: React.FC<TestimonialCarouselProps> = ({
   };
 
   return (
-    <section className="bg-linear-to-b from-[#0B0F10] via-[#0E1517] to-[#0A0E10] text-white py-20 relative overflow-hidden border-y border-white/10">
+    <section className="on-dark-brand bg-linear-to-b from-[#130F0C] via-[#1B1611] to-[#120F0B] text-white py-20 relative overflow-hidden border-y border-white/10">
       {/* Background Decorative Lighting Effect */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-150 h-150 bg-[#2CB5A0]/10 rounded-full blur-[140px] pointer-events-none" />
-      <div className="absolute top-0 right-10 w-80 h-80 bg-[#C7A36A]/10 rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-150 h-150 bg-brand-500/10 rounded-full blur-[140px] pointer-events-none" />
+      <div className="absolute top-0 right-10 w-80 h-80 bg-[#BFA476]/10 rounded-full blur-[120px] pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Section Header */}
@@ -140,9 +140,9 @@ export const TestimonialCarousel: React.FC<TestimonialCarouselProps> = ({
             initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#182325] border border-[#2CB5A0]/30 text-[#81E3D4] text-xs font-semibold uppercase tracking-widest shadow-md"
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#241E17] border border-[#BFA476]/30 text-[var(--brand-ink)] text-xs font-semibold uppercase tracking-widest shadow-md"
           >
-            <Sparkles className="w-3.5 h-3.5 text-[#E3C99B]" /> Guest Endorsements
+            <Sparkles className="w-3.5 h-3.5 text-[var(--brand-ink)]" /> Guest Endorsements
           </motion.div>
 
           <motion.h2
@@ -170,13 +170,13 @@ export const TestimonialCarousel: React.FC<TestimonialCarouselProps> = ({
         <div className="max-w-4xl mx-auto relative">
           {/* Main Card Wrapper */}
           <div
-            className="relative bg-[#121A1C]/90 backdrop-blur-xl rounded-3xl p-8 sm:p-12 border border-white/15 shadow-2xl overflow-hidden min-h-85 flex flex-col justify-between"
+            className="relative bg-[#1B1611]/90 backdrop-blur-xl rounded-3xl p-8 sm:p-12 border border-white/15 shadow-2xl overflow-hidden min-h-85 flex flex-col justify-between"
             onMouseEnter={() => setIsAutoplay(false)}
             onMouseLeave={() => setIsAutoplay(true)}
           >
             {/* Giant Background Watermark Quote */}
             <Quote className="absolute -top-4 -left-4 w-36 h-36 text-white/5 pointer-events-none rotate-180" />
-            <Quote className="absolute -bottom-6 -right-6 w-36 h-36 text-[#2CB5A0]/5 pointer-events-none" />
+            <Quote className="absolute -bottom-6 -right-6 w-36 h-36 text-[var(--brand-ink)]/5 pointer-events-none" />
 
             <AnimatePresence mode="wait" custom={direction}>
               <motion.div
@@ -192,11 +192,11 @@ export const TestimonialCarousel: React.FC<TestimonialCarouselProps> = ({
                 {/* Header Row: Service Badge & Star Rating */}
                 <div className="flex flex-wrap items-center justify-between gap-4 border-b border-white/10 pb-5">
                   <div className="flex items-center gap-2">
-                    <span className="px-3.5 py-1 rounded-full bg-[#2CB5A0]/20 border border-[#2CB5A0]/40 text-[#81E3D4] text-xs font-semibold">
+                    <span className="px-3.5 py-1 rounded-full bg-brand-500/20 border border-[#BFA476]/40 text-[var(--brand-ink)] text-xs font-semibold">
                       {current.serviceTitle || 'Full Body Recovery'}
                     </span>
-                    <span className="inline-flex items-center gap-1 text-[11px] text-[#E3C99B] bg-[#C7A36A]/10 px-2.5 py-0.5 rounded-md border border-[#C7A36A]/30">
-                      <ShieldCheck className="w-3 h-3 text-[#C7A36A]" /> Verified Guest
+                    <span className="inline-flex items-center gap-1 text-[11px] text-[var(--brand-ink)] bg-[#BFA476]/10 px-2.5 py-0.5 rounded-md border border-[#BFA476]/30">
+                      <ShieldCheck className="w-3 h-3 text-[var(--brand-ink)]" /> Verified Guest
                     </span>
                   </div>
 
@@ -218,7 +218,7 @@ export const TestimonialCarousel: React.FC<TestimonialCarouselProps> = ({
                 <div className="flex items-center justify-between pt-4 border-t border-white/10">
                   <div className="flex items-center gap-4">
                     {/* Avatar or Initials */}
-                    <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-[#C7A36A] bg-linear-to-tr from-[#1A6E61] to-[#2CB5A0] flex items-center justify-center text-white font-bold text-lg shadow-md shrink-0">
+                    <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-[#BFA476] bg-linear-to-tr from-[#80663F] to-[#BFA476] flex items-center justify-center text-white font-bold text-lg shadow-md shrink-0">
                       {current.avatarUrl ? (
                         <img
                           src={current.avatarUrl}
@@ -234,7 +234,7 @@ export const TestimonialCarousel: React.FC<TestimonialCarouselProps> = ({
                     <div>
                       <h4 className="text-base sm:text-lg font-serif font-bold text-white flex items-center gap-2">
                         {current.clientName}
-                        <CheckCircle2 className="w-4 h-4 text-[#2CB5A0]" />
+                        <CheckCircle2 className="w-4 h-4 text-[var(--brand-ink)]" />
                       </h4>
                       <p className="text-xs text-gray-400 font-medium">{current.role}</p>
                     </div>
@@ -261,7 +261,7 @@ export const TestimonialCarousel: React.FC<TestimonialCarouselProps> = ({
                     aria-label={`Go to slide ${idx + 1}`}
                     className={`h-2 rounded-full transition-all duration-300 cursor-pointer ${
                       idx === currentIndex % listToUse.length
-                        ? 'w-8 bg-[#2CB5A0] shadow-sm shadow-[#2CB5A0]'
+                        ? 'w-8 bg-brand-500 shadow-sm shadow-[#BFA476]'
                         : 'w-2 bg-white/20 hover:bg-white/40'
                     }`}
                   />
@@ -275,13 +275,13 @@ export const TestimonialCarousel: React.FC<TestimonialCarouselProps> = ({
                   title={isAutoplay ? 'Pause Carousel' : 'Autoplay Carousel'}
                   className="p-2 rounded-xl bg-white/5 border border-white/10 hover:border-white/30 text-gray-300 hover:text-white transition-colors cursor-pointer mr-2"
                 >
-                  {isAutoplay ? <Pause className="w-3.5 h-3.5 text-[#2CB5A0]" /> : <Play className="w-3.5 h-3.5 text-amber-400" />}
+                  {isAutoplay ? <Pause className="w-3.5 h-3.5 text-[var(--brand-ink)]" /> : <Play className="w-3.5 h-3.5 text-amber-400" />}
                 </button>
 
                 <button
                   onClick={handlePrev}
                   aria-label="Previous Review"
-                  className="p-3 rounded-2xl bg-white/5 border border-white/10 hover:border-[#2CB5A0] hover:bg-[#2CB5A0] text-gray-200 hover:text-white transition-all shadow-md cursor-pointer active:scale-95"
+                  className="p-3 rounded-2xl bg-white/5 border border-white/10 hover:border-[#BFA476] hover:bg-brand-500 text-gray-200 hover:text-brand-950 transition-all shadow-md cursor-pointer active:scale-95"
                 >
                   <ChevronLeft className="w-5 h-5" />
                 </button>
@@ -289,7 +289,7 @@ export const TestimonialCarousel: React.FC<TestimonialCarouselProps> = ({
                 <button
                   onClick={handleNext}
                   aria-label="Next Review"
-                  className="p-3 rounded-2xl bg-white/5 border border-white/10 hover:border-[#2CB5A0] hover:bg-[#2CB5A0] text-gray-200 hover:text-white transition-all shadow-md cursor-pointer active:scale-95"
+                  className="p-3 rounded-2xl bg-white/5 border border-white/10 hover:border-[#BFA476] hover:bg-brand-500 text-gray-200 hover:text-brand-950 transition-all shadow-md cursor-pointer active:scale-95"
                 >
                   <ChevronRight className="w-5 h-5" />
                 </button>
@@ -301,11 +301,11 @@ export const TestimonialCarousel: React.FC<TestimonialCarouselProps> = ({
         {/* Bottom Trust Stat Metrics */}
         <div className="mt-16 grid grid-cols-2 lg:grid-cols-4 gap-4 max-w-4xl mx-auto">
           <div className="bg-white/5 border border-white/10 rounded-2xl p-4 text-center backdrop-blur-md">
-            <span className="block text-2xl font-serif font-extrabold text-[#81E3D4]">4.98 / 5</span>
+            <span className="block text-2xl font-serif font-extrabold text-[var(--brand-ink)]">4.98 / 5</span>
             <span className="text-xs text-gray-400 font-medium">Average Guest Rating</span>
           </div>
           <div className="bg-white/5 border border-white/10 rounded-2xl p-4 text-center backdrop-blur-md">
-            <span className="block text-2xl font-serif font-extrabold text-[#E3C99B]">500+</span>
+            <span className="block text-2xl font-serif font-extrabold text-[var(--brand-ink)]">500+</span>
             <span className="text-xs text-gray-400 font-medium">Verified Reviews</span>
           </div>
           <div className="bg-white/5 border border-white/10 rounded-2xl p-4 text-center backdrop-blur-md">
@@ -313,7 +313,7 @@ export const TestimonialCarousel: React.FC<TestimonialCarouselProps> = ({
             <span className="text-xs text-gray-400 font-medium">Confidential & Private</span>
           </div>
           <div className="bg-white/5 border border-white/10 rounded-2xl p-4 text-center backdrop-blur-md">
-            <span className="block text-2xl font-serif font-extrabold text-teal-300">Licensed</span>
+            <span className="block text-2xl font-serif font-extrabold text-brand-300">Licensed</span>
             <span className="text-xs text-gray-400 font-medium">Male Specialists</span>
           </div>
         </div>
@@ -323,9 +323,9 @@ export const TestimonialCarousel: React.FC<TestimonialCarouselProps> = ({
           <div className="mt-10 text-center">
             <button
               onClick={() => onOpenBooking()}
-              className="px-8 py-3.5 rounded-2xl bg-linear-to-r from-[#2CB5A0] to-[#1A6E61] text-white font-bold text-sm shadow-xl hover:shadow-[#2CB5A0]/25 hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer inline-flex items-center gap-2"
+              className="px-8 py-3.5 rounded-2xl bg-linear-to-r from-[#C3AA7E] to-[#BFA476] text-brand-950 font-bold text-sm shadow-xl hover:shadow-[#BFA476]/25 hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer inline-flex items-center gap-2"
             >
-              <Sparkles className="w-4 h-4 text-[#E3C99B]" />
+              <Sparkles className="w-4 h-4 text-[var(--brand-ink)]" />
               <span>Experience Tripod Wellness Today</span>
             </button>
           </div>

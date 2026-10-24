@@ -108,7 +108,7 @@ export const AdminApplicationsPage: React.FC = () => {
           disabled={loading}
           className="px-4 py-2.5 bg-[#1A1A1A] hover:bg-black text-white rounded-xl text-xs font-bold flex items-center gap-2 shadow-sm cursor-pointer disabled:opacity-50"
         >
-          <RefreshCw className={`w-4 h-4 text-[#2CB5A0] ${loading ? 'animate-spin' : ''}`} />
+          <RefreshCw className={`w-4 h-4 text-[var(--brand-ink)] ${loading ? 'animate-spin' : ''}`} />
           {loading ? 'Loading...' : 'Refresh'}
         </button>
       </div>
@@ -159,7 +159,7 @@ export const AdminApplicationsPage: React.FC = () => {
                         )}
                       </td>
                       <td className="p-4">
-                        <span className="px-2.5 py-1 rounded-full text-[10px] font-bold bg-[#2CB5A0]/10 text-[#2CB5A0]">
+                        <span className="px-2.5 py-1 rounded-full text-[10px] font-bold bg-brand-500/10 text-[var(--brand-ink)]">
                           {a.requestedRole}
                         </span>
                       </td>

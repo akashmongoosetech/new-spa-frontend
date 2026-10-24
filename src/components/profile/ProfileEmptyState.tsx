@@ -28,7 +28,7 @@ export const ProfileEmptyState: React.FC<{ loading: boolean; tone?: ProfileTone 
   return (
     <div
       className={`mx-auto flex max-w-md flex-col items-center gap-3 rounded-2xl border p-8 text-center shadow-sm ${
-        dark ? 'border-white/10 bg-[#161a23]/90' : 'border-gray-200 bg-white'
+        dark ? 'border-white/10 bg-[#1E1913]/90' : 'border-gray-200 bg-white'
       }`}
     >
       <span

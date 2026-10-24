@@ -33,7 +33,7 @@ export const PrintBookingModal: React.FC<PrintBookingModalProps> = ({ isOpen, on
             <p className="text-[11px] text-gray-400">Indore, Ujjain, Dewas • +91 91716 06807</p>
           </div>
           <div className="text-right">
-            <span className="inline-block px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-teal-100 text-[#2CB5A0]">
+            <span className="inline-block px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-brand-100 text-[var(--brand-ink)]">
               {booking.status}
             </span>
             <p className="text-xs font-mono font-bold text-gray-800 mt-1">Ref: {booking.bookingNumber}</p>
@@ -52,7 +52,7 @@ export const PrintBookingModal: React.FC<PrintBookingModalProps> = ({ isOpen, on
           </div>
           <div>
             <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Therapy Appointment</span>
-            <p className="font-bold text-[#2CB5A0] mt-1">{booking.serviceTitle}</p>
+            <p className="font-bold text-[var(--brand-ink)] mt-1">{booking.serviceTitle}</p>
             <p className="text-gray-800 font-semibold mt-0.5">Therapist: {booking.therapistName}</p>
             <p className="text-gray-700">Date: {booking.date}</p>
             <p className="text-gray-700">Time: {booking.timeSlot} ({booking.durationMinutes} Mins)</p>
@@ -73,7 +73,7 @@ export const PrintBookingModal: React.FC<PrintBookingModalProps> = ({ isOpen, on
           )}
           <div className="flex justify-between text-gray-900 font-black text-sm border-t pt-2">
             <span>Total Payable:</span>
-            <span className="text-[#2CB5A0]">₹{booking.totalPaid}</span>
+            <span className="text-[var(--brand-ink)]">₹{booking.totalPaid}</span>
           </div>
           <div className="flex justify-between text-gray-500 text-[11px]">
             <span>Payment Option:</span>
@@ -97,7 +97,7 @@ export const PrintBookingModal: React.FC<PrintBookingModalProps> = ({ isOpen, on
           </button>
           <button
             onClick={handlePrint}
-            className="px-5 py-2 rounded-xl bg-[#2CB5A0] hover:bg-teal-600 text-white text-xs font-bold flex items-center gap-2 cursor-pointer shadow-md shadow-[#2CB5A0]/20"
+            className="px-5 py-2 rounded-xl bg-brand-500 hover:bg-brand-500 text-brand-950 text-xs font-bold flex items-center gap-2 cursor-pointer shadow-md shadow-[#BFA476]/20"
           >
             <Printer className="w-4 h-4" /> Print Voucher
           </button>

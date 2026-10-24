@@ -182,7 +182,7 @@ export const ContactManager: React.FC<ContactManagerProps> = ({ contacts, onRefr
                 <th className="py-4 px-4 w-10">
                   <button onClick={toggleSelectAll} className="cursor-pointer">
                     {selectedIds.length === filteredContacts.length && filteredContacts.length > 0 ? (
-                      <CheckSquare className="w-4 h-4 text-[#2CB5A0]" />
+                      <CheckSquare className="w-4 h-4 text-[var(--brand-ink)]" />
                     ) : (
                       <Square className="w-4 h-4 text-gray-300" />
                     )}
@@ -206,11 +206,11 @@ export const ContactManager: React.FC<ContactManagerProps> = ({ contacts, onRefr
                 filteredContacts.map((c) => {
                   const isSelected = selectedIds.includes(c.id);
                   return (
-                    <tr key={c.id} className={`hover:bg-gray-50/80 transition-colors ${isSelected ? 'bg-teal-50/30' : ''}`}>
+                    <tr key={c.id} className={`hover:bg-gray-50/80 transition-colors ${isSelected ? 'bg-brand-50/30' : ''}`}>
                       <td className="py-4 px-4">
                         <button onClick={() => toggleSelect(c.id)} className="cursor-pointer">
                           {isSelected ? (
-                            <CheckSquare className="w-4 h-4 text-[#2CB5A0]" />
+                            <CheckSquare className="w-4 h-4 text-[var(--brand-ink)]" />
                           ) : (
                             <Square className="w-4 h-4 text-gray-300" />
                           )}
@@ -243,7 +243,7 @@ export const ContactManager: React.FC<ContactManagerProps> = ({ contacts, onRefr
                             setReplyText(c.replyMessage || '');
                             setShowReplyModal(true);
                           }}
-                          className="p-1.5 rounded-lg bg-teal-50 text-[#2CB5A0] hover:bg-teal-100 cursor-pointer"
+                          className="p-1.5 rounded-lg bg-brand-50 text-[var(--brand-ink)] hover:bg-brand-100 cursor-pointer"
                           title="View & Reply Email"
                         >
                           <Send className="w-4 h-4" />
@@ -296,7 +296,7 @@ export const ContactManager: React.FC<ContactManagerProps> = ({ contacts, onRefr
                 value={replyText}
                 onChange={(e) => setReplyText(e.target.value)}
                 placeholder="Dear guest, thank you for reaching out to Tripod Wellness..."
-                className="w-full p-3.5 rounded-xl border text-xs focus:ring-2 focus:ring-[#2CB5A0] outline-none"
+                className="w-full p-3.5 rounded-xl border text-xs focus:ring-2 focus:ring-[#BFA476] outline-none"
               ></textarea>
               <div className="flex justify-between items-center pt-2">
                 <div className="flex gap-2">
@@ -318,7 +318,7 @@ export const ContactManager: React.FC<ContactManagerProps> = ({ contacts, onRefr
                 <button
                   type="submit"
                   disabled={replyLoading}
-                  className="px-5 py-2.5 rounded-xl bg-[#2CB5A0] hover:bg-teal-600 text-white font-bold flex items-center gap-2 cursor-pointer shadow-md shadow-[#2CB5A0]/20"
+                  className="px-5 py-2.5 rounded-xl bg-brand-500 hover:bg-brand-500 text-brand-950 font-bold flex items-center gap-2 cursor-pointer shadow-md shadow-[#BFA476]/20"
                 >
                   <Send className="w-4 h-4" /> {replyLoading ? 'Sending...' : 'Send Official Reply'}
                 </button>

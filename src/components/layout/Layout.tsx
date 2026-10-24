@@ -203,7 +203,7 @@ export const Layout: React.FC<LayoutProps> = ({
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#FAFAFA] text-[#1A1A1A] font-sans antialiased selection:bg-[#2CB5A0] selection:text-white">
+    <div className="min-h-screen flex flex-col bg-[#FAFAFA] text-[#1A1A1A] font-sans antialiased selection:bg-brand-500 selection:text-brand-950">
       <Toast toasts={toasts} onClose={removeToast} />
 
       <Header

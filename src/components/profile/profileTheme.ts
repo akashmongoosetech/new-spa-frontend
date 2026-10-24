@@ -3,7 +3,7 @@ export type ProfileTone = 'light' | 'dark';
 
 export const cardClass = (tone: ProfileTone): string =>
   tone === 'dark'
-    ? 'rounded-2xl border border-white/10 bg-[#161a23]/90 shadow-xl shadow-black/30 backdrop-blur'
+    ? 'rounded-2xl border border-white/10 bg-[#1E1913]/90 shadow-xl shadow-black/30 backdrop-blur'
     : 'rounded-2xl border border-gray-200 bg-white shadow-sm';
 
 export const sectionTitleClass = (tone: ProfileTone): string =>
@@ -16,8 +16,8 @@ export const labelClass = (_tone: ProfileTone): string =>
 
 export const inputClassFor = (tone: ProfileTone): string =>
   tone === 'dark'
-    ? 'w-full rounded-xl border border-white/10 bg-black/40 p-3 text-sm text-white placeholder:text-gray-500 focus:border-[#2CB5A0] focus:outline-none focus:ring-1 focus:ring-[#2CB5A0]'
-    : 'w-full rounded-xl border border-gray-300 bg-white p-3 text-sm text-gray-900 placeholder:text-gray-400 focus:border-[#2CB5A0] focus:outline-none focus:ring-1 focus:ring-[#2CB5A0]';
+    ? 'w-full rounded-xl border border-white/10 bg-black/40 p-3 text-sm text-white placeholder:text-gray-500 focus:border-[#BFA476] focus:outline-none focus:ring-1 focus:ring-[#BFA476]'
+    : 'w-full rounded-xl border border-gray-300 bg-white p-3 text-sm text-gray-900 placeholder:text-gray-400 focus:border-[#BFA476] focus:outline-none focus:ring-1 focus:ring-[#BFA476]';
 
 export const mutedText = (tone: ProfileTone): string =>
   tone === 'dark' ? 'text-gray-400' : 'text-gray-500';

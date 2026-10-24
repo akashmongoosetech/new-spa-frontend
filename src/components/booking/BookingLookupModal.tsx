@@ -65,9 +65,9 @@ export const BookingLookupModal: React.FC<BookingLookupModalProps> = ({
     <>
       <Modal isOpen={isOpen && !showConfirmationModal} onClose={onClose} title="Manage Your Reservation" maxWidth="md">
         <div className="font-sans text-gray-800 space-y-4 py-2">
-          <div className="bg-teal-50/70 border border-teal-100 p-4 rounded-2xl text-xs text-gray-700 space-y-1">
+          <div className="bg-brand-50/70 border border-brand-100 p-4 rounded-2xl text-xs text-gray-700 space-y-1">
             <h4 className="font-bold text-[#1A1A1A] text-sm flex items-center gap-1.5">
-              <Calendar className="w-4 h-4 text-[#2CB5A0]" />
+              <Calendar className="w-4 h-4 text-[var(--brand-ink)]" />
               Find Your Appointment
             </h4>
             <p className="text-gray-600">
@@ -86,7 +86,7 @@ export const BookingLookupModal: React.FC<BookingLookupModalProps> = ({
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="e.g. AL-20240101-ABC123"
-                  className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 text-sm font-medium focus:outline-none focus:border-[#2CB5A0] focus:ring-1 focus:ring-[#2CB5A0]"
+                  className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 text-sm font-medium focus:outline-none focus:border-[#BFA476] focus:ring-1 focus:ring-[#BFA476]"
                 />
                 <Search className="w-4 h-4 text-gray-400 absolute left-3.5 top-3.5" />
               </div>
@@ -100,7 +100,7 @@ export const BookingLookupModal: React.FC<BookingLookupModalProps> = ({
                 value={emailQuery}
                 onChange={(e) => setEmailQuery(e.target.value)}
                 placeholder="Email used at booking"
-                className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm font-medium focus:outline-none focus:border-[#2CB5A0] focus:ring-1 focus:ring-[#2CB5A0]"
+                className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm font-medium focus:outline-none focus:border-[#BFA476] focus:ring-1 focus:ring-[#BFA476]"
               />
             </div>
 
@@ -122,7 +122,7 @@ export const BookingLookupModal: React.FC<BookingLookupModalProps> = ({
               <button
                 type="submit"
                 disabled={loading || !searchQuery.trim() || !emailQuery.trim()}
-                className="px-6 py-2.5 rounded-xl bg-[#2CB5A0] hover:bg-[#259b89] text-white font-bold text-xs shadow-md transition-all flex items-center gap-2 cursor-pointer disabled:opacity-50"
+                className="px-6 py-2.5 rounded-xl bg-brand-500 hover:bg-brand-400 text-brand-950 font-bold text-xs shadow-md transition-all flex items-center gap-2 cursor-pointer disabled:opacity-50"
               >
                 {loading ? (
                   <span>Searching...</span>

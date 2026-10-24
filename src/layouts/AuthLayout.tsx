@@ -5,15 +5,15 @@ import { BrandLogo } from '../components/brand/BrandLogo';
 
 export const AuthLayout: React.FC<{ wide?: boolean }> = ({ wide = false }) => {
   return (
-    <div className="min-h-screen bg-[#0F172A] text-white flex flex-col justify-between p-4 sm:p-6 lg:p-8 font-sans antialiased">
+    <div className="on-dark-brand min-h-screen bg-[#17130F] text-white flex flex-col justify-between p-4 sm:p-6 lg:p-8 font-sans antialiased">
       {/* Top Bar */}
       <div className="max-w-7xl w-full mx-auto flex justify-between items-center">
         <Link to="/" className="flex items-center gap-2 group text-gray-300 hover:text-white transition-colors">
-          <ArrowLeft className="w-4 h-4 text-[#2CB5A0] group-hover:-translate-x-1 transition-transform" />
+          <ArrowLeft className="w-4 h-4 text-[var(--brand-ink)] group-hover:-translate-x-1 transition-transform" />
           <span className="text-xs font-semibold uppercase tracking-wider">Back to Sanctuary</span>
         </Link>
         <div className="flex items-center gap-2 text-xs font-medium text-gray-400">
-          <Shield className="w-4 h-4 text-[#2CB5A0]" />
+          <Shield className="w-4 h-4 text-[var(--brand-ink)]" />
           <span>Encrypted Portal</span>
         </div>
       </div>
@@ -22,7 +22,7 @@ export const AuthLayout: React.FC<{ wide?: boolean }> = ({ wide = false }) => {
       <div className={`w-full mx-auto my-8 ${wide ? 'max-w-6xl' : 'max-w-md'}`}>
         {!wide ? (
           <div className="text-center mb-8">
-            <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-white p-1 shadow-xl shadow-[#2CB5A0]/10 mb-4 overflow-hidden">
+            <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-white p-1 shadow-xl shadow-[#BFA476]/10 mb-4 overflow-hidden">
               <BrandLogo variant="icon" className="w-full h-full object-contain rounded-[10px]" />
             </div>
             <h1 className="text-2xl font-serif font-bold text-white tracking-wide">TRIPOD WELLNESS</h1>

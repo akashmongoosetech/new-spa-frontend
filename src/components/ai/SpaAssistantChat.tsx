@@ -219,7 +219,7 @@ export const SpaAssistantChat: React.FC<SpaAssistantChatProps> = ({ onOpenBookin
           onClick={() => setIsOpen(!isOpen)}
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
-          className="relative px-5 py-3.5 rounded-full bg-linear-to-r from-[#2CB5A0] to-[#1a6e61] text-white shadow-2xl flex items-center gap-2.5 font-sans font-bold text-sm cursor-pointer border border-teal-300/30"
+          className="relative px-5 py-3.5 rounded-full bg-linear-to-r from-[#C3AA7E] to-[#BFA476] text-brand-950 shadow-2xl flex items-center gap-2.5 font-sans font-bold text-sm cursor-pointer border border-brand-300/30"
         >
           <Sparkles className="w-5 h-5 text-amber-300 animate-spin-slow" />
           <span className="hidden sm:inline">Tripod AI Spa Assistant</span>
@@ -236,21 +236,21 @@ export const SpaAssistantChat: React.FC<SpaAssistantChatProps> = ({ onOpenBookin
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
             transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-            className="fixed bottom-20 right-4 sm:right-6 z-50 w-[92vw] sm:w-105 h-140 max-h-[calc(100dvh-6rem)] bg-white rounded-3xl shadow-2xl border border-teal-100 flex flex-col overflow-hidden font-sans"
+            className="fixed bottom-20 right-4 sm:right-6 z-50 w-[92vw] sm:w-105 h-140 max-h-[calc(100dvh-6rem)] bg-white rounded-3xl shadow-2xl border border-brand-100 flex flex-col overflow-hidden font-sans"
             role="dialog"
             aria-label="Tripod Wellness Concierge chat"
           >
             {/* Header */}
-            <div className="bg-[#1A1A1A] text-white p-4 flex items-center justify-between border-b border-gray-800">
+            <div className="on-dark-brand bg-[#1A1A1A] text-white p-4 flex items-center justify-between border-b border-gray-800">
               <div className="flex items-center gap-2.5">
-                <div className="w-9 h-9 rounded-xl bg-[#2CB5A0] flex items-center justify-center text-white">
+                <div className="w-9 h-9 rounded-xl bg-brand-500 flex items-center justify-center text-brand-950">
                   <Bot className="w-5 h-5" />
                 </div>
                 <div>
                   <h3 className="font-serif font-bold text-sm tracking-wide flex items-center gap-1.5">
                     Tripod Wellness Concierge <Sparkles className="w-3.5 h-3.5 text-amber-300" />
                   </h3>
-                  <p className="text-[10px] text-teal-300">Live answers from studio data + AI</p>
+                  <p className="text-[10px] text-brand-300">Live answers from studio data + AI</p>
                 </div>
               </div>
               <div className="flex items-center gap-1">
@@ -285,7 +285,7 @@ export const SpaAssistantChat: React.FC<SpaAssistantChatProps> = ({ onOpenBookin
                   className={`flex gap-2.5 ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}
                 >
                   {msg.sender === 'assistant' && (
-                    <div className="w-7 h-7 rounded-lg bg-[#2CB5A0] text-white flex items-center justify-center shrink-0 text-xs mt-1">
+                    <div className="w-7 h-7 rounded-lg bg-brand-500 text-brand-950 flex items-center justify-center shrink-0 text-xs mt-1">
                       <Bot className="w-4 h-4" />
                     </div>
                   )}
@@ -304,7 +304,7 @@ export const SpaAssistantChat: React.FC<SpaAssistantChatProps> = ({ onOpenBookin
                         {msg.sources.map((s, i) => (
                           <span
                             key={i}
-                            className="inline-flex items-center gap-1 rounded-full bg-teal-50 px-2 py-0.5 text-[10px] font-semibold text-teal-700"
+                            className="inline-flex items-center gap-1 rounded-full bg-brand-50 px-2 py-0.5 text-[10px] font-semibold text-brand-700"
                           >
                             <BookOpen className="w-3 h-3" />
                             {s.url ? (
@@ -348,7 +348,7 @@ export const SpaAssistantChat: React.FC<SpaAssistantChatProps> = ({ onOpenBookin
               ))}
               {streaming && (
                 <div className="flex gap-2.5 justify-start">
-                  <div className="w-7 h-7 rounded-lg bg-[#2CB5A0] text-white flex items-center justify-center shrink-0 text-xs mt-1">
+                  <div className="w-7 h-7 rounded-lg bg-brand-500 text-brand-950 flex items-center justify-center shrink-0 text-xs mt-1">
                     <Bot className="w-4 h-4 animate-bounce" />
                   </div>
                   <div className="max-w-[85%] p-3.5 rounded-2xl text-xs leading-relaxed bg-white border border-gray-200/80 text-gray-800 rounded-tl-none shadow-xs">
@@ -357,7 +357,7 @@ export const SpaAssistantChat: React.FC<SpaAssistantChatProps> = ({ onOpenBookin
                         <Markdown allowedElements={['p', 'strong', 'em', 'ul', 'ol', 'li', 'br', 'code']} skipHtml>{streamText}</Markdown>
                       </div>
                     ) : (
-                      <span className="font-medium text-teal-700">Tripod AI is checking live studio data…</span>
+                      <span className="font-medium text-brand-700">Tripod AI is checking live studio data…</span>
                     )}
                   </div>
                 </div>
@@ -378,7 +378,7 @@ export const SpaAssistantChat: React.FC<SpaAssistantChatProps> = ({ onOpenBookin
                       handleSendMessage(undefined, promptToQuery[prompt] || prompt);
                     }
                   }}
-                  className="px-2.5 py-1 rounded-full bg-gray-100 hover:bg-teal-50 hover:text-[#2CB5A0] text-[11px] font-medium text-gray-600 shrink-0 transition-colors cursor-pointer border border-transparent hover:border-teal-200"
+                  className="px-2.5 py-1 rounded-full bg-gray-100 hover:bg-brand-50 hover:text-[var(--brand-ink)] text-[11px] font-medium text-gray-600 shrink-0 transition-colors cursor-pointer border border-transparent hover:border-brand-200"
                 >
                   {prompt}
                 </button>
@@ -386,16 +386,16 @@ export const SpaAssistantChat: React.FC<SpaAssistantChatProps> = ({ onOpenBookin
             </div>
 
             {/* Direct Booking Shortcut Bar */}
-            <div className="px-3 py-1.5 bg-teal-50/50 border-t border-teal-100 flex items-center justify-between text-xs">
+            <div className="px-3 py-1.5 bg-brand-50/50 border-t border-brand-100 flex items-center justify-between text-xs">
               <span className="text-gray-600 font-medium text-[11px] flex items-center gap-1">
-                <Calendar className="w-3.5 h-3.5 text-[#2CB5A0]" /> Ready to relax?
+                <Calendar className="w-3.5 h-3.5 text-[var(--brand-ink)]" /> Ready to relax?
               </span>
               <button
                 onClick={() => {
                   setIsOpen(false);
                   onOpenBooking();
                 }}
-                className="text-[11px] font-bold text-[#2CB5A0] hover:underline cursor-pointer"
+                className="text-[11px] font-bold text-[var(--brand-ink)] hover:underline cursor-pointer"
               >
                 Book Online Now →
               </button>
@@ -409,13 +409,13 @@ export const SpaAssistantChat: React.FC<SpaAssistantChatProps> = ({ onOpenBookin
                 onChange={(e) => setInputPrompt(e.target.value)}
                 placeholder="Ask about treatments, pricing, availability..."
                 aria-label="Chat message"
-                className="flex-1 px-3.5 py-2.5 rounded-xl border border-gray-200 text-xs focus:outline-none focus:border-[#2CB5A0] focus:ring-1 focus:ring-[#2CB5A0]"
+                className="flex-1 px-3.5 py-2.5 rounded-xl border border-gray-200 text-xs focus:outline-none focus:border-[#BFA476] focus:ring-1 focus:ring-[#BFA476]"
               />
               <button
                 type="submit"
                 disabled={streaming || !inputPrompt.trim()}
                 aria-label="Send message"
-                className="p-2.5 rounded-xl bg-[#2CB5A0] text-white hover:bg-[#259b89] transition-colors disabled:opacity-50 cursor-pointer shadow-xs"
+                className="p-2.5 rounded-xl bg-brand-500 text-brand-950 hover:bg-brand-400 transition-colors disabled:opacity-50 cursor-pointer shadow-xs"
               >
                 <Send className="w-4 h-4" />
               </button>

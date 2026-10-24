@@ -80,7 +80,7 @@ export const AdminServiceFormPage: React.FC = () => {
           <ArrowLeft className="w-4 h-4" />
           Back to Services
         </Link>
-        <span className="text-xs font-semibold uppercase tracking-wider text-[#2CB5A0]">
+        <span className="text-xs font-semibold uppercase tracking-wider text-[var(--brand-ink)]">
           {isEdit ? 'Editing Service' : 'New Service Entry'}
         </span>
       </div>
@@ -114,7 +114,7 @@ export const AdminServiceFormPage: React.FC = () => {
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 placeholder="e.g. Executive Swedish Relaxation"
-                className="w-full border border-gray-300 rounded-xl py-3 px-4 text-sm focus:border-[#2CB5A0] focus:outline-none"
+                className="w-full border border-gray-300 rounded-xl py-3 px-4 text-sm focus:border-[#BFA476] focus:outline-none"
               />
             </div>
 
@@ -123,7 +123,7 @@ export const AdminServiceFormPage: React.FC = () => {
               <select
                 value={category}
                 onChange={(e) => setCategory(e.target.value as any)}
-                className="w-full border border-gray-300 rounded-xl py-3 px-4 text-sm focus:border-[#2CB5A0] focus:outline-none bg-white"
+                className="w-full border border-gray-300 rounded-xl py-3 px-4 text-sm focus:border-[#BFA476] focus:outline-none bg-white"
               >
                 <option value="relaxation">Relaxation & Swedish</option>
                 <option value="deep_tissue">Deep Tissue & Sports</option>
@@ -140,7 +140,7 @@ export const AdminServiceFormPage: React.FC = () => {
                 required
                 value={price}
                 onChange={(e) => setPrice(Number(e.target.value))}
-                className="w-full border border-gray-300 rounded-xl py-3 px-4 text-sm focus:border-[#2CB5A0] focus:outline-none"
+                className="w-full border border-gray-300 rounded-xl py-3 px-4 text-sm focus:border-[#BFA476] focus:outline-none"
               />
             </div>
 
@@ -151,7 +151,7 @@ export const AdminServiceFormPage: React.FC = () => {
                 required
                 value={duration}
                 onChange={(e) => setDuration(Number(e.target.value))}
-                className="w-full border border-gray-300 rounded-xl py-3 px-4 text-sm focus:border-[#2CB5A0] focus:outline-none"
+                className="w-full border border-gray-300 rounded-xl py-3 px-4 text-sm focus:border-[#BFA476] focus:outline-none"
               />
             </div>
           </div>
@@ -163,7 +163,7 @@ export const AdminServiceFormPage: React.FC = () => {
               value={imageUrl}
               onChange={(e) => setImageUrl(e.target.value)}
               placeholder="https://images.unsplash.com/..."
-              className="w-full border border-gray-300 rounded-xl py-3 px-4 text-sm focus:border-[#2CB5A0] focus:outline-none"
+              className="w-full border border-gray-300 rounded-xl py-3 px-4 text-sm focus:border-[#BFA476] focus:outline-none"
             />
           </div>
 
@@ -174,7 +174,7 @@ export const AdminServiceFormPage: React.FC = () => {
               value={shortDesc}
               onChange={(e) => setShortDesc(e.target.value)}
               placeholder="Brief summary displayed on therapy cards..."
-              className="w-full border border-gray-300 rounded-xl p-4 text-sm focus:border-[#2CB5A0] focus:outline-none"
+              className="w-full border border-gray-300 rounded-xl p-4 text-sm focus:border-[#BFA476] focus:outline-none"
             />
           </div>
 
@@ -184,7 +184,7 @@ export const AdminServiceFormPage: React.FC = () => {
               rows={4}
               value={fullDesc}
               onChange={(e) => setFullDesc(e.target.value)}
-              className="w-full border border-gray-300 rounded-xl p-4 text-sm focus:border-[#2CB5A0] focus:outline-none"
+              className="w-full border border-gray-300 rounded-xl p-4 text-sm focus:border-[#BFA476] focus:outline-none"
             />
           </div>
 
@@ -199,7 +199,7 @@ export const AdminServiceFormPage: React.FC = () => {
             <button
               type="submit"
               disabled={loading}
-              className="px-6 py-3 bg-[#2CB5A0] hover:bg-[#259b89] text-white rounded-xl text-xs font-bold flex items-center gap-2 shadow-sm disabled:opacity-50"
+              className="px-6 py-3 bg-brand-500 hover:bg-brand-400 text-brand-950 rounded-xl text-xs font-bold flex items-center gap-2 shadow-sm disabled:opacity-50"
             >
               <Save className="w-4 h-4" />
               {loading ? 'Saving...' : 'Save Service Record'}

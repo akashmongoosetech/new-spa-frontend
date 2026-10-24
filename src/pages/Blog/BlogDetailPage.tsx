@@ -68,7 +68,7 @@ export const BlogDetailPage: React.FC = () => {
 
       <Link
         to="/blog"
-        className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-[#2CB5A0] mb-8 font-medium transition-colors"
+        className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-[var(--brand-ink)] mb-8 font-medium transition-colors"
       >
         <ArrowLeft className="w-4 h-4" />
         Back to Wellness Journal
@@ -76,7 +76,7 @@ export const BlogDetailPage: React.FC = () => {
 
       <article className="space-y-8">
         <div className="space-y-4">
-          <div className="flex items-center gap-2 text-xs font-semibold text-[#2CB5A0] uppercase tracking-wider">
+          <div className="flex items-center gap-2 text-xs font-semibold text-[var(--brand-ink)] uppercase tracking-wider">
             <Tag className="w-3.5 h-3.5" />
             <span>{blog.category}</span>
           </div>
@@ -88,7 +88,7 @@ export const BlogDetailPage: React.FC = () => {
           <div className="flex flex-wrap items-center gap-4 text-xs text-gray-500 border-b pb-6">
             {(blog.therapistName || blog.author) && (
               <div className="flex items-center gap-1.5 font-medium text-gray-800">
-                <User className="w-4 h-4 text-[#2CB5A0]" />
+                <User className="w-4 h-4 text-[var(--brand-ink)]" />
                 <span>{blog.therapistName || blog.author}</span>
               </div>
             )}
@@ -116,7 +116,7 @@ export const BlogDetailPage: React.FC = () => {
         <div className="prose prose-lg max-w-none text-gray-700 font-light leading-relaxed space-y-6">
           {blog.excerptHtml && (
             <div
-              className="text-xl text-gray-800 font-normal leading-relaxed border-l-4 border-[#2CB5A0] pl-4 italic"
+              className="text-xl text-gray-800 font-normal leading-relaxed border-l-4 border-[#BFA476] pl-4 italic"
               dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(blog.excerptHtml || '') }}
             />
           )}
@@ -144,7 +144,7 @@ export const BlogDetailPage: React.FC = () => {
             <img
               src={blog.therapistAvatarUrl}
               alt={blog.therapistName}
-              className="w-16 h-16 rounded-full object-cover ring-2 ring-[#2CB5A0]/20"
+              className="w-16 h-16 rounded-full object-cover ring-2 ring-[#BFA476]/20"
             />
             <div className="space-y-1">
               <h4 className="font-semibold text-gray-900">{blog.therapistName}</h4>
@@ -155,12 +155,12 @@ export const BlogDetailPage: React.FC = () => {
 
         <div className="bg-linear-to-r from-[#1A1A1A] to-[#2A2A2A] text-white p-8 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-6 shadow-xl">
           <div className="space-y-1 text-center sm:text-left">
-            <h3 className="text-xl font-serif font-bold text-[#C7A36A]">Experience Restorative Healing</h3>
+            <h3 className="text-xl font-serif font-bold text-[var(--brand-ink)]">Experience Restorative Healing</h3>
             <p className="text-xs text-gray-300 font-light">Book your personalized therapeutic session with our licensed specialists.</p>
           </div>
           <button
             onClick={() => context.onOpenBooking?.()}
-            className="px-6 py-3 bg-[#2CB5A0] hover:bg-[#259b89] text-white rounded-xl text-xs font-bold transition-all shadow-md shrink-0"
+            className="px-6 py-3 bg-brand-500 hover:bg-brand-400 text-brand-950 rounded-xl text-xs font-bold transition-all shadow-md shrink-0"
           >
             Reserve Session
           </button>

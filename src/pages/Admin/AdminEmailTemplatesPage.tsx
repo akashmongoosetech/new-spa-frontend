@@ -68,7 +68,7 @@ export const AdminEmailTemplatesPage: React.FC = () => {
           </div>
         )}
 
-        <div className="p-4 rounded-xl bg-teal-50 border border-teal-200 text-[11px] leading-relaxed text-teal-900">
+        <div className="p-4 rounded-xl bg-brand-50 border border-brand-200 text-[11px] leading-relaxed text-brand-900">
           <p className="font-bold mb-1">Supported placeholders</p>
           <p>
             Booking: <code className="font-mono">{'{{customerName}} {{bookingNumber}} {{serviceName}} {{therapistName}} {{date}} {{dateLong}} {{time}} {{duration}} {{total}} {{status}} {{businessName}}'}</code>
@@ -76,7 +76,7 @@ export const AdminEmailTemplatesPage: React.FC = () => {
           <p className="mt-1">
             Contact: <code className="font-mono">{'{{name}} {{email}} {{phone}} {{subject}} {{message}} {{businessName}}'}</code>
           </p>
-          <p className="mt-1 text-teal-800">
+          <p className="mt-1 text-brand-800">
             The body is inserted into the branded email shell. Full HTML documents are also supported. Leave a subject
             or template blank to use the built-in default.
           </p>
@@ -90,7 +90,7 @@ export const AdminEmailTemplatesPage: React.FC = () => {
               value={bookingSubject}
               onChange={(e) => setBookingSubject(e.target.value)}
               placeholder="Appointment {{status}} — {{bookingNumber}}"
-              className="w-full border border-gray-300 rounded-xl p-3 text-sm focus:border-[#2CB5A0] focus:outline-none"
+              className="w-full border border-gray-300 rounded-xl p-3 text-sm focus:border-[#BFA476] focus:outline-none"
             />
           </div>
 
@@ -101,7 +101,7 @@ export const AdminEmailTemplatesPage: React.FC = () => {
               value={bookingBody}
               onChange={(e) => setBookingBody(e.target.value)}
               placeholder="Dear {{customerName}},&#10;&#10;Thank you for choosing Tripod Wellness. Your appointment for {{serviceName}} with {{therapistName}} on {{date}} at {{time}} has been confirmed.&#10;&#10;Warm regards,&#10;The Tripod Wellness Concierge Team"
-              className="w-full border border-gray-300 rounded-xl p-3 text-sm font-mono text-xs focus:border-[#2CB5A0] focus:outline-none"
+              className="w-full border border-gray-300 rounded-xl p-3 text-sm font-mono text-xs focus:border-[#BFA476] focus:outline-none"
             />
           </div>
 
@@ -112,7 +112,7 @@ export const AdminEmailTemplatesPage: React.FC = () => {
               value={contactSubject}
               onChange={(e) => setContactSubject(e.target.value)}
               placeholder="We received your message"
-              className="w-full border border-gray-300 rounded-xl p-3 text-sm focus:border-[#2CB5A0] focus:outline-none"
+              className="w-full border border-gray-300 rounded-xl p-3 text-sm focus:border-[#BFA476] focus:outline-none"
             />
           </div>
 
@@ -123,7 +123,7 @@ export const AdminEmailTemplatesPage: React.FC = () => {
               value={contactBody}
               onChange={(e) => setContactBody(e.target.value)}
               placeholder="Dear {{name}},&#10;&#10;Thank you for reaching out to Tripod Wellness. Our concierge team will respond within 2 business hours.&#10;&#10;Warm regards,&#10;The Tripod Wellness Concierge Team"
-              className="w-full border border-gray-300 rounded-xl p-3 text-sm font-mono text-xs focus:border-[#2CB5A0] focus:outline-none"
+              className="w-full border border-gray-300 rounded-xl p-3 text-sm font-mono text-xs focus:border-[#BFA476] focus:outline-none"
             />
           </div>
 
@@ -131,7 +131,7 @@ export const AdminEmailTemplatesPage: React.FC = () => {
             type="submit"
             disabled={saving || !loaded}
             title={!loaded ? 'Load the saved templates before saving.' : undefined}
-            className="px-6 py-3 bg-[#2CB5A0] text-white rounded-xl text-xs font-bold flex items-center gap-2 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
+            className="px-6 py-3 bg-brand-500 text-brand-950 rounded-xl text-xs font-bold flex items-center gap-2 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <Save className="w-4 h-4" />
             {saving ? 'Saving...' : 'Save Templates'}

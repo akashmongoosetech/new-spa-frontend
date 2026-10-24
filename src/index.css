@@ -6,37 +6,50 @@
   --font-display: 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
   --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
 
-  /* Luxury Gold Palette */
-  --color-gold-50: #fdfbf7;
-  --color-gold-100: #f7f0df;
-  --color-gold-200: #eedfbe;
-  --color-gold-300: #e3ca95;
-  --color-gold-400: #d8b06c;
-  --color-gold-500: #c5a059;
-  --color-gold-600: #aa8140;
-  --color-gold-700: #886232;
-  --color-gold-800: #6f4e2c;
-  --color-gold-900: #5c4128;
-  --color-gold-950: #352212;
+  /* Tripod Wellness Bronze Palette */
+  --color-brand-50: #fbf7f0;
+  --color-brand-100: #f5ede0;
+  --color-brand-200: #eadcc4;
+  --color-brand-300: #ddc8a5;
+  --color-brand-400: #c3aa7e;
+  --color-brand-500: #bfa476;
+  --color-brand-600: #a1855b;
+  --color-brand-700: #80663f;
+  --color-brand-800: #665032;
+  --color-brand-900: #523f28;
+  --color-brand-950: #2e2417;
+
+  /* Backwards-compatible gold aliases. */
+  --color-gold-50: var(--color-brand-50);
+  --color-gold-100: var(--color-brand-100);
+  --color-gold-200: var(--color-brand-200);
+  --color-gold-300: var(--color-brand-300);
+  --color-gold-400: var(--color-brand-400);
+  --color-gold-500: var(--color-brand-500);
+  --color-gold-600: var(--color-brand-600);
+  --color-gold-700: var(--color-brand-700);
+  --color-gold-800: var(--color-brand-800);
+  --color-gold-900: var(--color-brand-900);
+  --color-gold-950: var(--color-brand-950);
 
   /* Tripod Wellness Brand Identifiers */
-  --color-aura-gold: #c5a059;
-  --color-aura-gold-light: #dfc896;
-  --color-aura-gold-dark: #9e7b3a;
-  --color-aura-gold-bright: #e5b85a;
-  
-  --color-aura-dark: #0e1117;
-  --color-aura-charcoal: #161a23;
-  --color-aura-slate: #222734;
-  --color-aura-card: #1c212d;
-  
-  --color-aura-pearl: #fafaf7;
-  --color-aura-cream: #f4efe6;
-  --color-aura-sand: #e8ded1;
-  
-  --color-aura-emerald: #1c3b34;
-  --color-aura-emerald-dark: #122823;
-  --color-aura-sage: #809689;
+  --color-aura-gold: #bfa476;
+  --color-aura-gold-light: #c3aa7e;
+  --color-aura-gold-dark: #80663f;
+  --color-aura-gold-bright: #ddc8a5;
+
+  --color-aura-dark: #17130f;
+  --color-aura-charcoal: #201a14;
+  --color-aura-slate: #2a231b;
+  --color-aura-card: #241d16;
+
+  --color-aura-pearl: #faf8f4;
+  --color-aura-cream: #f5ede0;
+  --color-aura-sand: #eadcc4;
+
+  --color-aura-emerald: #2e2417;
+  --color-aura-emerald-dark: #1b1610;
+  --color-aura-sage: #a1855b;
 
   /* Custom Spacing Scales for Luxury Layouts */
   --spacing-18: 4.5rem;
@@ -57,27 +70,39 @@
 }
 
 /* Custom Utilities for Luxury Finishes */
+@layer base {
+  :root {
+    /* Default accent text: deep bronze for readable text on light surfaces. */
+    --brand-ink: #80663f;
+  }
+
+  /* Any section with a dark background opts into the lighter bronze accent. */
+  .on-dark-brand {
+    --brand-ink: #c3aa7e;
+  }
+}
+
 @layer utilities {
   .bg-gold-gradient {
-    background: linear-gradient(135deg, #dfc896 0%, #c5a059 50%, #9e7b3a 100%);
+    background: linear-gradient(135deg, #c3aa7e 0%, #bfa476 50%, #80663f 100%);
   }
 
   .text-gold-gradient {
-    background: linear-gradient(135deg, #f5e6c7 0%, #d4a341 50%, #b8832a 100%);
+    background: linear-gradient(135deg, #ddc8a5 0%, #c3aa7e 50%, #bfa476 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
   }
 
   .border-gold-subtle {
-    border-color: rgba(197, 160, 89, 0.25);
+    border-color: rgba(191, 164, 118, 0.28);
   }
 
   .shadow-gold-glow {
-    box-shadow: 0 0 25px -5px rgba(197, 160, 89, 0.25);
+    box-shadow: 0 0 25px -5px rgba(191, 164, 118, 0.32);
   }
 
   .shadow-luxury {
-    box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.08), 0 4px 12px -2px rgba(197, 160, 89, 0.05);
+    box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.08), 0 4px 12px -2px rgba(191, 164, 118, 0.08);
   }
 }
 
@@ -88,17 +113,17 @@
 }
 
 ::-webkit-scrollbar-track {
-  background: #0e1117;
+  background: #17130f;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #2a3140;
+  background: #3a2f23;
   border-radius: 4px;
-  border: 2px solid #0e1117;
+  border: 2px solid #17130f;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #c5a059;
+  background: #bfa476;
 }
 
 /* Prose/Typography styles for TipTap-generated HTML content */
@@ -147,13 +172,13 @@
   }
 
   .prose a {
-    color: #2CB5A0;
+    color: #80663f;
     text-decoration: underline;
     font-weight: 500;
   }
 
   .prose a:hover {
-    color: #259b89;
+    color: #665032;
   }
 
   .prose ul, .prose ol {
@@ -181,7 +206,7 @@
   }
 
   .prose blockquote {
-    border-left: 4px solid #2CB5A0;
+    border-left: 4px solid #bfa476;
     padding-left: 1rem;
     margin-top: 1.5em;
     margin-bottom: 1.5em;
@@ -277,7 +302,7 @@
     margin-top: 0.25rem;
     width: 1rem;
     height: 1rem;
-    accent-color: #2CB5A0;
+    accent-color: #bfa476;
   }
 
   /* Smaller variant for cards/modals */
