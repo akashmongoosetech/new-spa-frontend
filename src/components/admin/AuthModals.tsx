@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Modal } from '../ui/Modal';
 import { api } from '../../services/api';
+import { markConversionPending } from '../../utils/analytics';
 
 interface AuthModalsProps {
   showSignupModal: boolean;
@@ -19,11 +21,13 @@ export const AuthModals: React.FC<AuthModalsProps> = ({
   showChangePasswordModal,
   setShowChangePasswordModal,
 }) => {
+  const navigate = useNavigate();
   // Signup Form State
   const [signupName, setSignupName] = useState('');
   const [signupEmail, setSignupEmail] = useState('');
   const [signupPassword, setSignupPassword] = useState('');
   const [signupRole, setSignupRole] = useState('admin');
+  const [signupConsent, setSignupConsent] = useState(false);
   const [signupMsg, setSignupMsg] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
   const [signupLoading, setSignupLoading] = useState(false);
 
@@ -51,11 +55,23 @@ export const AuthModals: React.FC<AuthModalsProps> = ({
   const handleSignupSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSignupMsg(null);
+    if (!signupConsent) {
+      setSignupMsg({ type: 'error', text: 'Please agree to the Privacy Policy before submitting this application.' });
+      return;
+    }
     setSignupLoading(true);
     try {
-      await api.adminSignup({ name: signupName, email: signupEmail, password: signupPassword, requestedRole: roleToBackend(signupRole) });
-      setSignupMsg({ type: 'success', text: 'Application submitted for director approval!' });
-      setTimeout(() => setShowSignupModal(false), 1500);
+      await api.adminSignup({
+        name: signupName,
+        email: signupEmail,
+        password: signupPassword,
+        requestedRole: roleToBackend(signupRole),
+        consent: true,
+      });
+      setSignupMsg({ type: 'success', text: 'Application submitted for director approval.' });
+      setShowSignupModal(false);
+      markConversionPending('application');
+      navigate('/thank-you?type=application', { replace: true });
     } catch (err: any) {
       setSignupMsg({ type: 'error', text: err.message || 'Failed to create account.' });
     } finally {
@@ -99,7 +115,7 @@ export const AuthModals: React.FC<AuthModalsProps> = ({
   return (
     <>
       {/* Admin Signup Modal */}
-      <Modal isOpen={showSignupModal} onClose={() => setShowSignupModal(false)} title="Create Admin Staff Account">
+      <Modal isOpen={showSignupModal} onClose={() => setShowSignupModal(false)} title="Apply for Staff Access">
         <form onSubmit={handleSignupSubmit} className="space-y-4">
           {signupMsg && (
             <div className={`p-3 rounded-xl text-xs font-semibold ${signupMsg.type === 'success' ? 'bg-brand-50 text-[var(--brand-ink)]' : 'bg-rose-50 text-rose-600'}`}>
@@ -152,12 +168,34 @@ export const AuthModals: React.FC<AuthModalsProps> = ({
               <option value="receptionist">Receptionist (Bookings, Contacts)</option>
             </select>
           </div>
+          <label htmlFor="admin-signup-consent" className="flex items-start gap-2 text-[11px] leading-relaxed text-gray-600">
+            <input
+              id="admin-signup-consent"
+              type="checkbox"
+              required
+              checked={signupConsent}
+              onChange={(event) => setSignupConsent(event.target.checked)}
+              className="mt-0.5 h-4 w-4 shrink-0 accent-[#BFA476]"
+            />
+            <span>
+              I agree to the{' '}
+              <a
+                href="/privacy-policy"
+                target="_blank"
+                rel="noreferrer"
+                className="font-semibold text-[var(--brand-ink)] underline underline-offset-2"
+              >
+                Privacy Policy
+              </a>{' '}
+              and to the review of this staff application.
+            </span>
+          </label>
           <button
             type="submit"
-            disabled={signupLoading}
+            disabled={signupLoading || !signupConsent}
             className="w-full py-3 rounded-xl bg-brand-500 hover:bg-brand-500 text-brand-950 font-bold text-xs transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {signupLoading ? 'Creating Account...' : 'Create Staff Account'}
+            {signupLoading ? 'Submitting Application...' : 'Submit Staff Application'}
           </button>
         </form>
       </Modal>

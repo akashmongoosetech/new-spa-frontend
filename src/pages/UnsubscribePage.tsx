@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { MailX, CheckCircle2, AlertCircle, ArrowLeft } from 'lucide-react';
 import { api } from '../services/api';
-import { SEO } from '../components/ui/SEO';
 
 type Status = 'idle' | 'sending' | 'done' | 'error';
 
@@ -30,7 +29,6 @@ export const UnsubscribePage: React.FC = () => {
 
   return (
     <div className="min-h-[70vh] bg-[#FAFAFA] flex items-center justify-center px-4 py-16">
-      <SEO title="Unsubscribe | Tripod Wellness" description="Manage your Tripod Wellness newsletter subscription." />
       <div className="w-full max-w-md rounded-2xl border border-gray-100 bg-white p-8 shadow-xl text-center">
         <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-brand-500/10 text-[var(--brand-ink)]">
           {status === 'done' ? <CheckCircle2 className="h-7 w-7" /> : status === 'error' ? <AlertCircle className="h-7 w-7 text-rose-500" /> : <MailX className="h-7 w-7" />}

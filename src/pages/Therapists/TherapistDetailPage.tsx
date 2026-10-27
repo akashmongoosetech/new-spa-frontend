@@ -1,8 +1,10 @@
 import React from 'react';
 import { useParams, Link, useOutletContext } from 'react-router-dom';
-import { Star, Award, ShieldCheck, Calendar, ArrowLeft, CheckCircle2, Clock } from 'lucide-react';
+import { Calendar, ArrowLeft, CheckCircle2, Clock } from 'lucide-react';
 import { mockSettings } from '../../data/mockData';
 import { SEO } from '../../components/ui/SEO';
+import { clampSeoDescription, clampSeoTitle } from '../../utils/seo';
+import { EntityImage } from '../../components/ui/EntityImage';
 import NotFound from '../NotFound';
 
 export const TherapistDetailPage: React.FC = () => {
@@ -27,8 +29,11 @@ export const TherapistDetailPage: React.FC = () => {
   return (
     <div className="py-12 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto font-sans min-h-screen">
       <SEO
-        title={`${therapist.name} (${therapist.title}) | ${settings.businessName}`}
-        description={therapist.bio}
+        title={clampSeoTitle(`${therapist.name} | ${settings.businessName}`)}
+        description={clampSeoDescription(
+          therapist.bio || '',
+          `View this ${settings.businessName} therapist profile, including specialties and stated experience, then book a private men-to-men massage appointment in Indore.`
+        )}
       />
 
       <Link
@@ -43,10 +48,13 @@ export const TherapistDetailPage: React.FC = () => {
         <div className="md:col-span-1">
           <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-xl sticky top-28 text-center space-y-6">
             <div className="w-36 h-36 mx-auto rounded-full overflow-hidden border-4 border-[#BFA476]/20 shadow-lg">
-              <img
+              <EntityImage
                 src={therapist.photoUrl || therapist.imageUrl}
-                alt={therapist.name}
+                alt={`${therapist.name}, massage therapist`}
                 className="w-full h-full object-cover"
+                placeholderClassName="w-full h-full rounded-full"
+                label={therapist.name}
+                loading="eager"
               />
             </div>
 
@@ -57,19 +65,16 @@ export const TherapistDetailPage: React.FC = () => {
               </p>
             </div>
 
-            <div className="flex items-center justify-center gap-2 text-amber-500 text-sm font-bold bg-amber-50/80 py-2 px-4 rounded-xl">
-              <Star className="w-4 h-4 fill-amber-400 text-amber-400" />
-              <span>{therapist.rating} Rating ({therapist.reviewCount} Verified Reviews)</span>
-            </div>
-
             <div className="text-left text-xs text-gray-600 space-y-2.5 border-t pt-4">
+              {therapist.experienceYears > 0 && (
+                <div className="flex items-center gap-2">
+                  <Clock className="w-4 h-4 text-[var(--brand-ink)]" />
+                  <span>{therapist.experienceYears} years stated experience</span>
+                </div>
+              )}
               <div className="flex items-center gap-2">
-                <Award className="w-4 h-4 text-[var(--brand-ink)]" />
-                <span>{therapist.experienceYears} Years Clinical & Spa Experience</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <ShieldCheck className="w-4 h-4 text-[var(--brand-ink)]" />
-                <span>State Licensed & Background Verified</span>
+                <CheckCircle2 className="w-4 h-4 text-[var(--brand-ink)]" />
+                <span>Profile details supplied for this therapist</span>
               </div>
             </div>
 

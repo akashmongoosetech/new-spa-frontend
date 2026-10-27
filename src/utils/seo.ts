@@ -1,16 +1,27 @@
 /**
  * SEO & Meta Tag Management Utility for Tripod Wellness
  * Handles dynamic HTML meta tags, Open Graph card images, Twitter meta tags,
- * canonical link injection, and Schema.org JSON-LD structured data.
+ * canonical link injection, and optional Schema.org JSON-LD.
  */
 
-import { BRAND_ICON, BRAND_LOGO } from '../branding/logo';
+import { BRAND_ICON } from '../branding/logo';
+import {
+  DEFAULT_DESCRIPTION,
+  DEFAULT_OG_IMAGE,
+  DEFAULT_TITLE,
+  SITE_NAME,
+  SITE_URL,
+  TWITTER_HANDLE,
+  getStaticRouteMeta,
+  normalizePath,
+} from '../config/site';
 
 export interface SEOConfig {
   title?: string;
   description?: string;
   keywords?: string;
   ogImage?: string;
+  ogImageAlt?: string;
   favicon?: string;
   canonicalUrl?: string;
   path?: string;
@@ -19,285 +30,159 @@ export interface SEOConfig {
   jsonLd?: Record<string, any> | Array<Record<string, any>>;
 }
 
-const DEFAULT_SEO: Required<Omit<SEOConfig, 'jsonLd' | 'path'>> = {
-  title: "Tripod Wellness | Premier Men's Massage Therapy & Wellness Sanctuary Indore",
-  description: "Licensed Men-to-Men massage therapy sanctuary in Indore, Ujjain & Dewas. Deep Tissue, Swedish, Ayurvedic Abhyanga, and Hot Stone in private soundproof suites.",
-  keywords: "men to men massage Indore, Ujjain, Dewas, male massage therapist Indore, Ujjain, Dewas, deep tissue massage Indore, Ujjain, Dewas, Ayurvedic Abhyanga, male spa Indore, Ujjain, Dewas, male wellness sanctuary",
-  ogImage: "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?q=80&w=1200&auto=format&fit=crop",
-  favicon: BRAND_ICON,
-  canonicalUrl: "https://tripod-wellness.netlify.app",
-  type: "website",
-  robots: "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1",
+const DEFAULT_SEO = {
+  title: DEFAULT_TITLE,
+  description: DEFAULT_DESCRIPTION,
+  keywords: '',
+  ogImage: DEFAULT_OG_IMAGE,
+  ogImageAlt: `${SITE_NAME} — men's massage therapy in Indore`,
+  type: 'website' as const,
+  robots: 'index, follow',
 };
 
-export const BASE_URL = "https://tripod-wellness.netlify.app";
+function metaContent(value: string): string {
+  return String(value || '').replace(/\s+/g, ' ').trim();
+}
 
 /**
- * Dynamically sets or updates meta tags, Open Graph images, canonical links, and JSON-LD schema.
+ * Sets or updates a meta tag. Empty values are ignored so a page-level SEO
+ * component cannot accidentally erase the site defaults.
  */
-export const updatePageSEO = (config: SEOConfig = {}) => {
+function setMeta(attrName: 'name' | 'property', attrVal: string, contentVal: string): void {
+  const value = metaContent(contentVal);
+  if (!value) return;
+  let elem = document.querySelector(`meta[${attrName}="${attrVal}"]`);
+  if (!elem) {
+    elem = document.createElement('meta');
+    elem.setAttribute(attrName, attrVal);
+    document.head.appendChild(elem);
+  }
+  elem.setAttribute('content', value);
+}
+
+function removeMeta(attrName: 'name' | 'property', attrVal: string): void {
+  document.querySelectorAll(`meta[${attrName}="${attrVal}"]`).forEach((elem) => elem.remove());
+}
+
+function upsertLink(rel: string, href: string, extra: Record<string, string> = {}): void {
+  let link = document.querySelector(`link[rel="${rel}"]`) as HTMLLinkElement | null;
+  if (!link) {
+    link = document.createElement('link');
+    link.setAttribute('rel', rel);
+    document.head.appendChild(link);
+  }
+  link.setAttribute('href', href);
+  Object.entries(extra).forEach(([key, value]) => link!.setAttribute(key, value));
+}
+
+/**
+ * Dynamically sets or updates meta tags, Open Graph images, canonical links,
+ * and optional JSON-LD. The default business schema is deliberately not
+ * injected: structured data is only emitted when a page supplies verified data.
+ */
+export const updatePageSEO = (config: SEOConfig = {}): void => {
   if (typeof window === 'undefined') return;
 
-  const title = config.title || DEFAULT_SEO.title;
-  const description = config.description || DEFAULT_SEO.description;
-  const keywords = config.keywords || DEFAULT_SEO.keywords;
+  const title = metaContent(config.title || DEFAULT_SEO.title);
+  const description = metaContent(config.description || DEFAULT_SEO.description);
   const ogImage = config.ogImage || DEFAULT_SEO.ogImage;
+  const ogImageAlt = metaContent(config.ogImageAlt || DEFAULT_SEO.ogImageAlt);
   const type = config.type || DEFAULT_SEO.type;
   const robots = config.robots || DEFAULT_SEO.robots;
 
-  // Resolve Canonical URL
-  let canonicalUrl = config.canonicalUrl;
-  if (!canonicalUrl) {
-    const currentPath = config.path || window.location.pathname;
-    canonicalUrl = `${BASE_URL}${currentPath === '/' ? '' : currentPath}`;
-  }
+  const currentPath = normalizePath(config.path || window.location.pathname);
+  const canonicalUrl = (
+    config.canonicalUrl || `${SITE_URL}${currentPath === '/' ? '/' : currentPath}`
+  ).replace(/([^:]\/)\/+/g, '$1');
 
-  // 1. Update Document Title
   document.title = title;
 
-  // 2. Helper to set/update meta tag
-  const setMeta = (attrName: 'name' | 'property', attrVal: string, contentVal: string) => {
-    if (!contentVal) return;
-    let elem = document.querySelector(`meta[${attrName}="${attrVal}"]`);
-    if (!elem) {
-      elem = document.createElement('meta');
-      elem.setAttribute(attrName, attrVal);
-      document.head.appendChild(elem);
-    }
-    elem.setAttribute('content', contentVal);
-  };
-
-  // Standard Meta Tags
+  // Standard meta tags
   setMeta('name', 'description', description);
-  setMeta('name', 'keywords', keywords);
   setMeta('name', 'robots', robots);
+  if (config.keywords) setMeta('name', 'keywords', config.keywords);
+  else removeMeta('name', 'keywords');
+  setMeta('name', 'theme-color', '#17130F');
 
-  // Open Graph (Facebook / WhatsApp / LinkedIn / iMessage)
-  setMeta('property', 'og:site_name', 'Tripod Wellness');
+  // Open Graph
+  setMeta('property', 'og:site_name', SITE_NAME);
   setMeta('property', 'og:title', title);
   setMeta('property', 'og:description', description);
-  setMeta('property', 'og:type', type);
+  setMeta('property', 'og:type', type === 'business' ? 'website' : type);
   setMeta('property', 'og:url', canonicalUrl);
   setMeta('property', 'og:image', ogImage);
   setMeta('property', 'og:image:width', '1200');
   setMeta('property', 'og:image:height', '630');
+  setMeta('property', 'og:image:alt', ogImageAlt);
   setMeta('property', 'og:locale', 'en_IN');
 
-  // Twitter Cards
+  // Twitter cards
   setMeta('name', 'twitter:card', 'summary_large_image');
-  setMeta('name', 'twitter:site', '@TripodWellness');
   setMeta('name', 'twitter:title', title);
   setMeta('name', 'twitter:description', description);
   setMeta('name', 'twitter:image', ogImage);
+  setMeta('name', 'twitter:image:alt', ogImageAlt);
+  if (TWITTER_HANDLE) setMeta('name', 'twitter:site', TWITTER_HANDLE);
+  else removeMeta('name', 'twitter:site');
 
-  // 3. Update Canonical Link
-  let linkCanonical = document.querySelector('link[rel="canonical"]');
-  if (!linkCanonical) {
-    linkCanonical = document.createElement('link');
-    linkCanonical.setAttribute('rel', 'canonical');
-    document.head.appendChild(linkCanonical);
+  // Canonical and icons
+  upsertLink('canonical', canonicalUrl);
+  upsertLink('icon', config.favicon || BRAND_ICON, { type: 'image/png' });
+  upsertLink('apple-touch-icon', config.favicon || BRAND_ICON);
+
+  // Optional JSON-LD. No default schema is emitted because the previous
+  // default contained unverified ratings, prices, hours and amenities.
+  let scriptTag = document.getElementById('json-ld-spa-schema') as HTMLScriptElement | null;
+  if (config.jsonLd) {
+    if (!scriptTag) {
+      scriptTag = document.createElement('script');
+      scriptTag.id = 'json-ld-spa-schema';
+      scriptTag.type = 'application/ld+json';
+      document.head.appendChild(scriptTag);
+    }
+    scriptTag.textContent = JSON.stringify(config.jsonLd);
+  } else if (scriptTag) {
+    scriptTag.remove();
   }
-  linkCanonical.setAttribute('href', canonicalUrl);
+};
 
-  // 4. Update Favicon Link
-  // The approved icon is the only favicon source of truth.
-  const favicon = BRAND_ICON;
-  let linkFavicon = document.querySelector('link[rel="icon"], link[rel="shortcut icon"]') as HTMLLinkElement;
-  if (!linkFavicon) {
-    linkFavicon = document.createElement('link');
-    linkFavicon.setAttribute('rel', 'icon');
-    document.head.appendChild(linkFavicon);
-  }
-  linkFavicon.setAttribute('href', favicon);
+export function clampSeoTitle(value: string): string {
+  let title = metaContent(value);
+  if (title.length < 30) title = metaContent(`${title} | ${SITE_NAME}`);
+  if (title.length <= 60) return title;
+  const cut = title.slice(0, 60);
+  const lastSpace = cut.lastIndexOf(' ');
+  return cut.slice(0, lastSpace > 35 ? lastSpace : 60).replace(/[|,;:\-–—\s]+$/, '').trim();
+}
 
-  // 4. Inject or Update Schema.org JSON-LD Structured Data
-  const defaultBusinessSchema = generateLocalBusinessSchema();
+export function clampSeoDescription(value: string, fallback: string): string {
+  let description = metaContent(value);
+  if (description.length < 120) description = metaContent(`${description} ${fallback}`);
+  if (description.length <= 160) return description;
+  const cut = description.slice(0, 160);
+  const lastSpace = cut.lastIndexOf(' ');
+  return cut.slice(0, lastSpace > 120 ? lastSpace : 160).replace(/[|,;:\-–—\s]+$/, '').trim();
+}
 
-  const activeJsonLd = config.jsonLd ? config.jsonLd : defaultBusinessSchema;
-
-  let scriptTag = document.getElementById('json-ld-spa-schema') as HTMLScriptElement;
-  if (!scriptTag) {
-    scriptTag = document.createElement('script');
-    scriptTag.id = 'json-ld-spa-schema';
-    scriptTag.type = 'application/ld+json';
-    document.head.appendChild(scriptTag);
-  }
-  scriptTag.textContent = JSON.stringify(activeJsonLd);
+const PRESET_PATHS: Record<string, string> = {
+  home: '/',
+  services: '/services',
+  booking: '/booking',
+  gallery: '/gallery',
+  therapists: '/therapists',
+  blog: '/blog',
+  faq: '/faq',
+  about: '/about',
+  contact: '/contact',
 };
 
 /**
- * Generates rich Schema.org LocalBusiness / DaySpa JSON-LD structured data tailored for a luxury massage & spa sanctuary.
+ * Returns SEO metadata for a named route. Kept for compatibility with the
+ * existing hook API; all copy now comes from the central route manifest.
  */
-export const generateLocalBusinessSchema = (customData?: Record<string, any>): Record<string, any> => {
-  return {
-    "@context": "https://schema.org",
-    "@type": ["DaySpa", "HealthAndBeautyBusiness", "LocalBusiness"],
-    "@id": `${BASE_URL}/#spa-business`,
-    "name": "Tripod Wellness",
-    "alternateName": "Tripod Wellness Men's Massage & Wellness Sanctuary",
-    "description": "Licensed Men-to-Men luxury massage therapy sanctuary in Indore, Ujjain & Dewas. Offering deep tissue muscle recovery, Swedish relaxation, Ayurvedic Abhyanga, and volcanic hot stone therapies in private soundproof VIP suites.",
-    "url": BASE_URL,
-    "telephone": "+91-9171606807",
-    "email": "wellnesstripod@gmail.com",
-    "priceRange": "₹₹₹",
-    "currenciesAccepted": "INR",
-    "paymentAccepted": "Cash, Credit Card, Debit Card, UPI, Net Banking",
-    "logo": `${BASE_URL}${BRAND_LOGO}`,
-    "image": [
-      "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?q=80&w=1200&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1540555700478-4be289fbecef?q=80&w=1200&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1507652313519-d4e9174996dd?q=80&w=1200&auto=format&fit=crop"
-    ],
-    "address": {
-      "@type": "PostalAddress",
-      "addressLocality": "Indore, Ujjain, Dewas",
-      "addressRegion": "Madhya Pradesh",
-      "addressCountry": "IN"
-    },
-    "geo": {
-      "@type": "GeoCoordinates",
-      "latitude": 22.7196,
-      "longitude": 75.8577
-    },
-    "openingHoursSpecification": [
-      {
-        "@type": "OpeningHoursSpecification",
-        "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
-        "opens": "00:00",
-        "closes": "23:59"
-      }
-    ],
-    "aggregateRating": {
-      "@type": "AggregateRating",
-      "ratingValue": "4.9",
-      "reviewCount": "348",
-      "bestRating": "5",
-      "worstRating": "1"
-    },
-    "hasOfferCatalog": {
-      "@type": "OfferCatalog",
-      "name": "Luxury Massage & Therapy Menu",
-      "itemListElement": [
-        {
-          "@type": "Offer",
-          "itemOffered": {
-            "@type": "Service",
-            "name": "Deep Tissue Muscle Recovery",
-            "description": "Targeted myofascial release focusing on chronic muscle knots and post-workout soreness.",
-            "provider": { "@id": `${BASE_URL}/#spa-business` }
-          },
-          "price": "3500",
-          "priceCurrency": "INR"
-        },
-        {
-          "@type": "Offer",
-          "itemOffered": {
-            "@type": "Service",
-            "name": "Swedish Relaxation Massage",
-            "description": "Classic gentle gliding strokes with cold-pressed organic botanical oils for supreme stress relief.",
-            "provider": { "@id": `${BASE_URL}/#spa-business` }
-          },
-          "price": "3000",
-          "priceCurrency": "INR"
-        },
-        {
-          "@type": "Offer",
-          "itemOffered": {
-            "@type": "Service",
-            "name": "Ayurvedic Abhyanga Therapy",
-            "description": "Traditional warm herbal oil rhythmic bodywork restoring dosha harmony and energy vitality.",
-            "provider": { "@id": `${BASE_URL}/#spa-business` }
-          },
-          "price": "4000",
-          "priceCurrency": "INR"
-        },
-        {
-          "@type": "Offer",
-          "itemOffered": {
-            "@type": "Service",
-            "name": "Volcanic Hot Stone Therapy",
-            "description": "Heated basalt stones placed along energy meridians to melt deep muscular stiffness.",
-            "provider": { "@id": `${BASE_URL}/#spa-business` }
-          },
-          "price": "4500",
-          "priceCurrency": "INR"
-        }
-      ]
-    },
-    "amenityFeature": [
-      {
-        "@type": "LocationFeatureSpecification",
-        "name": "Private Soundproof VIP Suites",
-        "value": true
-      },
-      {
-        "@type": "LocationFeatureSpecification",
-        "name": "En-suite Rainfall Showers",
-        "value": true
-      },
-      {
-        "@type": "LocationFeatureSpecification",
-        "name": "Ergonomic Heated Therapy Tables",
-        "value": true
-      },
-      {
-        "@type": "LocationFeatureSpecification",
-        "name": "Hospital-grade UV Hygiene Sanitization",
-        "value": true
-      }
-    ],
-    ...customData,
-  };
-};
-
-/**
- * Returns SEO metadata presets for key application routes
- */
-export const getSEOPresets = (pageName: string, params?: Record<string, any>): SEOConfig => {
-  switch (pageName) {
-    case 'home':
-      return {
-        title: "Tripod Wellness | Luxury Men's Massage Therapy Indore",
-        description: "Experience executive male wellness in private soundproof suites. Certified male therapists, deep tissue muscle recovery, Swedish relaxation, and hot stone therapy.",
-        ogImage: "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?q=80&w=1200&auto=format&fit=crop",
-        path: "/",
-      };
-    case 'services':
-      return {
-        title: "Massage Therapies & Pricing Menu | Tripod Wellness",
-        description: "Explore our signature therapies including Deep Tissue Recovery, Swedish Relaxation, Ayurvedic Abhyanga, and Eucalyptus Steam. Transparent pricing and private suites.",
-        ogImage: "https://images.unsplash.com/photo-1540555700478-4be289fbecef?q=80&w=1200&auto=format&fit=crop",
-        path: "/services",
-      };
-    case 'booking':
-      return {
-        title: "Book VIP Suite Session Online | Tripod Wellness Reserve",
-        description: "Select therapist, date, time slot, and treatment package in under 60 seconds. Instant booking confirmation for private VIP therapy suites in Indore, Ujjain & Dewas.",
-        ogImage: "https://images.unsplash.com/photo-1519823551278-64ac92734fb1?q=80&w=1200&auto=format&fit=crop",
-        path: "/booking",
-      };
-    case 'gallery':
-      return {
-        title: "Sanctuary Suites & Equipment Gallery | Tripod Wellness",
-        description: "High-resolution photo tour of our VIP therapy suites, volcanic hot stone warmers, hydrotherapy tubs, and hospital-grade sanitized facilities.",
-        ogImage: "https://images.unsplash.com/photo-1507652313519-d4e9174996dd?q=80&w=1200&auto=format&fit=crop",
-        path: "/gallery",
-      };
-    case 'therapists':
-      return {
-        title: "Certified Male Massage Therapists | Tripod Wellness Staff",
-        description: "Meet our licensed male massage specialists trained in deep tissue, sports kinesiology, and Ayurvedic bodywork.",
-        ogImage: "https://images.unsplash.com/photo-1600334089648-b0d9d3028eb2?q=80&w=1200&auto=format&fit=crop",
-        path: "/therapists",
-      };
-    case 'blog':
-      return {
-        title: "Men's Health & Massage Therapy Blog | Tripod Wellness Insights",
-        description: "Expert articles on posture correction, muscle tension recovery, hot stone therapy benefits, and stress relief for modern gentlemen.",
-        ogImage: "https://images.unsplash.com/photo-1515377905703-c4788e51af15?q=80&w=1200&auto=format&fit=crop",
-        path: "/blog",
-      };
-    default:
-      return {};
-  }
+export const getSEOPresets = (pageName: string): SEOConfig => {
+  const path = PRESET_PATHS[pageName];
+  if (!path) return {};
+  const meta = getStaticRouteMeta(path);
+  return meta ? { ...meta, path: meta.path } : {};
 };

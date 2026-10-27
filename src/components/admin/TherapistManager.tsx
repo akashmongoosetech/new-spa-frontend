@@ -29,12 +29,12 @@ export const TherapistManager: React.FC<TherapistManagerProps> = ({ therapists, 
   // Form Fields
   const [name, setName] = useState('');
   const [title, setTitle] = useState('');
-  const [experienceYears, setExperienceYears] = useState(5);
+  const [experienceYears, setExperienceYears] = useState(0);
   const [bio, setBio] = useState('');
   const [photoUrl, setPhotoUrl] = useState('');
   const [galleryInput, setGalleryInput] = useState('');
   const [specialtiesInput, setSpecialtiesInput] = useState('');
-  const [rating, setRating] = useState(4.9);
+  const [rating, setRating] = useState(0);
   const [featured, setFeatured] = useState(true);
   const [active, setActive] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -51,14 +51,14 @@ export const TherapistManager: React.FC<TherapistManagerProps> = ({ therapists, 
   const handleOpenAdd = () => {
     setEditingTherapist(null);
     setName('');
-    setTitle('Senior Bodywork & Deep Tissue Specialist');
-    setExperienceYears(6);
-    setBio('Certified male therapeutic practitioner with expertise in sports recovery and muscular tension release.');
-    setPhotoUrl('https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=400');
-    setGalleryInput('https://images.unsplash.com/photo-1544161515-4ab6ce6db874?auto=format&fit=crop&q=80&w=400');
-    setSpecialtiesInput('Deep Tissue, Swedish, Hot Stone, Sports Massage');
-    setRating(4.9);
-    setFeatured(true);
+    setTitle('');
+    setExperienceYears(0);
+    setBio('');
+    setPhotoUrl('');
+    setGalleryInput('');
+    setSpecialtiesInput('');
+    setRating(0);
+    setFeatured(false);
     setActive(true);
     setShowModal(true);
   };
@@ -136,7 +136,7 @@ export const TherapistManager: React.FC<TherapistManagerProps> = ({ therapists, 
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <h2 className="text-xl font-black text-gray-900 tracking-tight">Therapists & Male Models Directory</h2>
-          <p className="text-xs text-gray-500">Manage licensed therapists, specialized skills, gallery profiles, and availability.</p>
+          <p className="text-xs text-gray-500">Manage therapist profiles, specialties, photos and availability.</p>
         </div>
         <button
           onClick={handleOpenAdd}
@@ -190,7 +190,7 @@ export const TherapistManager: React.FC<TherapistManagerProps> = ({ therapists, 
                 <div>
                   <h3 className="font-extrabold text-gray-900 text-base">{t.name}</h3>
                   <p className="text-xs text-[var(--brand-ink)] font-semibold">{t.title}</p>
-                  <p className="text-[11px] text-gray-400 mt-0.5">{t.experienceYears} Years Licensed Experience</p>
+                  <p className="text-[11px] text-gray-400 mt-0.5">{t.experienceYears} Years of Experience</p>
                 </div>
 
                 <p className="text-xs text-gray-600 line-clamp-2 leading-relaxed">{t.bio}</p>

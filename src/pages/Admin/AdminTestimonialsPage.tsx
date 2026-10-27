@@ -55,7 +55,7 @@ export const AdminTestimonialsPage: React.FC = () => {
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-serif font-bold text-gray-900">Client Reviews & Testimonials</h1>
-        <p className="text-xs text-gray-500 mt-1">Review verified feedback submitted by executive patrons</p>
+        <p className="text-xs text-gray-500 mt-1">Add and approve feedback for use on the site</p>
       </div>
 
       <form onSubmit={handleAdd} className="bg-white rounded-2xl border border-gray-200 p-5 shadow-sm space-y-3">

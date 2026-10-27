@@ -1,4 +1,11 @@
 /logo.png    /brand/tripod-wellness-logo-f1514578.png    301!
 /icon.png    /brand/tripod-wellness-icon-3af949f8.png    301!
-/assets/*    /assets/:splat    200
-/*           /index.html       200
+/favicon.ico /brand/tripod-wellness-icon-3af949f8.png    301!
+/privacy     /privacy-policy                              301!
+
+/admin                /index.html  200
+/admin/*              /index.html  200
+/reset-password/*     /index.html  200
+/assets/*             /assets/:splat  200
+
+/*  /404.html  404

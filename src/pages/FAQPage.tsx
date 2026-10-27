@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Search, ChevronDown, ChevronUp, HelpCircle } from 'lucide-react';
 import { FAQ, BusinessSettings } from '../types';
-import { SEO } from '../components/ui/SEO';
 
 interface FAQPageProps {
   faqs?: FAQ[];
@@ -28,8 +27,6 @@ export const FAQPage: React.FC<FAQPageProps> = ({ faqs }) => {
 
   return (
     <div className="py-12 bg-[#FAFAFA] font-sans min-h-screen">
-      <SEO title="Frequently Asked Questions | Tripod Wellness" description="Find answers regarding our Men-to-Men massage therapies, therapist certifications, booking process, and hygiene standards." />
-
       <div className="max-w-4xl mx-auto px-4 sm:px-6 space-y-8">
         <div className="text-center space-y-3">
           <span className="text-xs font-bold uppercase tracking-widest text-[var(--brand-ink)] bg-brand-50 px-3 py-1 rounded-full">
@@ -50,7 +47,7 @@ export const FAQPage: React.FC<FAQPageProps> = ({ faqs }) => {
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Type your question e.g., cancellation, showers, male therapists..."
+            placeholder="Type your question e.g., cancellation, pressure, male therapists..."
             className="w-full pl-11 pr-4 py-3 rounded-2xl border border-gray-200 text-xs focus:outline-none focus:border-[#BFA476] shadow-sm bg-white"
           />
         </div>

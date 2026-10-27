@@ -98,7 +98,7 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
     { id: 'overview', label: 'Dashboard Overview', icon: LayoutDashboard },
     { id: 'bookings', label: 'Bookings & CRM', icon: Calendar, badge: pendingBookingsCount },
     { id: 'contacts', label: 'Contact Messages', icon: MessageSquare, badge: unreadContactsCount },
-    { id: 'therapists', label: 'Therapists & Models', icon: Award },
+    { id: 'therapists', label: 'Therapists', icon: Award },
     { id: 'services', label: 'Therapy Services', icon: Sparkles },
     { id: 'schedule', label: 'Schedule & Calendar', icon: Clock },
     { id: 'reports', label: 'Reports & Export', icon: FileText },

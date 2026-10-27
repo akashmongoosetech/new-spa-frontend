@@ -51,14 +51,14 @@ export const ServiceManager: React.FC<ServiceManagerProps> = ({ services, onRefr
     setEditingService(null);
     setTitle('');
     setCategory('relaxation');
-    setPrice(180);
+    setPrice(0);
     setDurationMinutes(60);
-    setShortDescription('An elite therapeutic session tailored for gentlemen muscle relief.');
-    setFullDescription('Experience therapeutic excellence crafted exclusively for men in Indore, Ujjain, Dewas.');
-    setImageUrl('https://images.unsplash.com/photo-1544161515-4ab6ce6db874?auto=format&fit=crop&q=80&w=600');
-    setBenefitsInput('Deep muscle recovery, Tension relief, Enhanced circulation, Stress mitigation');
-    setIncludedInput('Hydrotherapy access, Organic aromatic oil choice, Post-session herbal elixir');
-    setFeatured(true);
+    setShortDescription('');
+    setFullDescription('');
+    setImageUrl('');
+    setBenefitsInput('');
+    setIncludedInput('');
+    setFeatured(false);
     setActive(true);
     setShowModal(true);
   };
@@ -97,8 +97,8 @@ export const ServiceManager: React.FC<ServiceManagerProps> = ({ services, onRefr
       includedItems,
       featured,
       active,
-      rating: editingService?.rating || 4.9,
-      reviewsCount: editingService?.reviewsCount || 28,
+      rating: editingService?.rating || 0,
+      reviewsCount: editingService?.reviewsCount || 0,
     };
 
     try {
@@ -244,7 +244,7 @@ export const ServiceManager: React.FC<ServiceManagerProps> = ({ services, onRefr
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               className="w-full px-3.5 py-2.5 rounded-xl border font-semibold outline-none focus:ring-2 focus:ring-[#BFA476]"
-              placeholder="e.g. Royal Swedish Relaxation Massage"
+              placeholder="e.g. Swedish Relaxation Massage"
             />
           </div>
 
@@ -260,7 +260,7 @@ export const ServiceManager: React.FC<ServiceManagerProps> = ({ services, onRefr
                 <option value="relaxation">Relaxation</option>
                 <option value="deep_tissue">Deep Tissue</option>
                 <option value="hot_stone">Hot Stone</option>
-                <option value="vip_packages">VIP Packages</option>
+                <option value="vip_packages">Packages</option>
               </select>
             </div>
             <div>
@@ -330,7 +330,7 @@ export const ServiceManager: React.FC<ServiceManagerProps> = ({ services, onRefr
               value={includedInput}
               onChange={(e) => setIncludedInput(e.target.value)}
               className="w-full px-3.5 py-2.5 rounded-xl border outline-none"
-              placeholder="Shower Suite Access, Organic Essential Oils, Herbal Elixir"
+              placeholder="e.g. Warm oil, towels, consultation"
             />
           </div>
 

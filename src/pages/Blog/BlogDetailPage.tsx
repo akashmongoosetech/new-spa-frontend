@@ -148,7 +148,7 @@ export const BlogDetailPage: React.FC = () => {
             />
             <div className="space-y-1">
               <h4 className="font-semibold text-gray-900">{blog.therapistName}</h4>
-              <p className="text-xs text-gray-500">Licensed Therapist</p>
+              <p className="text-xs text-gray-500">Therapist</p>
             </div>
           </div>
         )}
@@ -156,7 +156,7 @@ export const BlogDetailPage: React.FC = () => {
         <div className="bg-linear-to-r from-[#1A1A1A] to-[#2A2A2A] text-white p-8 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-6 shadow-xl">
           <div className="space-y-1 text-center sm:text-left">
             <h3 className="text-xl font-serif font-bold text-[var(--brand-ink)]">Experience Restorative Healing</h3>
-            <p className="text-xs text-gray-300 font-light">Book your personalized therapeutic session with our licensed specialists.</p>
+            <p className="text-xs text-gray-300 font-light">View therapies and request an appointment with the concierge.</p>
           </div>
           <button
             onClick={() => context.onOpenBooking?.()}

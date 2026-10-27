@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { Header } from './Header';
 import { Footer } from './Footer';
@@ -8,8 +8,10 @@ import { Toast, ToastMessage } from '../ui/Toast';
 import { playNotificationSound } from '../../utils/toastEvents';
 import { BookingWizard } from '../booking/BookingWizard';
 import { BookingLookupModal } from '../booking/BookingLookupModal';
+import { CookieConsent } from '../consent/CookieConsent';
 import { mockSettings } from '../../data/mockData';
 import { api } from '../../services/api';
+import { trackPageView, markConversionPending } from '../../utils/analytics';
 import { Service, Therapist, BusinessSettings, Booking } from '../../types';
 
 export interface LayoutProps {
@@ -21,7 +23,7 @@ export interface LayoutProps {
   setActiveTab?: (tab: string) => void;
   onOpenBooking?: (serviceId?: string) => void;
   onOpenLookupBooking?: () => void;
-  onSubscribeNewsletter?: (email: string) => Promise<void>;
+  onSubscribeNewsletter?: (email: string, consent: boolean, website?: string) => Promise<void>;
   showAssistantChat?: boolean;
 }
 
@@ -114,11 +116,11 @@ export const Layout: React.FC<LayoutProps> = ({
         playNotificationSound('success');
         addToast(
           'success',
-          `Appointment #${b.bookingNumber || b.id} confirmed for ${b.firstName} (${b.serviceTitle || 'Massage'} on ${b.date} @ ${b.timeSlot}).`,
-          '🎉 Booking Confirmed!',
+          `Appointment request #${b.bookingNumber || b.id} received for ${b.firstName} (${b.serviceTitle || 'Massage'} on ${b.date} @ ${b.timeSlot}).`,
+          'Booking request received',
           {
             bookingRef: b.bookingNumber || b.id,
-            actionLabel: 'View Pass',
+            actionLabel: 'View status',
             onAction: () => {
               setIsLookupOpen(true);
             },
@@ -173,6 +175,8 @@ export const Layout: React.FC<LayoutProps> = ({
     faq: '/faq',
     privacy: '/privacy-policy',
     terms: '/terms-and-conditions',
+    refund: '/refund-policy',
+    cookie: '/cookie-policy',
     admin: '/admin/dashboard',
   };
 
@@ -189,16 +193,25 @@ export const Layout: React.FC<LayoutProps> = ({
     window.scrollTo(0, 0);
   }, [location.pathname]);
 
-  const handleSubscribeNewsletter = async (email: string) => {
+  useEffect(() => {
+    const track = () => trackPageView(`${location.pathname}${location.search}`);
+    track();
+    window.addEventListener('tripod-consent-change', track);
+    return () => window.removeEventListener('tripod-consent-change', track);
+  }, [location.pathname, location.search]);
+
+  const handleSubscribeNewsletter = async (email: string, consent: boolean, website?: string) => {
     if (propOnSubscribeNewsletter) {
-      await propOnSubscribeNewsletter(email);
+      await propOnSubscribeNewsletter(email, consent, website);
       return;
     }
     try {
-      await api.subscribeNewsletter(email);
-      addToast('success', `Subscribed ${email} to Tripod Wellness updates!`);
+      await api.subscribeNewsletter(email, consent, website);
+      markConversionPending('newsletter');
+      navigate('/thank-you?type=newsletter', { replace: true });
     } catch (err: any) {
       addToast('error', err?.message || 'Failed to subscribe. Please try again.');
+      throw err;
     }
   };
 
@@ -252,7 +265,7 @@ export const Layout: React.FC<LayoutProps> = ({
             therapists={therapists}
             initialServiceId={bookingServiceId}
             onBookingSuccess={(booking: Booking) => {
-              addToast('success', `Appointment confirmed for ${booking.firstName} ${booking.lastName}!`);
+              addToast('success', 'Booking request received. The concierge will confirm availability by email.');
               setIsBookingOpen(false);
             }}
             onClose={() => setIsBookingOpen(false)}
@@ -268,6 +281,8 @@ export const Layout: React.FC<LayoutProps> = ({
           services={services}
         />
       )}
+
+      <CookieConsent />
     </div>
   );
 };

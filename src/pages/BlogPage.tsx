@@ -3,7 +3,6 @@ import DOMPurify from 'dompurify';
 import { Search, Clock, User, Tag, BookOpen, ArrowRight } from 'lucide-react';
 import { BlogPost, BusinessSettings } from '../types';
 import { Modal } from '../components/ui/Modal';
-import { SEO } from '../components/ui/SEO';
 
 function clean(html: string): string {
   return DOMPurify.sanitize(html || '', { ALLOWED_URI_REGEXP: /^(?:(?:https?|mailto|tel):|[^a-z]|[a-z+.-]+(?:[^a-z+.\-:]|$))/i });
@@ -44,8 +43,6 @@ export const BlogPage: React.FC<BlogPageProps> = ({ blogs }) => {
 
   return (
     <div className="py-12 bg-[#FAFAFA] font-sans min-h-screen">
-      <SEO title="Men's Health & Wellness Articles | Tripod Wellness Blog" description="Read articles on deep tissue recovery, Swedish comparison guides, and executive health maintenance." />
-
       <div className="max-w-7xl mx-auto px-4 sm:px-6 space-y-10">
         <div className="text-center max-w-2xl mx-auto space-y-3">
           <span className="text-xs font-bold uppercase tracking-widest text-[var(--brand-ink)] bg-brand-50 px-3 py-1 rounded-full">
@@ -55,7 +52,7 @@ export const BlogPage: React.FC<BlogPageProps> = ({ blogs }) => {
             Men's Wellness & Bodywork Journal
           </h1>
           <p className="text-xs text-gray-600">
-            Articles written by our certified therapists on athletic recovery, stress management, and posture maintenance.
+            Verified articles on massage, recovery and everyday wellness. New posts are published only when the content has been reviewed.
           </p>
         </div>
 

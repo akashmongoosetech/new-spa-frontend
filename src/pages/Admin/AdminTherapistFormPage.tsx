@@ -78,7 +78,7 @@ export const AdminTherapistFormPage: React.FC = () => {
 
       <div className="bg-white rounded-2xl border border-gray-200 p-6 sm:p-8 shadow-sm">
         <h1 className="text-2xl font-serif font-bold text-gray-900 mb-6">
-          {isEdit ? 'Edit Therapist' : 'Add Certified Therapist Record'}
+          {isEdit ? 'Edit Therapist' : 'Add Therapist Record'}
         </h1>
 
         {saved && (

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { User, Mail, Lock, BadgeCheck, CheckCircle2, AlertCircle } from 'lucide-react';
 import { adminSignup } from '../../services/api';
+import { markConversionPending } from '../../utils/analytics';
 
 const ROLE_OPTIONS: { value: string; label: string }[] = [
   { value: 'Manager', label: 'Manager' },
@@ -15,6 +16,8 @@ export const AdminSignupPage: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [requestedRole, setRequestedRole] = useState('Manager');
+  const [consent, setConsent] = useState(false);
+  const [website, setWebsite] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -22,14 +25,24 @@ export const AdminSignupPage: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+    if (website) {
+      setError('Unable to submit this application.');
+      return;
+    }
     if (password.length < 8 || !/[a-zA-Z]/.test(password) || !/\d/.test(password)) {
       setError('Password must be at least 8 characters with a letter and a number.');
       return;
     }
+    if (!consent) {
+      setError('Please agree to the Privacy Policy before submitting this application.');
+      return;
+    }
     setLoading(true);
     try {
-      await adminSignup({ name, email, password, requestedRole });
+      await adminSignup({ name, email, password, requestedRole, consent: true, website });
       setSubmitted(true);
+      markConversionPending('application');
+      navigate('/thank-you?type=application', { replace: true });
     } catch (err: any) {
       setError(err?.message || 'Registration failed. Please try again.');
     } finally {
@@ -70,37 +83,57 @@ export const AdminSignupPage: React.FC = () => {
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
-          <label className="block text-xs font-semibold text-gray-300 uppercase tracking-wider mb-1.5">Full Name</label>
+      <form onSubmit={handleSubmit} className="space-y-4" noValidate>
+        <div className="hidden" aria-hidden="true">
+          <label htmlFor="signup-website">Website</label>
           <input
+            id="signup-website"
+            type="text"
+            tabIndex={-1}
+            autoComplete="off"
+            value={website}
+            onChange={(e) => setWebsite(e.target.value)}
+          />
+        </div>
+        <div>
+          <label htmlFor="signup-name" className="block text-xs font-semibold text-gray-300 uppercase tracking-wider mb-1.5">Full Name</label>
+          <input
+            id="signup-name"
             type="text"
             required
+            maxLength={120}
+            autoComplete="name"
             value={name}
             onChange={(e) => setName(e.target.value)}
             className="w-full bg-[#17130F]/80 border border-[#BFA476]/15 focus:border-[#BFA476] rounded-xl py-3 px-4 text-sm text-white focus:outline-none"
-            placeholder="Julian Vance"
+            placeholder="Your full name"
           />
         </div>
 
         <div>
-          <label className="block text-xs font-semibold text-gray-300 uppercase tracking-wider mb-1.5">Work Email</label>
+          <label htmlFor="signup-email" className="block text-xs font-semibold text-gray-300 uppercase tracking-wider mb-1.5">Work Email</label>
           <input
+            id="signup-email"
             type="email"
             required
+            maxLength={254}
+            autoComplete="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             className="w-full bg-[#17130F]/80 border border-[#BFA476]/15 focus:border-[#BFA476] rounded-xl py-3 px-4 text-sm text-white focus:outline-none"
-            placeholder="therapist@example.com"
+            placeholder="name@example.com"
           />
         </div>
 
         <div>
-          <label className="block text-xs font-semibold text-gray-300 uppercase tracking-wider mb-1.5">Password</label>
+          <label htmlFor="signup-password" className="block text-xs font-semibold text-gray-300 uppercase tracking-wider mb-1.5">Password</label>
           <input
+            id="signup-password"
             type="password"
             required
             minLength={8}
+            maxLength={200}
+            autoComplete="new-password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             className="w-full bg-[#17130F]/80 border border-[#BFA476]/15 focus:border-[#BFA476] rounded-xl py-3 px-4 text-sm text-white focus:outline-none"
@@ -129,10 +162,33 @@ export const AdminSignupPage: React.FC = () => {
           </div>
         </div>
 
+        <label htmlFor="signup-consent" className="flex items-start gap-2 text-[11px] leading-relaxed text-gray-400">
+          <input
+            id="signup-consent"
+            type="checkbox"
+            required
+            checked={consent}
+            onChange={(event) => setConsent(event.target.checked)}
+            className="mt-0.5 h-4 w-4 shrink-0 accent-[#BFA476]"
+          />
+          <span>
+            I agree to the{' '}
+            <a
+              href="/privacy-policy"
+              target="_blank"
+              rel="noreferrer"
+              className="font-semibold text-[var(--brand-ink)] underline underline-offset-2"
+            >
+              Privacy Policy
+            </a>{' '}
+            and to the review of this staff application.
+          </span>
+        </label>
+
         <button
           type="submit"
-          disabled={loading}
-          className="w-full py-3.5 bg-brand-500 hover:bg-brand-400 text-brand-950 rounded-xl text-sm font-bold tracking-wide transition-all shadow-lg shadow-[#BFA476]/20 mt-6"
+          disabled={loading || !consent}
+          className="w-full py-3.5 bg-brand-500 hover:bg-brand-400 text-brand-950 rounded-xl text-sm font-bold tracking-wide transition-all shadow-lg shadow-[#BFA476]/20 mt-6 disabled:opacity-50"
         >
           {loading ? 'Submitting...' : 'Submit Application'}
         </button>

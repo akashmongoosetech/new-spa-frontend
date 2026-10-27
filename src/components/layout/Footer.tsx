@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import {
   Phone,
   Mail,
@@ -14,16 +15,18 @@ import {
   ShieldCheck,
   Sparkles,
   ArrowUpRight,
-  Award
+  Calendar
 } from 'lucide-react';
 import { BusinessSettings, Service } from '../../types';
 import { BrandLogo } from '../brand/BrandLogo';
+import { analyticsConfigured } from '../../utils/analytics';
+import { publicWorkingHours } from '../../utils/settings';
 
 interface FooterProps {
   settings: BusinessSettings;
   services: Service[];
   setActiveTab: (tab: string) => void;
-  onSubscribeNewsletter: (email: string) => Promise<void>;
+  onSubscribeNewsletter: (email: string, consent: boolean, website?: string) => Promise<void>;
   onOpenBooking: () => void;
 }
 
@@ -35,20 +38,30 @@ export const Footer: React.FC<FooterProps> = ({
   onOpenBooking
 }) => {
   const [newsletterEmail, setNewsletterEmail] = useState('');
+  const [newsletterConsent, setNewsletterConsent] = useState(false);
+  const [newsletterWebsite, setNewsletterWebsite] = useState('');
   const [subscribing, setSubscribing] = useState(false);
   const [subscribedSuccess, setSubscribedSuccess] = useState(false);
   const [newsletterError, setNewsletterError] = useState('');
 
   const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!newsletterEmail || !newsletterEmail.includes('@')) {
+    if (newsletterWebsite) {
+      setNewsletterError('Unable to submit this request.');
+      return;
+    }
+    if (!newsletterEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(newsletterEmail)) {
       setNewsletterError('Please enter a valid email address.');
+      return;
+    }
+    if (!newsletterConsent) {
+      setNewsletterError('Please agree to the Privacy Policy before subscribing.');
       return;
     }
     setSubscribing(true);
     setNewsletterError('');
     try {
-      await onSubscribeNewsletter(newsletterEmail);
+      await onSubscribeNewsletter(newsletterEmail.trim(), true, newsletterWebsite);
       setSubscribedSuccess(true);
       setNewsletterEmail('');
     } catch (err) {
@@ -59,6 +72,13 @@ export const Footer: React.FC<FooterProps> = ({
   };
 
   const currencySymbol = settings?.currencySymbol || '₹';
+  const isUnverifiedSocialUrl = (url?: string) =>
+    !url || /auraluxespa|example\.com|twitter\.com\/tripodwellness|instagram\.com\/tripodwellness|facebook\.com\/tripodwellness/i.test(url);
+  const socialLinks = [
+    { label: 'Instagram', url: settings?.instagramUrl, Icon: Instagram },
+    { label: 'Facebook', url: settings?.facebookUrl, Icon: Facebook },
+    { label: 'Twitter', url: settings?.twitterUrl, Icon: Twitter },
+  ].filter((link) => !isUnverifiedSocialUrl(link.url));
 
   return (
     <footer className="on-dark-brand bg-[#120F0B] text-gray-300 pt-16 pb-12 border-t border-white/10 font-sans relative overflow-hidden">
@@ -75,48 +95,85 @@ export const Footer: React.FC<FooterProps> = ({
           <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
             <div className="lg:col-span-7 space-y-3">
               <span className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full text-xs font-semibold bg-brand-500/15 border border-[#BFA476]/30 text-[var(--brand-ink)] uppercase tracking-wider">
-                <Sparkles className="w-3.5 h-3.5 text-[var(--brand-ink)]" /> Exclusive Members Invitation
+                <Sparkles className="w-3.5 h-3.5 text-[var(--brand-ink)]" /> Tripod Wellness Updates
               </span>
               <h3 className="text-2xl sm:text-3xl font-serif font-bold text-white tracking-tight">
-                Subscribe for Private Tripod Wellness Offers & Slots
+                Subscribe for Appointment & Wellness Updates
               </h3>
               <p className="text-gray-400 text-sm max-w-xl leading-relaxed">
-                Receive confidential guest invitations to seasonal wellness rituals, prime weekend therapist availability, and holistic health updates.
+                Receive occasional therapy availability, appointment updates and wellness notes.
+                You can unsubscribe at any time.
               </p>
             </div>
             <div className="lg:col-span-5">
               {subscribedSuccess ? (
                 <div className="p-4 rounded-2xl bg-brand-500/15 border border-[#BFA476]/40 text-[var(--brand-ink)] flex items-center gap-3 text-sm font-medium">
                   <CheckCircle2 className="w-5 h-5 shrink-0 text-[var(--brand-ink)]" />
-                  <span>Your executive subscription is active! Welcome to Tripod Wellness.</span>
+                  <span>Your subscription request has been received. You can unsubscribe at any time.</span>
                 </div>
               ) : (
-                <form onSubmit={handleSubscribe} className="flex flex-col sm:flex-row gap-3">
-                  <label htmlFor="footer-newsletter-email" className="sr-only">
-                    Email address for the private Tripod Wellness newsletter
+                <form onSubmit={handleSubscribe} className="space-y-3" noValidate>
+                  <div className="hidden" aria-hidden="true">
+                    <label htmlFor="footer-newsletter-website">Website</label>
+                    <input
+                      id="footer-newsletter-website"
+                      type="text"
+                      tabIndex={-1}
+                      autoComplete="off"
+                      value={newsletterWebsite}
+                      onChange={(e) => setNewsletterWebsite(e.target.value)}
+                    />
+                  </div>
+                  <div className="flex flex-col gap-3 sm:flex-row">
+                    <label htmlFor="footer-newsletter-email" className="sr-only">
+                      Email address for Tripod Wellness updates
+                    </label>
+                    <input
+                      id="footer-newsletter-email"
+                      type="email"
+                      value={newsletterEmail}
+                      onChange={(e) => setNewsletterEmail(e.target.value)}
+                      placeholder="Your email address"
+                      required
+                      maxLength={254}
+                      autoComplete="email"
+                      aria-invalid={!!newsletterError}
+                      className="flex-1 rounded-2xl border border-white/15 bg-black/50 px-4 py-3.5 text-sm text-white placeholder-gray-500 transition-all focus:border-[#BFA476] focus:outline-none focus:ring-1 focus:ring-[#BFA476]"
+                    />
+                    <button
+                      type="submit"
+                      disabled={subscribing || !newsletterConsent}
+                      className="flex shrink-0 cursor-pointer items-center justify-center gap-2 rounded-2xl bg-linear-to-r from-[#C3AA7E] to-[#BFA476] px-6 py-3.5 text-sm font-bold text-brand-950 shadow-lg transition-all hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-50"
+                    >
+                      <span>{subscribing ? 'Subscribing...' : 'Subscribe'}</span>
+                      <Send className="h-4 w-4" />
+                    </button>
+                  </div>
+                  <label htmlFor="footer-newsletter-consent" className="flex items-start gap-2 text-[10px] leading-relaxed text-gray-400">
+                    <input
+                      id="footer-newsletter-consent"
+                      type="checkbox"
+                      checked={newsletterConsent}
+                      onChange={(e) => setNewsletterConsent(e.target.checked)}
+                      className="mt-0.5 h-3.5 w-3.5 shrink-0 accent-[#BFA476]"
+                    />
+                    <span>
+                      I agree to the{' '}
+                      <a
+                        href="/privacy-policy"
+                        target="_blank"
+                        rel="noreferrer"
+                        className="font-semibold text-[var(--brand-ink)] underline underline-offset-2"
+                      >
+                        Privacy Policy
+                      </a>{' '}
+                      and to receive occasional Tripod Wellness updates. I can unsubscribe at any time.
+                    </span>
                   </label>
-                  <input
-                    id="footer-newsletter-email"
-                    type="email"
-                    value={newsletterEmail}
-                    onChange={(e) => setNewsletterEmail(e.target.value)}
-                    placeholder="Enter your private email..."
-                    required
-                    aria-invalid={!!newsletterError}
-                    className="flex-1 bg-black/50 border border-white/15 rounded-2xl px-4 py-3.5 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-[#BFA476] focus:ring-1 focus:ring-[#BFA476] transition-all"
-                  />
-                  <button
-                    type="submit"
-                    disabled={subscribing}
-                    className="px-6 py-3.5 rounded-2xl bg-linear-to-r from-[#C3AA7E] to-[#BFA476] hover:brightness-110 text-brand-950 font-bold text-sm transition-all shadow-lg hover:shadow-[#BFA476]/20 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 shrink-0"
-                  >
-                    <span>{subscribing ? 'Joining...' : 'Join Private Club'}</span>
-                    <Send className="w-4 h-4" />
-                  </button>
                 </form>
               )}
               {newsletterError && (
-                <p role="status" className="mt-3 text-xs font-medium text-rose-400">
+                <p role="alert" className="mt-3 text-xs font-medium text-rose-400">
                   {newsletterError}
                 </p>
               )}
@@ -146,53 +203,39 @@ export const Footer: React.FC<FooterProps> = ({
             </div>
 
             <p className="text-xs sm:text-sm leading-relaxed text-gray-400">
-              Indore, Ujjain, Dewas benchmark licensed Men-to-Men massage therapy sanctuary. Dedicated to unmatched privacy, medical-grade hygiene, and executive stress recovery.
+              Men-to-men massage therapy appointments in Indore, Ujjain and Dewas. View therapies,
+              meet the team, and contact the concierge for appointment details.
             </p>
 
             <div className="space-y-2 pt-1 text-xs">
               <div className="flex items-center gap-2 text-[var(--brand-ink)] font-medium">
                 <ShieldCheck className="w-4 h-4 text-[var(--brand-ink)]" />
-                <span>100% Certified Professional Male Therapists</span>
+                <span>Men-to-men massage appointments</span>
               </div>
               <div className="flex items-center gap-2 text-[var(--brand-ink)] font-medium">
-                <Award className="w-4 h-4 text-[var(--brand-ink)]" />
-                <span>Private Hydrotherapy & Steam Suites</span>
+                <Calendar className="w-4 h-4 text-[var(--brand-ink)]" />
+                <span>Online appointment requests</span>
               </div>
             </div>
 
             {/* Social Media Links */}
             <div className="pt-2">
               <span className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2.5">
-                Connect With Concierge
+                Contact the Concierge
               </span>
               <div className="flex items-center gap-2.5">
-                <a
-                  href={settings?.instagramUrl || 'https://instagram.com/tripodwellness'}
-                  target="_blank"
-                  rel="noreferrer"
-                  aria-label="Instagram"
-                  className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 hover:border-[#BFA476] hover:bg-brand-500 text-gray-300 hover:text-brand-950 transition-all flex items-center justify-center group"
-                >
-                  <Instagram className="w-4 h-4 group-hover:scale-110 transition-transform" />
-                </a>
-                <a
-                  href={settings?.facebookUrl || 'https://facebook.com/tripodwellness'}
-                  target="_blank"
-                  rel="noreferrer"
-                  aria-label="Facebook"
-                  className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 hover:border-[#BFA476] hover:bg-brand-500 text-gray-300 hover:text-brand-950 transition-all flex items-center justify-center group"
-                >
-                  <Facebook className="w-4 h-4 group-hover:scale-110 transition-transform" />
-                </a>
-                <a
-                  href={settings?.twitterUrl || 'https://twitter.com/tripodwellness'}
-                  target="_blank"
-                  rel="noreferrer"
-                  aria-label="Twitter"
-                  className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 hover:border-[#BFA476] hover:bg-brand-500 text-gray-300 hover:text-brand-950 transition-all flex items-center justify-center group"
-                >
-                  <Twitter className="w-4 h-4 group-hover:scale-110 transition-transform" />
-                </a>
+                {socialLinks.map(({ label, url, Icon }) => (
+                  <a
+                    key={label}
+                    href={url}
+                    target="_blank"
+                    rel="noreferrer"
+                    aria-label={label}
+                    className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 hover:border-[#BFA476] hover:bg-brand-500 text-gray-300 hover:text-brand-950 transition-all flex items-center justify-center group"
+                  >
+                    <Icon className="w-4 h-4 group-hover:scale-110 transition-transform" />
+                  </a>
+                ))}
                 {settings?.whatsapp && (
                   <a
                     href={`https://wa.me/${settings.whatsapp.replace(/[^0-9]/g, '')}`}
@@ -226,27 +269,27 @@ export const Footer: React.FC<FooterProps> = ({
               </li>
               <li>
                 <button onClick={() => setActiveTab('about')} className="hover:text-[var(--brand-ink)] transition-colors">
-                  About Our Sanctuary
+                  About Tripod Wellness
                 </button>
               </li>
               <li>
                 <button onClick={() => setActiveTab('gallery')} className="hover:text-[var(--brand-ink)] transition-colors">
-                  Private Suite Gallery
+                  Facility Gallery
                 </button>
               </li>
               <li>
                 <button onClick={() => setActiveTab('blog')} className="hover:text-[var(--brand-ink)] transition-colors">
-                  Wellness Blog
+                  Wellness Journal
                 </button>
               </li>
               <li>
                 <button onClick={() => setActiveTab('faq')} className="hover:text-[var(--brand-ink)] transition-colors">
-                  Guest FAQ
+                  FAQ
                 </button>
               </li>
               <li>
                 <button onClick={() => setActiveTab('contact')} className="hover:text-[var(--brand-ink)] transition-colors">
-                  Contact & Location
+                  Concierge & Service Area
                 </button>
               </li>
             </ul>
@@ -278,7 +321,7 @@ export const Footer: React.FC<FooterProps> = ({
                 onClick={onOpenBooking}
                 className="w-full py-2.5 px-4 rounded-xl bg-brand-500/15 border border-[#BFA476]/40 text-[var(--brand-ink)] hover:bg-brand-500 hover:text-brand-950 transition-all text-xs font-bold flex items-center justify-center gap-1.5 cursor-pointer"
               >
-                <span>Book Appointment</span>
+                <span>Request Appointment</span>
                 <ArrowUpRight className="w-3.5 h-3.5" />
               </button>
             </div>
@@ -287,12 +330,12 @@ export const Footer: React.FC<FooterProps> = ({
           {/* Col 4: Contact Information */}
           <div className="lg:col-span-3 space-y-4">
             <h4 className="text-white font-serif font-bold text-base border-b border-white/10 pb-2.5">
-              Spa Concierge & Location
+              Service Area & Concierge
             </h4>
             <div className="space-y-3 text-xs text-gray-400">
               <div className="flex items-start gap-2.5">
                 <MapPin className="w-4 h-4 text-[var(--brand-ink)] shrink-0 mt-0.5" />
-                <span className="leading-relaxed">{settings?.address || 'Indore, Ujjain, Dewas'}</span>
+                <span className="leading-relaxed">{settings?.address || 'Indore, Ujjain & Dewas service area'}</span>
               </div>
               <div className="flex items-center gap-2.5">
                 <Phone className="w-4 h-4 text-[var(--brand-ink)] shrink-0" />
@@ -308,7 +351,7 @@ export const Footer: React.FC<FooterProps> = ({
               </div>
               <div className="flex items-center gap-2.5">
                 <Clock className="w-4 h-4 text-[var(--brand-ink)] shrink-0" />
-                <span>{settings?.workingHours || 'Open 24 hours, Mon - Sun (IST)'}</span>
+                <span>{publicWorkingHours(settings?.workingHours)}</span>
               </div>
             </div>
 
@@ -322,7 +365,7 @@ export const Footer: React.FC<FooterProps> = ({
                   className="block rounded-xl overflow-hidden border border-white/10 hover:border-[#BFA476] transition-colors bg-[#1B1611] p-3 text-center group"
                 >
                   <span className="text-xs font-semibold text-gray-300 group-hover:text-[var(--brand-ink)] transition-colors flex items-center justify-center gap-1.5">
-                    <MapPin className="w-3.5 h-3.5 text-[var(--brand-ink)]" /> Google Maps Directions
+                    <MapPin className="w-3.5 h-3.5 text-[var(--brand-ink)]" /> Open map search
                   </span>
                 </a>
               </div>
@@ -335,25 +378,45 @@ export const Footer: React.FC<FooterProps> = ({
           <div className="flex flex-col sm:flex-row items-center gap-2 text-center sm:text-left">
             <span>© {new Date().getFullYear()} {settings?.businessName || 'Tripod Wellness'}. All Rights Reserved.</span>
             <span className="hidden sm:inline text-gray-400">•</span>
-            <span className="text-gray-400">Premier Licensed Men's Spa Sanctuary</span>
+            <span className="text-gray-400">Men-to-men massage therapy</span>
           </div>
 
-          <div className="flex items-center gap-4 text-gray-400">
-            <button onClick={() => setActiveTab('privacy')} className="hover:text-gray-300 transition-colors">
-              Privacy Policy
-            </button>
+          <div className="flex flex-wrap items-center justify-center gap-4 text-gray-400">
+            <Link to="/privacy-policy" className="hover:text-gray-300 transition-colors">
+              Privacy
+            </Link>
             <span>•</span>
-            <button onClick={() => setActiveTab('terms')} className="hover:text-gray-300 transition-colors">
-              Terms of Service
-            </button>
+            <Link to="/terms-and-conditions" className="hover:text-gray-300 transition-colors">
+              Terms
+            </Link>
             <span>•</span>
-            <button
-              onClick={() => setActiveTab('admin')}
+            <Link to="/refund-policy" className="hover:text-gray-300 transition-colors">
+              Refunds
+            </Link>
+            <span>•</span>
+            <Link to="/cookie-policy" className="hover:text-gray-300 transition-colors">
+              Cookies
+            </Link>
+            {analyticsConfigured() && (
+              <>
+                <span>•</span>
+                <button
+                  type="button"
+                  onClick={() => window.dispatchEvent(new Event('tripod-open-consent'))}
+                  className="hover:text-gray-300 transition-colors"
+                >
+                  Cookie settings
+                </button>
+              </>
+            )}
+            <span>•</span>
+            <Link
+              to="/admin-login"
               className="hover:text-[var(--brand-ink)] transition-colors flex items-center gap-1"
             >
               <Lock className="w-3 h-3 text-[var(--brand-ink)]" />
               <span>Admin</span>
-            </button>
+            </Link>
           </div>
         </div>
       </div>

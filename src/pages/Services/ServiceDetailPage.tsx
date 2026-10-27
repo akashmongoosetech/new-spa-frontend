@@ -1,15 +1,19 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, Link, useOutletContext } from 'react-router-dom';
-import { Clock, Star, CheckCircle2, Calendar, ArrowLeft, ShieldCheck, Sparkles } from 'lucide-react';
+import { useParams, Link, useOutletContext, useNavigate } from 'react-router-dom';
+import { Clock, CheckCircle2, Calendar, ArrowLeft, ShieldCheck, Sparkles } from 'lucide-react';
 import { SEO } from '../../components/ui/SEO';
+import { clampSeoDescription, clampSeoTitle } from '../../utils/seo';
+import { EntityImage } from '../../components/ui/EntityImage';
 import { api, createBooking } from '../../services/api';
 import { showToast } from '../../utils/toastEvents';
+import { markConversionPending } from '../../utils/analytics';
 import { localDateInputValue, formatSlot12h } from '../../utils/date';
 import { mockSettings as defaultSettings } from '../../data/mockData';
 import NotFound from '../NotFound';
 
 export const ServiceDetailPage: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
+  const navigate = useNavigate();
   const context = useOutletContext<{
     services?: any[];
     settings?: typeof defaultSettings;
@@ -43,6 +47,8 @@ export const ServiceDetailPage: React.FC = () => {
   const [bookingStatus, setBookingStatus] = useState<'idle' | 'submitting'>('idle');
   const [availableSlots, setAvailableSlots] = useState<string[]>([]);
   const [slotsLoading, setSlotsLoading] = useState(false);
+  const [consent, setConsent] = useState(false);
+  const [website, setWebsite] = useState('');
 
   // Live availability so this page only offers slots the API will accept.
   useEffect(() => {
@@ -74,6 +80,7 @@ export const ServiceDetailPage: React.FC = () => {
     if (!service) return;
     setBookingStatus('submitting');
     try {
+      if (website) throw new Error('Unable to submit this request');
       const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(bookingData.customerEmail.trim());
       if (!bookingData.customerName.trim() || !emailOk || bookingData.customerPhone.replace(/\D/g, '').length < 7) {
         throw new Error('Enter a valid name, email and phone number');
@@ -84,6 +91,9 @@ export const ServiceDetailPage: React.FC = () => {
       if (!bookingData.selectedTime) {
         throw new Error('Choose an available time slot');
       }
+      if (!consent) {
+        throw new Error('Agree to the Privacy Policy before sending this request');
+      }
       const result = await createBooking({
         serviceId: service.id,
         therapistId: bookingData.selectedTherapist || 'any',
@@ -93,14 +103,15 @@ export const ServiceDetailPage: React.FC = () => {
         email: bookingData.customerEmail.trim(),
         phone: bookingData.customerPhone.trim(),
         notes: '',
-        paymentMethod: 'pay_at_venue'
+        paymentMethod: 'pay_at_venue',
+        consent: true,
+        website
       });
+      const reference = result.bookingNumber || result.id || '';
+      if (reference) sessionStorage.setItem('tripod_booking_reference', String(reference));
       setBookingStatus('idle');
-      showToast({
-        type: 'success',
-        title: 'Booking Confirmed!',
-        message: `Your reservation #${result.bookingNumber} has been confirmed. A confirmation email was dispatched.`,
-      });
+      markConversionPending('booking');
+      navigate('/thank-you?type=booking', { replace: true });
     } catch (err: any) {
       setBookingStatus('idle');
       showToast({
@@ -118,8 +129,11 @@ export const ServiceDetailPage: React.FC = () => {
   return (
     <div className="py-12 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto font-sans min-h-screen">
       <SEO
-        title={`${service.title} | ${settings.businessName}`}
-        description={service.shortDescription}
+        title={clampSeoTitle(`${service.title} | ${settings.businessName}`)}
+        description={clampSeoDescription(
+          service.shortDescription || service.fullDescription || '',
+          `View session details, duration and pricing for ${service.title}, then book a private men-to-men appointment with ${settings.businessName} in Indore.`
+        )}
       />
 
       <Link
@@ -133,10 +147,13 @@ export const ServiceDetailPage: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2 space-y-8">
           <div className="relative rounded-2xl overflow-hidden shadow-xl aspect-video">
-            <img
+            <EntityImage
               src={service.imageUrl}
-              alt={service.title}
+              alt={`${service.title} at Tripod Wellness`}
               className="w-full h-full object-cover"
+              placeholderClassName="w-full h-full"
+              label={service.title}
+              loading="eager"
             />
             <div className="on-dark-brand absolute top-4 left-4 bg-[#1A1A1A]/90 backdrop-blur-md text-[var(--brand-ink)] px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider border border-[#BFA476]/30 flex items-center gap-1.5">
               <Sparkles className="w-3.5 h-3.5" />
@@ -155,7 +172,7 @@ export const ServiceDetailPage: React.FC = () => {
 
           {service.benefits && service.benefits.length > 0 && (
             <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm space-y-4">
-              <h2 className="text-xl font-serif font-bold text-gray-900">Key Therapeutic Benefits</h2>
+              <h2 className="text-xl font-serif font-bold text-gray-900">Session Details</h2>
               <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {service.benefits.map((b: string, i: number) => (
                   <li key={i} className="flex items-start gap-2.5 text-sm text-gray-700">
@@ -196,10 +213,6 @@ export const ServiceDetailPage: React.FC = () => {
                   </span>
                 )}
               </div>
-              <div className="flex items-center gap-1 text-amber-500 text-sm font-semibold">
-                <Star className="w-4 h-4 fill-amber-400 text-amber-400" />
-                <span>{service.rating} ({service.reviewsCount})</span>
-              </div>
             </div>
 
             <div className="space-y-3 text-sm text-gray-600">
@@ -209,18 +222,31 @@ export const ServiceDetailPage: React.FC = () => {
               </div>
               <div className="flex items-center gap-3">
                 <ShieldCheck className="w-5 h-5 text-[var(--brand-ink)]" />
-                <span>Private Male Therapist Assigned</span>
+                <span>Therapist selection available</span>
               </div>
             </div>
 
             <div>
-              <h3 className="text-sm font-medium text-gray-700 mb-3">Book Appointment</h3>
-              <form onSubmit={e => { e.preventDefault(); handleBook(); }} className="space-y-4">
+              <h3 className="text-sm font-medium text-gray-700 mb-3">Request Appointment</h3>
+              <form onSubmit={e => { e.preventDefault(); handleBook(); }} className="space-y-4" noValidate>
+                <div className="hidden" aria-hidden="true">
+                  <label htmlFor="service-booking-website">Website</label>
+                  <input
+                    id="service-booking-website"
+                    type="text"
+                    tabIndex={-1}
+                    autoComplete="off"
+                    value={website}
+                    onChange={(e) => setWebsite(e.target.value)}
+                  />
+                </div>
                 <div>
                   <label className="block text-xs font-bold uppercase text-gray-700 mb-2">Customer Name</label>
                   <input
                     type="text"
                     required
+                    maxLength={160}
+                    autoComplete="name"
                     value={bookingData.customerName}
                     onChange={(e) => setBookingData(prev => ({ ...prev, customerName: e.target.value }))}
                     placeholder="Your full name"
@@ -233,6 +259,8 @@ export const ServiceDetailPage: React.FC = () => {
                   <input
                     type="email"
                     required
+                    maxLength={254}
+                    autoComplete="email"
                     value={bookingData.customerEmail}
                     onChange={(e) => setBookingData(prev => ({ ...prev, customerEmail: e.target.value }))}
                     placeholder="you@example.com"
@@ -245,9 +273,11 @@ export const ServiceDetailPage: React.FC = () => {
                   <input
                     type="tel"
                     required
+                    maxLength={30}
+                    autoComplete="tel"
                     value={bookingData.customerPhone}
                     onChange={(e) => setBookingData(prev => ({ ...prev, customerPhone: e.target.value }))}
-                    placeholder="+91-9171606807"
+                    placeholder="+91 91716 06807"
                     className="w-full border border-gray-300 rounded-xl py-3 px-4 text-sm focus:border-[#BFA476] focus:outline-none"
                   />
                 </div>
@@ -303,13 +333,36 @@ export const ServiceDetailPage: React.FC = () => {
                   </select>
                 </div>
 
+                <label htmlFor="service-booking-consent" className="flex items-start gap-2 text-[11px] leading-relaxed text-gray-600">
+                  <input
+                    id="service-booking-consent"
+                    type="checkbox"
+                    required
+                    checked={consent}
+                    onChange={(event) => setConsent(event.target.checked)}
+                    className="mt-0.5 h-4 w-4 shrink-0 accent-[#BFA476]"
+                  />
+                  <span>
+                    I agree to the{' '}
+                    <a
+                      href="/privacy-policy"
+                      target="_blank"
+                      rel="noreferrer"
+                      className="font-semibold text-[var(--brand-ink)] underline underline-offset-2"
+                    >
+                      Privacy Policy
+                    </a>{' '}
+                    and to being contacted about this appointment request.
+                  </span>
+                </label>
+
                 <button
                   type="submit"
-                  disabled={bookingStatus === 'submitting'}
+                  disabled={bookingStatus === 'submitting' || !consent}
                   className="w-full py-4 bg-brand-500 hover:bg-brand-400 text-brand-950 rounded-xl font-bold text-sm tracking-wide transition-all shadow-lg shadow-[#BFA476]/20 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <Calendar className="w-4 h-4" />
-                  {bookingStatus === 'submitting' ? 'Reserving Appointment...' : 'Confirm Booking'}
+                  {bookingStatus === 'submitting' ? 'Sending request...' : 'Send Booking Request'}
                 </button>
               </form>
             </div>

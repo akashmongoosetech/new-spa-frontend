@@ -221,7 +221,7 @@ export const AdminBlogFormPage: React.FC = () => {
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 className="w-full border border-gray-300 rounded-xl py-3 px-4 text-sm focus:border-[#BFA476] focus:outline-none"
-                placeholder="e.g., Traditional Indian Wedding Food vs Modern Wedding Menus"
+                placeholder="e.g., How to Recover After a Long Workout"
               />
             </div>
 
@@ -258,7 +258,7 @@ export const AdminBlogFormPage: React.FC = () => {
                 type="text"
                 value={tagsInput}
                 onChange={(e) => handleTagsChange(e.target.value)}
-                placeholder="Indian Wedding, Catering, Wedding Food, Event Catering"
+                placeholder="Massage, Recovery, Stress, Indore"
                 className="w-full border border-gray-300 rounded-xl py-3 px-4 text-sm focus:border-[#BFA476] focus:outline-none"
               />
               <p className="text-[10px] text-gray-400 mt-1">Comma-separated. Press Enter after each tag.</p>
@@ -420,7 +420,7 @@ export const AdminBlogFormPage: React.FC = () => {
                 value={seoKeywordsInput}
                 onChange={(e) => handleSeoKeywordsChange(e.target.value)}
                 className="w-full border border-gray-300 rounded-xl py-3 px-4 text-sm focus:border-[#BFA476] focus:outline-none"
-                placeholder="Indian wedding catering, wedding food menu, modern wedding catering"
+                placeholder="massage Indore, recovery, stress relief"
               />
               <p className="text-[10px] text-gray-400 mt-1">Comma-separated keywords.</p>
               {seoKeywords.length > 0 && (

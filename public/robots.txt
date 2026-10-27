@@ -1,0 +1,14 @@
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /admin/
+Disallow: /admin-login
+Disallow: /admin-signup
+Disallow: /forgot-password
+Disallow: /reset-password/
+Disallow: /profile
+Disallow: /unauthorized
+Disallow: /thank-you
+Disallow: /unsubscribe
+
+Sitemap: https://tripod-wellness.netlify.app/sitemap.xml

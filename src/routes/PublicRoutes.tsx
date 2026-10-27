@@ -1,5 +1,5 @@
 import React, { lazy, Suspense } from 'react';
-import { Route } from 'react-router-dom';
+import { Navigate, Route } from 'react-router-dom';
 import { MainLayout } from '../layouts/MainLayout';
 import { LoadingSpinner } from '../components/ui/LoadingSpinner';
 
@@ -21,6 +21,8 @@ const RefundPolicyPage = lazy(() => import('../pages/Legal/RefundPolicyPage'));
 const CookiePolicyPage = lazy(() => import('../pages/Legal/CookiePolicyPage'));
 const SitemapPage = lazy(() => import('../pages/Legal/SitemapPage'));
 const UnsubscribePage = lazy(() => import('../pages/UnsubscribePage'));
+const ThankYouPage = lazy(() => import('../pages/ThankYouPage'));
+const NotFound = lazy(() => import('../pages/NotFound'));
 
 export const renderPublicRoutes = () => (
   <Route
@@ -42,12 +44,15 @@ export const renderPublicRoutes = () => (
     <Route path="blog" element={<BlogPage />} />
     <Route path="blog/:slug" element={<BlogDetailPage />} />
     <Route path="faq" element={<FAQPage />} />
+    <Route path="privacy" element={<Navigate to="/privacy-policy" replace />} />
     <Route path="privacy-policy" element={<PrivacyPolicyPage />} />
     <Route path="terms-and-conditions" element={<TermsPage />} />
     <Route path="refund-policy" element={<RefundPolicyPage />} />
     <Route path="cookie-policy" element={<CookiePolicyPage />} />
     <Route path="sitemap" element={<SitemapPage />} />
     <Route path="unsubscribe" element={<UnsubscribePage />} />
+    <Route path="thank-you" element={<ThankYouPage />} />
+    <Route path="*" element={<NotFound />} />
   </Route>
 );
 

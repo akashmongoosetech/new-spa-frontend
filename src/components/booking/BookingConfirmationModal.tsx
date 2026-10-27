@@ -62,7 +62,7 @@ export const BookingConfirmationModal: React.FC<BookingConfirmationModalProps> =
   const [copiedId, setCopiedId] = useState(false);
 
   const matchedTherapist = therapists.find((t) => t.id === (newTherapistId !== 'any' ? newTherapistId : booking?.therapistId));
-  const therapistDisplayName = matchedTherapist ? matchedTherapist.name : booking?.therapistName || 'Assigned Certified Therapist';
+  const therapistDisplayName = matchedTherapist ? matchedTherapist.name : booking?.therapistName || 'Assigned Therapist';
 
   // Offline fallback only — the picker prefers live availability. Values stay
   // in the API's 24h format; labels are rendered as 12h.
@@ -291,7 +291,7 @@ export const BookingConfirmationModal: React.FC<BookingConfirmationModalProps> =
                 </div>
                 <div className="space-y-1 text-xs">
                   <div>
-                    <span className="text-gray-400 block text-[11px]">Certified Therapist:</span>
+                    <span className="text-gray-400 block text-[11px]">Therapist:</span>
                     <strong className="text-sm font-semibold text-gray-900">{therapistDisplayName}</strong>
                   </div>
                   <div className="pt-1">
@@ -336,7 +336,7 @@ export const BookingConfirmationModal: React.FC<BookingConfirmationModalProps> =
               <div>
                 <span className="text-gray-400 font-medium block text-[11px]">Total Rate:</span>
                 <strong className="text-[var(--brand-ink)] font-bold text-base font-mono">
-                  ₹{booking.totalPaid || 1999}
+                  {booking.totalPaid ? `\u20B9${booking.totalPaid}` : 'Confirm at venue'}
                 </strong>
                 <span className="text-gray-500 block text-[11px] capitalize">
                   Payment: {booking.paymentMethod ? booking.paymentMethod.replace(/_/g, ' ') : 'Pay at Venue'}
@@ -359,7 +359,7 @@ export const BookingConfirmationModal: React.FC<BookingConfirmationModalProps> =
               <ShieldCheck className="w-5 h-5 text-[var(--brand-ink)] shrink-0 mt-0.5" />
               <div>
                 <strong className="font-semibold block text-slate-900">Pre-Session Protocols</strong>
-                <span>Please arrive 10 minutes prior to your session. Complimentary private executive showers, steam room access, and organic refreshments are included with your reservation.</span>
+                <span>Please arrive 10 minutes before your session. Contact the concierge if you need to change or cancel this appointment.</span>
               </div>
             </div>
 

@@ -1,8 +1,12 @@
 import React from 'react';
 import { useOutletContext, Link } from 'react-router-dom';
-import { Star, Award, ShieldCheck, Calendar, ArrowRight } from 'lucide-react';
+import { Calendar, ArrowRight, User } from 'lucide-react';
 import { mockSettings } from '../../data/mockData';
-import { SEO } from '../../components/ui/SEO';
+import { EntityImage } from '../../components/ui/EntityImage';
+
+function nameSlug(name = '') {
+  return name.trim().toLowerCase().replace(/\s+/g, '-');
+}
 
 export const TherapistsPage: React.FC = () => {
   const context = useOutletContext<{
@@ -12,86 +16,105 @@ export const TherapistsPage: React.FC = () => {
   }>() || {};
 
   const therapists = context.therapists ?? [];
-  const settings = context.settings || mockSettings;
 
   return (
-    <div className="py-12 bg-[#FAFAFA] font-sans min-h-screen">
-      <SEO
-        title={`Certified Male Therapists | ${settings.businessName}`}
-        description="Meet our team of licensed, highly skilled male massage therapists specializing in executive male relaxation and sports recovery."
-      />
-
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center max-w-3xl mx-auto mb-12">
-          <span className="text-xs font-bold tracking-widest text-[var(--brand-ink)] uppercase">Licensed Specialists</span>
-          <h1 className="text-3xl sm:text-4xl font-serif font-bold text-gray-900 mt-2 mb-4">
-            Our Elite Male Therapy Staff
+    <div className="min-h-screen bg-[#FAFAFA] py-12 font-sans">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto mb-12 max-w-3xl text-center">
+          <span className="text-xs font-bold uppercase tracking-widest text-[var(--brand-ink)]">
+            Our Team
+          </span>
+          <h1 className="mb-4 mt-2 font-serif text-3xl font-bold text-gray-900 sm:text-4xl">
+            Our Male Massage Therapists
           </h1>
-          <p className="text-gray-600 font-light text-base leading-relaxed">
-            Every therapist at Tripod Wellness holds advanced state certifications, background verifications, and extensive training in muscular recovery and somatic relaxation.
+          <p className="text-base font-light leading-relaxed text-gray-600">
+            View the therapist profiles currently published for Tripod Wellness. Profile details
+            include the name, role, specialties and experience supplied for each team member.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {therapists.map((therapist) => (
-            <div
-              key={therapist.id}
-              className="bg-white rounded-2xl border border-gray-100 overflow-hidden shadow-sm hover:shadow-xl transition-all group flex flex-col justify-between"
-            >
-              <div>
-                <div className="relative h-64 overflow-hidden">
-                  <img
-                    src={therapist.photoUrl || therapist.imageUrl}
-                    alt={therapist.name}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
-                  <div className="absolute top-3 right-3 bg-white/95 backdrop-blur-md px-2.5 py-1 rounded-full text-xs font-bold text-gray-800 flex items-center gap-1 shadow-md">
-                    <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
-                    <span>{therapist.rating} ({therapist.reviewCount})</span>
+        {therapists.length > 0 ? (
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+            {therapists.map((therapist) => (
+              <div
+                key={therapist.id}
+                className="group flex flex-col justify-between overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm transition-all hover:shadow-xl"
+              >
+                <div>
+                  <div className="relative h-64 overflow-hidden">
+                    <EntityImage
+                      src={therapist.photoUrl || therapist.imageUrl}
+                      alt={`${therapist.name}, massage therapist`}
+                      className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      placeholderClassName="h-full w-full"
+                      label={therapist.name}
+                    />
                   </div>
-                </div>
 
-                <div className="p-6 space-y-4">
-                  <div>
-                    <h3 className="text-xl font-serif font-bold text-gray-900">{therapist.name}</h3>
-                    <p className="text-xs font-semibold text-[var(--brand-ink)] uppercase tracking-wider mt-1">
-                      {therapist.title} &bull; {therapist.experienceYears} Yrs Exp.
+                  <div className="space-y-4 p-6">
+                    <div>
+                      <h2 className="font-serif text-xl font-bold text-gray-900">{therapist.name}</h2>
+                      <p className="mt-1 text-xs font-semibold uppercase tracking-wider text-[var(--brand-ink)]">
+                        {therapist.title}
+                        {therapist.experienceYears > 0
+                          ? ` • ${therapist.experienceYears} years stated experience`
+                          : ''}
+                      </p>
+                    </div>
+
+                    <p className="line-clamp-3 text-xs font-light leading-relaxed text-gray-600">
+                      {therapist.bio}
                     </p>
-                  </div>
 
-                  <p className="text-gray-600 text-xs font-light line-clamp-3 leading-relaxed">
-                    {therapist.bio}
-                  </p>
-
-                  <div className="flex flex-wrap gap-1.5">
-                    {(therapist.specialties || []).map((spec: string, i: number) => (
-                      <span key={i} className="px-2.5 py-1 bg-gray-100 text-gray-700 rounded-md text-[11px] font-medium">
-                        {spec}
-                      </span>
-                    ))}
+                    <div className="flex flex-wrap gap-1.5">
+                      {(therapist.specialties || []).map((specialty: string, index: number) => (
+                        <span
+                          key={index}
+                          className="rounded-md bg-gray-100 px-2.5 py-1 text-[11px] font-medium text-gray-700"
+                        >
+                          {specialty}
+                        </span>
+                      ))}
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              <div className="p-6 pt-0 flex items-center gap-3">
-                <Link
-                  to={`/therapists/${therapist.id}`}
-                  className="flex-1 text-center py-2.5 border border-gray-200 hover:border-[#BFA476] text-gray-800 hover:text-[var(--brand-ink)] rounded-xl text-xs font-bold transition-colors flex items-center justify-center gap-1"
-                >
-                  View Profile
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </Link>
-                <button
-                  onClick={() => context.onOpenBooking?.()}
-                  className="flex-1 py-2.5 bg-[#1A1A1A] hover:bg-brand-500 text-white hover:text-brand-950 rounded-xl text-xs font-bold transition-colors flex items-center justify-center gap-1 shadow-sm"
-                >
-                  <Calendar className="w-3.5 h-3.5" />
-                  Book Session
-                </button>
+                <div className="flex items-center gap-3 p-6 pt-0">
+                  <Link
+                    to={`/therapists/${nameSlug(therapist.name)}`}
+                    className="flex flex-1 items-center justify-center gap-1 rounded-xl border border-gray-200 py-2.5 text-center text-xs font-bold text-gray-800 transition-colors hover:border-[#BFA476] hover:text-[var(--brand-ink)]"
+                  >
+                    View profile
+                    <ArrowRight className="h-3.5 w-3.5" />
+                  </Link>
+                  <button
+                    onClick={() => context.onOpenBooking?.()}
+                    className="flex flex-1 items-center justify-center gap-1 rounded-xl bg-[#1A1A1A] py-2.5 text-xs font-bold text-white shadow-sm transition-colors hover:bg-brand-500 hover:text-brand-950"
+                  >
+                    <Calendar className="h-3.5 w-3.5" />
+                    Book appointment
+                  </button>
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        ) : (
+          <div className="rounded-3xl border border-gray-200 bg-white p-10 text-center">
+            <User className="mx-auto h-8 w-8 text-[var(--brand-ink)]" />
+            <h2 className="mt-3 font-serif text-xl font-bold text-gray-900">
+              Team profiles are being updated
+            </h2>
+            <p className="mx-auto mt-2 max-w-lg text-sm text-gray-600">
+              Contact the concierge for the current team and appointment availability.
+            </p>
+            <Link
+              to="/contact"
+              className="mt-5 inline-flex items-center gap-2 rounded-xl bg-brand-500 px-5 py-3 text-sm font-bold text-brand-950"
+            >
+              Contact concierge <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
+        )}
       </div>
     </div>
   );

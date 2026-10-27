@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+﻿import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Sparkles, X, Send, Bot, Calendar, RotateCcw, Copy, Check, RefreshCw, BookOpen } from 'lucide-react';
 import Markdown from 'react-markdown';
@@ -131,7 +131,7 @@ export const SpaAssistantChat: React.FC<SpaAssistantChatProps> = ({ onOpenBookin
           {
             id: `ast-err-${Date.now()}`,
             sender: 'assistant',
-            text: 'Sorry, I\'m temporarily unable to help. Please try again shortly or tap **Book Appointment**.',
+            text: 'Sorry, I\'m temporarily unable to help. Please try again shortly or tap **Request Appointment**.',
             at: Date.now(),
           },
         ]);
@@ -200,7 +200,7 @@ export const SpaAssistantChat: React.FC<SpaAssistantChatProps> = ({ onOpenBookin
     'Are slots available tomorrow?',
     'What are your working hours?',
     'Where are you located?',
-    'Book Appointment',
+    'Request Appointment',
   ];
 
   const promptToQuery: Record<string, string> = {
@@ -371,7 +371,7 @@ export const SpaAssistantChat: React.FC<SpaAssistantChatProps> = ({ onOpenBookin
                 <button
                   key={idx}
                   onClick={() => {
-                    if (prompt === 'Book Appointment') {
+                    if (prompt === 'Request Appointment') {
                       setIsOpen(false);
                       onOpenBooking();
                     } else {

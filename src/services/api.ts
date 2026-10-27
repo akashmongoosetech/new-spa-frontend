@@ -1,4 +1,4 @@
-import axios from 'axios';
+﻿import axios from 'axios';
 import {
   Service,
   Therapist,
@@ -18,7 +18,9 @@ import {
   ScheduleConfig
 } from '../types';
 
-const API_BASE = import.meta.env.VITE_API_URL || '/api';
+const API_BASE =
+  import.meta.env.VITE_API_URL ||
+  (import.meta.env.PROD ? 'https://new-spa-backend.onrender.com/api' : '/api');
 const TOKEN_KEY = 'aura_admin_token';
 const USER_KEY = 'aura_admin_user';
 
@@ -215,22 +217,49 @@ function mapCoupon(c: any): Coupon {
   };
 }
 
+/**
+ * The legacy settings record still contains a generic superlative tagline and
+ * old-brand social handles. Do not repeat unverified positioning or link to a
+ * profile that is not clearly associated with this business.
+ */
+function publicTagline(value: unknown): string {
+  const text = String(value || '').trim();
+  if (!text || /\b(premier|luxur\w*|elite|exclusive|sanctuary|best)\b/i.test(text)) {
+    return "Men's massage therapy in Indore, Ujjain and Dewas";
+  }
+  return text;
+}
+
+function verifiedSocialUrl(value: unknown, hosts: string[]): string {
+  const raw = String(value || '').trim();
+  if (!raw) return '';
+  try {
+    const url = new URL(raw);
+    if (!/^https?:$/.test(url.protocol)) return '';
+    const host = url.hostname.toLowerCase().replace(/^www\./, '');
+    if (!hosts.includes(host)) return '';
+    // Keep only profiles that name this business; old-brand handles are hidden.
+    return /tripod/i.test(url.pathname) ? url.toString() : '';
+  } catch {
+    return '';
+  }
+}
 function mapBusinessSettings(s: any): BusinessSettings {
   const base: BusinessSettings = {
     businessName: s.businessName || s.siteName || 'Tripod Wellness',
-    tagline: s.tagline || "Premier Men's Massage & Wellness Sanctuary",
+    tagline: publicTagline(s.tagline),
     phone: s.phone || '+91-9171606807',
     whatsapp: s.whatsapp || s.phone || '+91-9171606807',
     email: s.email || 'wellnesstripod@gmail.com',
     address: s.address || 'Indore, Ujjain, Dewas',
     city: s.city || 'Indore, Ujjain, Dewas',
-    workingHours: s.workingHours || s.openingHours || 'Open 24 hours, Mon - Sun (IST)',
+    workingHours: s.workingHours || s.openingHours || 'By appointment only',
     currencySymbol: s.currencySymbol || '₹',
     currencyCode: s.currencyCode || 'INR',
     googleMapsUrl: s.googleMapsUrl || 'https://www.google.com/maps/search/?api=1&query=Indore+Ujjain+Dewas',
-    facebookUrl: s.facebookUrl || 'https://facebook.com/tripodwellness',
-    instagramUrl: s.instagramUrl || 'https://instagram.com/tripodwellness',
-    twitterUrl: s.twitterUrl || 'https://twitter.com/tripodwellness',
+    facebookUrl: verifiedSocialUrl(s.facebookUrl, ['facebook.com']),
+    instagramUrl: verifiedSocialUrl(s.instagramUrl, ['instagram.com']),
+    twitterUrl: verifiedSocialUrl(s.twitterUrl, ['twitter.com', 'x.com']),
     smtpHost: s.smtpHost || '',
     smtpPort: s.smtpPort || 587,
     smtpUser: s.smtpUser || '',
@@ -243,7 +272,7 @@ function mapBusinessSettings(s: any): BusinessSettings {
     contactEmailTemplate: s.contactEmailTemplate || '',
     maxBookingsPerSlot: s.maxBookingsPerSlot || 3,
     slotIntervalMinutes: s.slotIntervalMinutes || 60,
-    autoApproveBookings: s.autoApproveBookings !== false,
+    autoApproveBookings: s.autoApproveBookings === true,
     bookingDurationMinutes: s.bookingDurationMinutes || 60,
     maxDailyBookings: s.maxDailyBookings || 0,
 
@@ -527,7 +556,15 @@ export const api = {
   },
 
   // Contact & Newsletter
-  async sendContact(data: { name: string; email: string; phone?: string; subject?: string; message: string }) {
+  async sendContact(data: {
+    name: string;
+    email: string;
+    phone?: string;
+    subject?: string;
+    message: string;
+    consent?: boolean;
+    website?: string;
+  }) {
     try {
       const res = await http.post('/contact', data);
       return res.data;
@@ -541,9 +578,9 @@ export const api = {
     return data.map(mapContactMessage);
   },
 
-  async subscribeNewsletter(email: string) {
+  async subscribeNewsletter(email: string, consent = false, website = '') {
     try {
-      const res = await http.post('/newsletter', { email });
+      const res = await http.post('/newsletter', { email, consent, website });
       return res.data;
     } catch (error) {
       throw new Error(getErrorMessage(error, 'Failed to subscribe'));
@@ -851,13 +888,22 @@ export const api = {
     return mapAdminUser(data);
   },
 
-  async adminSignup(data: { name: string; email: string; password: string; requestedRole?: string }): Promise<{ success: boolean; message: string }> {
+  async adminSignup(data: {
+    name: string;
+    email: string;
+    password: string;
+    requestedRole?: string;
+    consent?: boolean;
+    website?: string;
+  }): Promise<{ success: boolean; message: string }> {
     try {
       const res = await http.post<{ success: boolean; message: string }>('/admin/signup', {
         name: data.name,
         email: data.email,
         password: data.password,
         requestedRole: data.requestedRole || 'Receptionist',
+        consent: data.consent,
+        website: data.website,
       });
       return res.data;
     } catch (error) {
@@ -1334,5 +1380,12 @@ export const getTherapists = () => api.getTherapists();
 export const getSettings = () => api.getSettings();
 export const createBooking = (data: any) => api.createBooking(data);
 export const adminLogin = (email: string, password: string) => api.adminLogin(email, password);
-export const adminSignup = (data: { name: string; email: string; password: string; requestedRole?: string }) => api.adminSignup(data);
+export const adminSignup = (data: {
+  name: string;
+  email: string;
+  password: string;
+  requestedRole?: string;
+  consent?: boolean;
+  website?: string;
+}) => api.adminSignup(data);
 export default api;

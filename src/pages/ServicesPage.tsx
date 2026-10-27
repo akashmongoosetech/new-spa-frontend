@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { Clock, Calendar, CheckCircle2, Star, Sparkles, Filter, Info } from 'lucide-react';
+import { Clock, Calendar, CheckCircle2, Sparkles, Filter, Info } from 'lucide-react';
 import { Service, BusinessSettings } from '../types';
+import { EntityImage } from '../components/ui/EntityImage';
 import { Modal } from '../components/ui/Modal';
-import { SEO } from '../components/ui/SEO';
 
 interface ServicesPageProps {
   services: Service[];
@@ -24,7 +24,7 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({
     { id: 'relaxation', label: 'Swedish & Relaxation' },
     { id: 'deep_tissue', label: 'Deep Tissue & Sports' },
     { id: 'specialized', label: 'Hot Stone & Specialized' },
-    { id: 'vip_packages', label: 'VIP Executive Packages' },
+    { id: 'vip_packages', label: 'Packages' },
   ];
 
   const safeServices = services || [];
@@ -35,22 +35,18 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({
 
   return (
     <div className="py-12 bg-[#FAFAFA] font-sans min-h-screen">
-      <SEO
-        title="Massage Therapies & Pricing | Tripod Wellness"
-        description="Explore our complete menu of Men-to-Men massage therapies including Swedish, Deep Tissue, Hot Stone, and Executive VIP packages."
-      />
-
       <div className="max-w-7xl mx-auto px-4 sm:px-6 space-y-10">
         {/* Page Header */}
         <div className="text-center max-w-3xl mx-auto space-y-4">
           <span className="text-xs font-bold uppercase tracking-widest text-[var(--brand-ink)] bg-brand-50 px-3 py-1 rounded-full">
-            Curated Menu
+            Therapy Menu
           </span>
           <h1 className="text-4xl sm:text-5xl font-serif font-extrabold text-gray-900">
             Professional Men's Therapy Menu
           </h1>
           <p className="text-gray-600 text-sm leading-relaxed">
-            Every session is tailored to your body's physical demands. Select from individual therapies or comprehensive VIP executive packages.
+            Choose a therapy and review the listed duration and price. The concierge confirms the
+            current price and availability before your appointment; payment is made at the venue.
           </p>
         </div>
 
@@ -81,10 +77,12 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({
             >
               <div>
                 <div className="relative h-60 overflow-hidden">
-                  <img
+                  <EntityImage
                     src={srv.imageUrl}
-                    alt={srv.title}
+                    alt={`${srv.title} at Tripod Wellness`}
                     className="w-full h-full object-cover"
+                    placeholderClassName="w-full h-full"
+                    label={srv.title}
                   />
                   <div className="absolute top-4 right-4 bg-black/80 backdrop-blur-md text-white px-3 py-1 rounded-full text-xs font-bold font-mono">
                     {settings.currencySymbol || '₹'}{srv.price}
@@ -102,7 +100,9 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({
                       <Clock className="w-3.5 h-3.5 text-[var(--brand-ink)]" />
                       {srv.durationMinutes} Minutes
                     </span>
-                    <span className="text-amber-500 font-bold">★ {srv.rating} ({srv.reviewsCount})</span>
+                    <span className="text-[11px] uppercase tracking-wider text-gray-400">
+                      {srv.category?.replaceAll('_', ' ')}
+                    </span>
                   </div>
 
                   <h3 className="text-xl font-serif font-bold text-gray-900 leading-snug">
@@ -161,10 +161,12 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({
       >
         {selectedServiceDetail && (
           <div className="space-y-6 font-sans">
-            <img
+            <EntityImage
               src={selectedServiceDetail.imageUrl}
-              alt={selectedServiceDetail.title}
+              alt={`${selectedServiceDetail.title} at Tripod Wellness`}
               className="w-full h-64 object-cover rounded-2xl"
+              placeholderClassName="w-full h-64 rounded-2xl"
+              label={selectedServiceDetail.title}
             />
 
             <div className="flex justify-between items-center pb-3 border-b border-gray-100">
@@ -173,9 +175,6 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({
                 <span className="text-xs text-gray-400 font-sans font-normal">
                   ({selectedServiceDetail.durationMinutes} Minutes)
                 </span>
-              </span>
-              <span className="text-xs font-bold text-amber-500 bg-amber-50 px-3 py-1 rounded-full">
-                ★ {selectedServiceDetail.rating} Rating
               </span>
             </div>
 
@@ -190,7 +189,7 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({
 
             <div className="space-y-2">
               <h4 className="text-sm font-bold text-gray-900 uppercase tracking-wider">
-                Therapeutic Benefits
+                Session Notes
               </h4>
               <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-gray-700">
                 {(selectedServiceDetail.benefits || []).map((b, i) => (
@@ -226,7 +225,7 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({
                 className="px-6 py-3 rounded-xl bg-brand-500 text-brand-950 font-bold text-xs shadow-md flex items-center gap-2 cursor-pointer"
               >
                 <Calendar className="w-4 h-4" />
-                <span>Book Now ({settings.currencySymbol || '₹'}{selectedServiceDetail.price})</span>
+                <span>Request ({settings.currencySymbol || '₹'}{selectedServiceDetail.price})</span>
               </button>
             </div>
           </div>

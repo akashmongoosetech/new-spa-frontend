@@ -1,64 +1,357 @@
 import React from 'react';
-import { ShieldCheck, FileText, Lock } from 'lucide-react';
-import { SEO } from '../components/ui/SEO';
+import { useOutletContext } from 'react-router-dom';
+import { AlertTriangle, ShieldCheck, FileText, Lock } from 'lucide-react';
+import { BusinessSettings } from '../types';
+import { mockSettings } from '../data/mockData';
 
 interface LegalPagesProps {
   type: 'privacy' | 'terms' | 'cookies';
 }
 
+const TITLES = {
+  privacy: 'Privacy Policy',
+  terms: 'Terms & Conditions',
+  cookies: 'Cookie & Consent Policy',
+};
+
+const TemplateNotice: React.FC = () => (
+  <div className="rounded-2xl border-2 border-amber-300 bg-amber-50 p-5 text-amber-900">
+    <div className="flex items-start gap-3">
+      <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0" />
+      <div className="space-y-1.5 text-xs leading-relaxed">
+        <p className="text-sm font-extrabold uppercase tracking-wide">
+          TEMPLATE — REVIEW BEFORE PUBLICATION
+        </p>
+        <p>
+          This draft describes the website and form flows in this codebase. It is not legal advice.
+          The business owner and a qualified adviser must confirm the legal entity, address,
+          retention periods, payment model, grievance contact and all bracketed details before this
+          page is published.
+        </p>
+      </div>
+    </div>
+  </div>
+);
+
+const Section: React.FC<{ title: string; children: React.ReactNode }> = ({ title, children }) => (
+  <section className="space-y-2">
+    <h2 className="font-serif text-base font-bold text-gray-900">{title}</h2>
+    <div className="space-y-2 text-xs leading-relaxed text-gray-700">{children}</div>
+  </section>
+);
+
 export const LegalPages: React.FC<LegalPagesProps> = ({ type }) => {
-  const titles = {
-    privacy: 'Privacy Policy & Data Security',
-    terms: 'Terms of Service & Spa Etiquette',
-    cookies: 'Cookie & Tracking Policy'
-  };
+  const context = useOutletContext<{ settings?: BusinessSettings }>() || {};
+  const settings = context.settings || mockSettings;
 
   return (
-    <div className="py-12 bg-[#FAFAFA] font-sans min-h-screen">
-      <SEO title={`${titles[type]} | Tripod Wellness`} description="Read our executive privacy policy, terms of service, and cookie disclosures." />
-
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 space-y-8">
-        <div className="text-center space-y-3">
-          <span className="text-xs font-bold uppercase tracking-widest text-[var(--brand-ink)] bg-brand-50 px-3 py-1 rounded-full">
-            Legal Compliance
+    <div className="min-h-screen bg-[#FAFAFA] py-12 font-sans">
+      <div className="mx-auto max-w-4xl space-y-8 px-4 sm:px-6">
+        <div className="space-y-3 text-center">
+          <span className="rounded-full bg-brand-50 px-3 py-1 text-xs font-bold uppercase tracking-widest text-[var(--brand-ink)]">
+            Legal Information
           </span>
-          <h1 className="text-3xl font-serif font-bold text-gray-900">
-            {titles[type]}
-          </h1>
-          <p className="text-xs text-gray-500">Last updated: January 2026</p>
+          <h1 className="font-serif text-3xl font-bold text-gray-900">{TITLES[type]}</h1>
+          <p className="text-xs text-gray-500">Draft — October 2026</p>
         </div>
 
-        <div className="bg-white rounded-3xl p-8 border border-gray-100 shadow-sm space-y-6 text-xs text-gray-700 leading-relaxed">
+        <TemplateNotice />
+
+        <div className="space-y-6 rounded-3xl border border-gray-100 bg-white p-8 shadow-sm">
           {type === 'privacy' && (
             <>
-              <h2 className="text-base font-serif font-bold text-gray-900">1. Client Confidentiality & Anonymity</h2>
-              <p>Tripod Wellness strictly safeguards all client data, contact details, and appointment histories. We do not sell, rent, or distribute client information to third parties.</p>
+              <div className="flex items-start gap-3 rounded-2xl bg-brand-50 p-4 text-xs leading-relaxed text-gray-700">
+                <ShieldCheck className="mt-0.5 h-5 w-5 shrink-0 text-[var(--brand-ink)]" />
+                <p>
+                  This policy is based on the forms, storage and third-party services currently used
+                  by the Tripod Wellness website. Bracketed items must be completed by the owner.
+                </p>
+              </div>
 
-              <h2 className="text-base font-serif font-bold text-gray-900">2. Information We Collect</h2>
-              <p>When reserving a massage session, we collect your name, phone number, email address, and optional muscle focus notes for therapist preparation.</p>
+              <Section title="1. Who is responsible for your data">
+                <p>
+                  The website and appointment forms are operated for {settings.businessName}. Contact:{' '}
+                  {settings.email || '[OWNER TO CONFIRM EMAIL]'} or {settings.phone || '[OWNER TO CONFIRM PHONE]'}.
+                  Legal entity and registered address: [OWNER TO CONFIRM].
+                </p>
+                <p>
+                  Grievance or privacy contact: [OWNER TO CONFIRM NAME, EMAIL AND POSTAL ADDRESS].
+                </p>
+              </Section>
 
-              <h2 className="text-base font-serif font-bold text-gray-900">3. Payment & Data Security</h2>
-              <p>All financial transactions processed online use 256-bit SSL encryption. Payment data is never stored locally on our web servers.</p>
+              <Section title="2. Data we collect">
+                <ul className="list-disc space-y-1 pl-5">
+                  <li>
+                    <strong>Appointment requests:</strong> name, email, phone number, selected
+                    therapy, therapist preference, date, time, optional notes, and the booking
+                    reference.
+                  </li>
+                  <li>
+                    <strong>Contact messages:</strong> name, email, phone number, subject, message and
+                    consent timestamp.
+                  </li>
+                  <li>
+                    <strong>Newsletter:</strong> email address, subscription status and consent
+                    records.
+                  </li>
+                  <li>
+                    <strong>Staff applications:</strong> name, email, requested role, application
+                    notes and a password hash. Applications do not create an active staff account
+                    until a director approves them.
+                  </li>
+                  <li>
+                    <strong>Website chat:</strong> messages, a session identifier and a hashed IP
+                    address used for abuse limits. Public chat transcripts expire after 90 days.
+                  </li>
+                  <li>
+                    <strong>Technical data:</strong> IP address, browser/device information, request
+                    logs and security events generated by the hosting and API providers.
+                  </li>
+                  <li>
+                    <strong>Analytics:</strong> Google Analytics 4 page views and successful form
+                    conversions, only when a measurement ID is configured and consent is given where
+                    required. Advertising and remarketing are not configured.
+                  </li>
+                </ul>
+              </Section>
+
+              <Section title="3. Why we use it">
+                <ul className="list-disc space-y-1 pl-5">
+                  <li>To respond to enquiries and process appointment requests.</li>
+                  <li>To send the acknowledgement and service emails requested through the forms.</li>
+                  <li>To manage newsletter subscriptions and honour unsubscribe requests.</li>
+                  <li>To review staff applications and administer authorised staff accounts.</li>
+                  <li>To protect the website, prevent abuse and maintain service reliability.</li>
+                  <li>To measure page views and successful form submissions where analytics is enabled and consented to.</li>
+                </ul>
+              </Section>
+
+              <Section title="4. Legal bases">
+                <p>
+                  Depending on the context, processing relies on your consent (for example, optional
+                  analytics and newsletter updates), steps requested before an appointment, the
+                  legitimate operation and security of the service, and compliance with applicable
+                  law. [OWNER/ADVISER TO CONFIRM THE LEGAL BASES AND ANY CONSENT WORDING.]
+                </p>
+              </Section>
+
+              <Section title="5. Sharing and processors">
+                <p>
+                  Data may be processed by service providers used to host the website, run the API and
+                  database, deliver email, provide security/rate limiting, and measure analytics when
+                  enabled. Current providers include the website host, the API/database host and the
+                  configured email delivery service. [OWNER TO LIST PROVIDERS AND CONFIRM CONTRACTS.]
+                </p>
+                <p>
+                  We do not sell personal data. This draft assumes no sale or advertising-sharing;
+                  confirm before publication.
+                </p>
+              </Section>
+
+              <Section title="6. Retention">
+                <p>
+                  Appointment and contact records are kept for [OWNER TO CONFIRM PERIOD]. Newsletter
+                  records are kept until you unsubscribe or the list is closed. Chat transcripts are
+                  intended to expire after 90 days. Security logs are kept for [OWNER TO CONFIRM
+                  PERIOD]. Staff account records are kept while the account is active and for any
+                  required audit period.
+                </p>
+              </Section>
+
+              <Section title="7. Your choices and rights">
+                <p>
+                  You may ask for access, correction, deletion, or withdrawal of consent by contacting
+                  the privacy contact above. You may unsubscribe from newsletter email using the link
+                  in the email or the website unsubscribe page. We may need to verify your identity
+                  before acting on a request. [OWNER/ADVISER TO CONFIRM THE APPLICABLE RIGHTS AND
+                  RESPONSE TIMELINE.]
+                </p>
+              </Section>
+
+              <Section title="8. Security">
+                <p>
+                  The site is served over HTTPS and uses access controls, request validation and rate
+                  limiting. No method of transmission or storage is completely secure. Do not send
+                  sensitive medical records or payment card details through the website forms.
+                </p>
+              </Section>
+
+              <Section title="9. Children">
+                <p>
+                  The website and appointment forms are intended for adults. [OWNER TO CONFIRM AGE
+                  POLICY AND ANY GUARDIAN PROCESS.]
+                </p>
+              </Section>
+
+              <Section title="10. Changes and contact">
+                <p>
+                  We may update this policy when the website or services change. The revised date will
+                  appear at the top of this page. Questions can be sent to{' '}
+                  {settings.email || '[OWNER TO CONFIRM EMAIL]'}.
+                </p>
+              </Section>
+
+              <div className="rounded-xl border border-gray-200 bg-gray-50 p-4 text-[11px] leading-relaxed text-gray-600">
+                <strong>Review notes:</strong> confirm the legal entity, address, grievance officer,
+                retention periods, email provider, analytics activation, payment model, age policy and
+                the exact legal bases. Remove this box and the template banner before publication.
+              </div>
             </>
           )}
 
           {type === 'terms' && (
             <>
-              <h2 className="text-base font-serif font-bold text-gray-900">1. Code of Professional Conduct</h2>
-              <p>Tripod Wellness operates as a licensed, strictly therapeutic massage therapy spa. Professional behavior is expected from all guests at all times.</p>
+              <div className="flex items-start gap-3 rounded-2xl bg-brand-50 p-4 text-xs leading-relaxed text-gray-700">
+                <FileText className="mt-0.5 h-5 w-5 shrink-0 text-[var(--brand-ink)]" />
+                <p>
+                  These terms describe how the website and appointment request flow currently work.
+                  They are a draft for owner and legal review.
+                </p>
+              </div>
 
-              <h2 className="text-base font-serif font-bold text-gray-900">2. Cancellation & Rescheduling</h2>
-              <p>Appointments may be rescheduled or cancelled up to 4 hours prior to slot time. Late cancellations may incur a fee.</p>
+              <Section title="1. Website use">
+                <p>
+                  You may use this website to view information, send an appointment request, contact
+                  the concierge, subscribe to updates or apply for a staff account. Do not misuse the
+                  forms, attempt unauthorised access, or submit false information.
+                </p>
+              </Section>
 
-              <h2 className="text-base font-serif font-bold text-gray-900">3. Health & Medical Conditions</h2>
-              <p>Guests must notify their therapist of any cardiovascular conditions, recent surgeries, or skin allergies prior to session start.</p>
+              <Section title="2. Appointment requests">
+                <p>
+                  Submitting the booking form creates an appointment request. It is not a confirmed
+                  booking until the concierge confirms availability and sends the appointment details
+                  by email. Please check the confirmation before travelling.
+                </p>
+              </Section>
+
+              <Section title="3. Prices and payment">
+                <p>
+                  Prices shown on the therapy menu are in Indian rupees and may change. The current
+                  website does not process card, UPI or wallet payments online. Unless the concierge
+                  confirms another method in writing, payment is made at the venue. [OWNER TO CONFIRM
+                  PAYMENT MODEL, TAXES AND RECEIPTS.]
+                </p>
+              </Section>
+
+              <Section title="4. Cancellations and refunds">
+                <p>
+                  Cancellation and refund terms are being reviewed by the owner. Contact the concierge
+                  for the current terms before booking. [OWNER TO CONFIRM NOTICE PERIOD, FEES,
+                  RESCHEDULING AND REFUND TIMELINE.]
+                </p>
+              </Section>
+
+              <Section title="5. Health and comfort">
+                <p>
+                  Massage therapy is not a substitute for medical diagnosis or treatment. Tell the
+                  therapist about relevant health conditions, recent surgery, pregnancy, injuries,
+                  allergies or medications before the session. The therapist may decline or adjust a
+                  session where it is not appropriate.
+                </p>
+              </Section>
+
+              <Section title="6. Conduct and privacy">
+                <p>
+                  Treat staff and other guests with respect. The service is professional massage
+                  therapy. Any request for unlawful or non-therapeutic services may result in refusal
+                  and removal. Do not record or photograph staff or private areas without permission.
+                </p>
+              </Section>
+
+              <Section title="7. Liability and governing law">
+                <p>
+                  [OWNER/ADVISER TO CONFIRM LIABILITY WORDING, CONSUMER RIGHTS, JURISDICTION AND
+                  GOVERNING LAW.]
+                </p>
+              </Section>
+
+              <Section title="8. Contact">
+                <p>
+                  Questions about these terms can be sent to {settings.email || '[OWNER TO CONFIRM EMAIL]'} or{' '}
+                  {settings.phone || '[OWNER TO CONFIRM PHONE]'}.
+                </p>
+              </Section>
+
+              <div className="rounded-xl border border-gray-200 bg-gray-50 p-4 text-[11px] leading-relaxed text-gray-600">
+                <strong>Review notes:</strong> confirm the legal entity, payment model, cancellation
+                terms, refund process, liability wording and governing law. Remove this box and the
+                template banner before publication.
+              </div>
             </>
           )}
 
           {type === 'cookies' && (
             <>
-              <h2 className="text-base font-serif font-bold text-gray-900">1. Cookie Usage</h2>
-              <p>We use essential functional cookies to remember your session preferences, active booking state, and dark mode toggles.</p>
+              <div className="flex items-start gap-3 rounded-2xl bg-brand-50 p-4 text-xs leading-relaxed text-gray-700">
+                <Lock className="mt-0.5 h-5 w-5 shrink-0 text-[var(--brand-ink)]" />
+                <p>
+                  This page describes the storage used by the current website. Optional analytics is
+                  not loaded until a measurement ID is configured and the required consent is given.
+                </p>
+              </div>
+
+              <Section title="1. Essential storage">
+                <ul className="list-disc space-y-1 pl-5">
+                  <li>
+                    <strong>Admin session:</strong> a staff JWT and basic staff profile are stored in
+                    browser localStorage after an authorised sign-in. These are removed on sign-out or
+                    when the API rejects the session.
+                  </li>
+                  <li>
+                    <strong>Consent choice:</strong> the analytics consent choice is stored in
+                    localStorage under <code>tripod_consent_v1</code> so the banner is not shown again
+                    unnecessarily.
+                  </li>
+                  <li>
+                    <strong>Booking reference:</strong> a booking reference may be stored for the thank
+                    you page in the current browser session.
+                  </li>
+                </ul>
+                <p>
+                  These items support the requested service and security. They are not used for
+                  advertising.
+                </p>
+              </Section>
+
+              <Section title="2. Optional analytics">
+                <p>
+                  When <code>VITE_GA_MEASUREMENT_ID</code> is configured, Google Analytics 4 may set{' '}
+                  <code>_ga</code> and <code>_ga_*</code> cookies and receive page views and
+                  successful form conversion events. Analytics is loaded only after consent where
+                  consent is required. No advertising, remarketing or behavioural profiling is
+                  configured in this codebase. [OWNER TO CONFIRM ANALYTICS USE AND CONSENT REGION.]
+                </p>
+              </Section>
+
+              <Section title="3. Managing consent">
+                <p>
+                  Use the cookie banner to accept or reject optional analytics. You can change your
+                  choice with the "Cookie settings" link in the footer. Rejecting analytics does not
+                  block essential booking or contact forms.
+                </p>
+              </Section>
+
+              <Section title="4. Third-party services">
+                <p>
+                  The website loads Google Fonts and may load Google Analytics when enabled. The API
+                  and website hosting providers may process technical request data. [OWNER TO CONFIRM
+                  THE FINAL PROVIDER LIST AND ANY ADDITIONAL EMBEDS.]
+                </p>
+              </Section>
+
+              <Section title="5. Contact">
+                <p>
+                  Questions about cookies or consent can be sent to{' '}
+                  {settings.email || '[OWNER TO CONFIRM EMAIL]'}.
+                </p>
+              </Section>
+
+              <div className="rounded-xl border border-gray-200 bg-gray-50 p-4 text-[11px] leading-relaxed text-gray-600">
+                <strong>Review notes:</strong> confirm the analytics ID, consent regions, cookie
+                lifetimes, provider list and the final consent interface. Remove this box and the
+                template banner before publication.
+              </div>
             </>
           )}
         </div>
@@ -66,3 +359,5 @@ export const LegalPages: React.FC<LegalPagesProps> = ({ type }) => {
     </div>
   );
 };
+
+export default LegalPages;

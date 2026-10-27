@@ -262,8 +262,6 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
 
   return (
     <div className="min-h-screen bg-gray-50 text-gray-900 font-sans">
-      <SEO title="CRM Control Hub | Tripod Wellness Admin" />
-
       {/* Tab Body */}
       <main className="max-w-7xl w-full mx-auto space-y-8">
         {activeTab === 'overview' && (
@@ -278,7 +276,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                   Welcome back, {currentUser?.name || 'Administrator'}!
                 </h1>
                 <p className="text-xs text-gray-400 max-w-lg">
-                  Real-time operational overview for Tripod Wellness Men-to-Men Massage & Executive Wellness Suites.
+                  Real-time operational overview for Tripod Wellness Men-to-Men Massage Therapy.
                 </p>
               </div>
               <div className="flex items-center gap-3 relative z-10">
@@ -352,7 +350,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                 </div>
                 <h3 className="text-2xl font-black text-gray-900">{therapists.length}</h3>
                 <div className="flex items-center gap-1.5 text-xs text-purple-600 font-bold">
-                  <span>100% On-Call Ready</span>
+                  <span>Active directory profiles</span>
                 </div>
               </div>
             </div>
@@ -363,7 +361,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                 <div className="flex items-center justify-between">
                   <div>
                     <h3 className="font-extrabold text-gray-900 text-sm">Monthly Revenue Analytics</h3>
-                    <p className="text-xs text-gray-400">Gross revenue performance from therapy sessions & VIP packages.</p>
+                    <p className="text-xs text-gray-400">Gross revenue from therapy sessions and packages.</p>
                   </div>
                   <span className="px-3 py-1 rounded-full text-xs font-bold bg-brand-50 text-[var(--brand-ink)]">
                     2026 Financial Year

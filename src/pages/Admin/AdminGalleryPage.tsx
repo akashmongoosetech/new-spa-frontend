@@ -94,7 +94,7 @@ export const AdminGalleryPage: React.FC = () => {
       <div className="flex justify-between items-center">
         <div>
           <h1 className="text-2xl font-serif font-bold text-gray-900">Sanctuary Gallery Manager</h1>
-          <p className="text-xs text-gray-500 mt-1">Manage high-resolution imagery showcasing private suites and facilities</p>
+          <p className="text-xs text-gray-500 mt-1">Manage approved photos of therapy rooms and facilities</p>
         </div>
         <button
           onClick={() => fileRef.current?.click()}
@@ -121,7 +121,7 @@ export const AdminGalleryPage: React.FC = () => {
             onChange={(e) => setCategory(e.target.value)}
             className="border border-gray-300 rounded-xl px-3 py-2.5 text-xs outline-none bg-white"
           >
-            <option value="suites">VIP Suites</option>
+            <option value="suites">Therapy Rooms</option>
             <option value="equipment">Equipment</option>
             <option value="ambiance">Ambiance</option>
             <option value="hydrotherapy">Hydrotherapy</option>
@@ -138,7 +138,7 @@ export const AdminGalleryPage: React.FC = () => {
             type="text"
             value={subtitle}
             onChange={(e) => setSubtitle(e.target.value)}
-            placeholder="Subtitle (e.g. Private Master Suite)"
+            placeholder="Subtitle (e.g. Therapy Room)"
             className="border border-gray-300 rounded-xl px-3 py-2.5 text-xs outline-none focus:border-[#BFA476]"
           />
         </div>
@@ -147,7 +147,7 @@ export const AdminGalleryPage: React.FC = () => {
             type="text"
             value={dimensions}
             onChange={(e) => setDimensions(e.target.value)}
-            placeholder="Dimensions (e.g. 350 sq ft Suite)"
+            placeholder="Dimensions (optional)"
             className="border border-gray-300 rounded-xl px-3 py-2.5 text-xs outline-none focus:border-[#BFA476]"
           />
           <input

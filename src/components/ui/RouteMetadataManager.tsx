@@ -1,34 +1,68 @@
 import React, { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import { updatePageSEO, getSEOPresets } from '../../utils/seo';
+import {
+  getRouteMeta,
+  getStaticRouteMeta,
+  isPrivatePath,
+  normalizePath,
+} from '../../config/site';
+import { updatePageSEO } from '../../utils/seo';
+
+const NOT_FOUND_TITLE = 'Page Not Found | Tripod Wellness';
+const NOT_FOUND_DESCRIPTION =
+  'The page you requested could not be found. Return to Tripod Wellness or browse therapies, therapists, booking and contact pages.';
 
 export const RouteMetadataManager: React.FC = () => {
   const location = useLocation();
 
   useEffect(() => {
-    const path = location.pathname;
+    const path = normalizePath(location.pathname);
+    const exact = getStaticRouteMeta(path);
 
-    if (path.startsWith('/admin')) {
+    if (path === '/privacy') {
+      const privacy = getStaticRouteMeta('/privacy-policy');
       updatePageSEO({
-        title: 'Tripod Wellness | Executive CRM & Sanctuary Management',
-        description: 'Secure administrative management portal for client bookings, therapist schedules, and sanctuary operations.',
+        title: privacy?.title,
+        description: privacy?.description,
+        path: '/privacy-policy',
+        robots: 'noindex, nofollow',
+      });
+      return;
+    }
+
+    if (isPrivatePath(path)) {
+      updatePageSEO({
+        title: exact?.title || 'Staff Portal | Tripod Wellness',
+        description:
+          exact?.description ||
+          'Secure staff access for Tripod Wellness. This page is not indexed by search engines.',
         path,
         robots: 'noindex, nofollow',
       });
       return;
     }
 
-    let presetName = 'home';
-    if (path.startsWith('/services')) presetName = 'services';
-    else if (path.startsWith('/booking')) presetName = 'booking';
-    else if (path.startsWith('/gallery')) presetName = 'gallery';
-    else if (path.startsWith('/therapists')) presetName = 'therapists';
-    else if (path.startsWith('/blog')) presetName = 'blog';
+    const meta = getRouteMeta(path);
+    if (!meta) {
+      updatePageSEO({
+        title: NOT_FOUND_TITLE,
+        description: NOT_FOUND_DESCRIPTION,
+        path,
+        robots: 'noindex, nofollow',
+      });
+      return;
+    }
 
-    const preset = getSEOPresets(presetName);
+    // Detail pages load a record before rendering and set their own unique
+    // title/description. Do not overwrite those values with the parent page
+    // metadata when the route changes.
+    if (/^\/(?:services|therapists|blog)\/[^/]+$/.test(path)) return;
+
     updatePageSEO({
-      ...preset,
+      title: meta.title,
+      description: meta.description,
       path,
+      robots: meta.robots,
     });
   }, [location.pathname]);
 

@@ -1,0 +1,12 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "22"
+  NPM_FLAGS = "--no-audit --no-fund"
+  VITE_API_URL = "https://new-spa-backend.onrender.com/api"
+  VITE_SITE_URL = "https://tripod-wellness.netlify.app"
+
+# Redirects and headers live in public/_redirects and public/_headers so the same
+# behavior is used by CLI and Git-based deployments.

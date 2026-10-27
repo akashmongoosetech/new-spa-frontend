@@ -128,7 +128,7 @@ export const AdminServiceFormPage: React.FC = () => {
                 <option value="relaxation">Relaxation & Swedish</option>
                 <option value="deep_tissue">Deep Tissue & Sports</option>
                 <option value="specialized">Specialized Therapy</option>
-                <option value="vip_packages">VIP Executive Package</option>
+                <option value="vip_packages">Package</option>
                 <option value="ayurvedic">Ayurvedic</option>
               </select>
             </div>

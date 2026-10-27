@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
+import { useNavigate } from 'react-router-dom';
 import {
   Calendar,
   Clock,
@@ -10,22 +11,14 @@ import {
   ArrowLeft,
   ShieldCheck,
   Tag,
-  Printer,
-  Star,
-  Award,
   ChevronRight,
-  X,
-  CreditCard,
-  Building2,
-  Smartphone
 } from 'lucide-react';
-import confetti from 'canvas-confetti';
 import { Service, Therapist, Booking } from '../../types';
 import { AvailabilityCalendar } from './AvailabilityCalendar';
 import { localDateInputValue, formatSlot12h } from '../../utils/date';
 import { api } from '../../services/api';
-import { BookingConfirmationModal } from './BookingConfirmationModal';
 import { broadcastNewBooking } from '../../utils/toastEvents';
+import { markConversionPending } from '../../utils/analytics';
 
 interface BookingWizardProps {
   services: Service[];
@@ -43,7 +36,8 @@ export const BookingWizard: React.FC<BookingWizardProps> = ({
   onBookingSuccess,
   onClose,
 }) => {
-  // Step State: 1 = Service, 2 = Therapist, 3 = Date & Time Slot, 4 = Details & Payment, 5 = Confirmation
+  const navigate = useNavigate();
+  // Step State: 1 = Service, 2 = Therapist, 3 = Date & Time Slot, 4 = Details
   const [step, setStep] = useState<number>(1);
 
   // Form Selections
@@ -60,10 +54,11 @@ export const BookingWizard: React.FC<BookingWizardProps> = ({
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
-  const [age, setAge] = useState<number>(32);
-  const [gender, setGender] = useState('Male');
+  const [age, setAge] = useState('');
+  const [gender, setGender] = useState('');
   const [notes, setNotes] = useState('');
-  const [paymentMethod, setPaymentMethod] = useState<'pay_at_venue' | 'credit_card' | 'upi' | 'paypal'>('pay_at_venue');
+  const [consent, setConsent] = useState(false);
+  const [website, setWebsite] = useState('');
 
   // Coupon Code
   const [couponCode, setCouponCode] = useState('');
@@ -73,8 +68,6 @@ export const BookingWizard: React.FC<BookingWizardProps> = ({
 
   // Submission State
   const [submitting, setSubmitting] = useState(false);
-  const [completedBooking, setCompletedBooking] = useState<Booking | null>(null);
-  const [showConfirmationModal, setShowConfirmationModal] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
   const currentService = services.find((s) => s.id === selectedServiceId) || services[0];
@@ -109,12 +102,28 @@ export const BookingWizard: React.FC<BookingWizardProps> = ({
   // Submit Booking
   const handleSubmitBooking = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!firstName || !lastName || !email || !phone) {
+    if (website) {
+      setErrorMessage('Unable to submit this request.');
+      return;
+    }
+    if (!firstName.trim() || !lastName.trim() || !email.trim() || !phone.trim()) {
       setErrorMessage('Please fill in your full name, email, and phone number.');
+      return;
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
+      setErrorMessage('Please enter a valid email address.');
+      return;
+    }
+    if (phone.replace(/\D/g, '').length < 7) {
+      setErrorMessage('Please enter a valid phone number.');
       return;
     }
     if (!selectedTimeSlot) {
       setErrorMessage('Please choose an available time slot.');
+      return;
+    }
+    if (!consent) {
+      setErrorMessage('Please agree to the Privacy Policy before sending this request.');
       return;
     }
 
@@ -124,10 +133,10 @@ export const BookingWizard: React.FC<BookingWizardProps> = ({
     try {
       const bookingData = {
         customerName: `${firstName} ${lastName}`.trim(),
-        email,
-        phone,
-        age,
-        gender,
+        email: email.trim(),
+        phone: phone.trim(),
+        age: age ? Number(age) : undefined,
+        gender: gender || undefined,
         serviceId: selectedServiceId,
         serviceTitle: currentService?.title,
         therapistId: selectedTherapistId,
@@ -137,41 +146,28 @@ export const BookingWizard: React.FC<BookingWizardProps> = ({
         couponCode: appliedCoupon ? appliedCoupon.code : undefined,
         discountAmount: appliedCoupon ? appliedCoupon.discount : 0,
         totalPaid: totalAmount,
-        notes,
-        paymentMethod,
+        notes: notes.trim(),
+        paymentMethod: 'pay_at_venue',
+        consent: true,
+        website,
       };
 
       const result = await api.createBooking(bookingData);
-      setCompletedBooking(result);
-      setStep(5); // Go to confirmation
-
-      // Broadcast real-time booking event to trigger client toast & admin alerts
-      broadcastNewBooking(result);
-
-      // Trigger celebration confetti
-      try {
-        confetti({
-          particleCount: 80,
-          spread: 70,
-          origin: { y: 0.6 },
-          colors: ['#BFA476', '#DDC8A5', '#DDC8A5'],
-        });
-      } catch (err) {
-        // ignore
+      const reference = result.bookingNumber || result.id || '';
+      if (reference) {
+        sessionStorage.setItem('tripod_booking_reference', String(reference));
       }
-
+      broadcastNewBooking(result);
       if (onBookingSuccess) {
         onBookingSuccess(result);
       }
+      markConversionPending('booking');
+      navigate('/thank-you?type=booking', { replace: true });
     } catch (err: any) {
       setErrorMessage(err.message || 'An error occurred during booking. Please try again.');
     } finally {
       setSubmitting(false);
     }
-  };
-
-  const handlePrint = () => {
-    window.print();
   };
 
   const handleCardKeyDown = (e: React.KeyboardEvent, action: () => void) => {
@@ -193,13 +189,13 @@ export const BookingWizard: React.FC<BookingWizardProps> = ({
           <div className="flex items-center justify-between mb-4">
             <div>
               <span className="text-[10px] font-extrabold uppercase tracking-widest text-[var(--brand-ink)] bg-brand-500/15 px-3 py-1 rounded-full border border-[#BFA476]/30">
-                Tripod Wellness • Online Booking
+                Tripod Wellness â€¢ Online Booking
               </span>
               <h2 className="text-2xl font-serif font-bold text-white mt-1">
                 {step === 1 && '1. Choose Massage Ritual'}
-                {step === 2 && '2. Choose Male Therapist'}
+                {step === 2 && '2. Choose Therapist'}
                 {step === 3 && '3. Choose Date & Time Slot'}
-                {step === 4 && '4. Details & Payment Method'}
+                {step === 4 && '4. Your Details'}
               </h2>
             </div>
             {/* {onClose && (
@@ -249,7 +245,7 @@ export const BookingWizard: React.FC<BookingWizardProps> = ({
                         : 'bg-white/10 text-gray-500'
                     }`}
                   >
-                    {done ? '✓' : s.num}
+                    {done ? 'âœ“' : s.num}
                   </div>
                   <span className="text-xs font-semibold truncate hidden sm:inline">
                     {s.label}
@@ -264,23 +260,23 @@ export const BookingWizard: React.FC<BookingWizardProps> = ({
             <div className="mt-4 p-3 rounded-xl bg-[#201A15] border border-white/10 text-xs flex flex-wrap items-center justify-between gap-2">
               <div className="flex items-center gap-3 text-gray-300 flex-wrap">
                 <span className="font-semibold text-white flex items-center gap-1">
-                  💆 {currentService?.title}
+                  ðŸ’† {currentService?.title}
                 </span>
-                <span className="text-gray-500">•</span>
+                <span className="text-gray-500">â€¢</span>
                 <span className="text-gray-300 flex items-center gap-1">
-                  👤 {selectedTherapistId === 'any' ? 'Any Available Therapist' : currentTherapist?.name}
+                  ðŸ‘¤ {selectedTherapistId === 'any' ? 'Any Available Therapist' : currentTherapist?.name}
                 </span>
                 {step >= 4 && (
                   <>
-                    <span className="text-gray-500">•</span>
+                    <span className="text-gray-500">â€¢</span>
                     <span className="text-brand-300 flex items-center gap-1">
-                      📅 {selectedDate} @ {formatSlot12h(selectedTimeSlot)}
+                      ðŸ“… {selectedDate} @ {formatSlot12h(selectedTimeSlot)}
                     </span>
                   </>
                 )}
               </div>
               <span className="font-serif font-bold text-[var(--brand-ink)] text-sm">
-                ₹{totalAmount}
+                â‚¹{totalAmount}
               </span>
             </div>
           )}
@@ -290,7 +286,7 @@ export const BookingWizard: React.FC<BookingWizardProps> = ({
       {/* Error Banner */}
       {errorMessage && (
         <div className="mb-6 p-4 rounded-2xl bg-rose-950/80 border border-rose-500/40 text-rose-200 text-sm font-medium flex items-center gap-2">
-          <span>⚠️ {errorMessage}</span>
+          <span>âš ï¸ {errorMessage}</span>
         </div>
       )}
 
@@ -305,7 +301,8 @@ export const BookingWizard: React.FC<BookingWizardProps> = ({
             className="space-y-6 relative z-10"
           >
             <p className="text-gray-400 text-xs -mt-2">
-              Select your signature therapy session. All treatments include private suite access and post-session herbal tea.
+              Select a therapy session. The concierge will confirm availability and appointment
+              details before your visit.
             </p>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-h-120 overflow-y-auto pr-1 scrollbar-thin">
@@ -348,7 +345,7 @@ export const BookingWizard: React.FC<BookingWizardProps> = ({
                               {srv.durationMinutes} mins
                             </span>
                             <span className="text-[var(--brand-ink)] font-serif font-extrabold text-base">
-                              ₹{srv.price}
+                              â‚¹{srv.price}
                             </span>
                           </div>
                         </div>
@@ -358,11 +355,7 @@ export const BookingWizard: React.FC<BookingWizardProps> = ({
                       </p>
                     </div>
 
-                    <div className="mt-4 pt-3 border-t border-white/10 flex items-center justify-between text-xs font-semibold">
-                      <span className="text-[var(--brand-ink)] flex items-center gap-1">
-                        <Star className="w-3.5 h-3.5 fill-[#DDC8A5] text-[var(--brand-ink)]" />
-                        {srv.rating} ({srv.reviewsCount} reviews)
-                      </span>
+                    <div className="mt-4 pt-3 border-t border-white/10 flex items-center justify-end text-xs font-semibold">
                       <span
                         className={`px-3.5 py-1 rounded-full text-[11px] font-bold transition-colors ${
                           isSelected
@@ -370,7 +363,7 @@ export const BookingWizard: React.FC<BookingWizardProps> = ({
                             : 'bg-white/10 text-gray-300'
                         }`}
                       >
-                        {isSelected ? '✓ Selected' : 'Select'}
+                        {isSelected ? 'âœ“ Selected' : 'Select'}
                       </span>
                     </div>
                   </div>
@@ -402,7 +395,8 @@ export const BookingWizard: React.FC<BookingWizardProps> = ({
             className="space-y-6 relative z-10"
           >
             <p className="text-gray-400 text-xs -mt-2">
-              All therapists are certified male practitioners specialized in deep tissue, sports therapy, and Swedish pressure points.
+              Choose a therapist or let the concierge assign the first available male therapist.
+              Availability is confirmed after the request is submitted.
             </p>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-h-120 overflow-y-auto pr-1 scrollbar-thin">
@@ -439,7 +433,7 @@ export const BookingWizard: React.FC<BookingWizardProps> = ({
               {/* Specific Male Therapists */}
               {therapists.length === 0 && (
                 <div className="col-span-full p-8 text-center text-gray-400 text-sm bg-[#201A14] border border-white/10 rounded-2xl">
-                  No therapists are currently available. The spa will assign the best available practitioner.
+                  No therapists are currently available. The concierge will assign the first available practitioner.
                 </div>
               )}
               {therapists.map((th) => {
@@ -472,16 +466,6 @@ export const BookingWizard: React.FC<BookingWizardProps> = ({
                         )}
                       </div>
                       <p className="text-xs text-[var(--brand-ink)] font-semibold mt-0.5">{th.title}</p>
-                      <div className="flex items-center gap-2 mt-1.5 text-[11px] text-gray-400">
-                        <span className="flex items-center gap-1 text-[var(--brand-ink)] font-bold">
-                          <Star className="w-3 h-3 fill-[#DDC8A5] text-[var(--brand-ink)]" />
-                          {th.rating}
-                        </span>
-                        <span>•</span>
-                        <span>{th.experienceYears} yrs exp</span>
-                        <span>•</span>
-                        <span>{th.reviewCount} sessions</span>
-                      </div>
                       <div className="mt-2 flex flex-wrap gap-1">
                         {th.specialties?.slice(0, 2).map((spec, i) => (
                           <span key={i} className="text-[10px] bg-white/5 border border-white/10 text-gray-300 px-2 py-0.5 rounded-md">
@@ -559,7 +543,7 @@ export const BookingWizard: React.FC<BookingWizardProps> = ({
           </motion.div>
         )}
 
-        {/* STEP 4: CUSTOMER DETAILS & PAYMENT METHOD */}
+        {/* STEP 4: CUSTOMER DETAILS */}
         {step === 4 && (
           <motion.div
             key="step4"
@@ -568,15 +552,30 @@ export const BookingWizard: React.FC<BookingWizardProps> = ({
             exit={{ opacity: 0, x: -15 }}
             className="space-y-6 relative z-10"
           >
-            <form onSubmit={handleSubmitBooking} className="space-y-6">
+            <form onSubmit={handleSubmitBooking} className="space-y-6" noValidate>
+              <div className="hidden" aria-hidden="true">
+                <label htmlFor="booking-website">Website</label>
+                <input
+                  id="booking-website"
+                  name="website"
+                  type="text"
+                  tabIndex={-1}
+                  autoComplete="off"
+                  value={website}
+                  onChange={(e) => setWebsite(e.target.value)}
+                />
+              </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-bold text-gray-300 mb-1">
+                  <label htmlFor="booking-first-name" className="block text-xs font-bold text-gray-300 mb-1">
                     First Name *
                   </label>
                   <input
+                    id="booking-first-name"
                     type="text"
                     required
+                    maxLength={80}
+                    autoComplete="given-name"
                     value={firstName}
                     onChange={(e) => setFirstName(e.target.value)}
                     placeholder="e.g. Rahul"
@@ -584,12 +583,15 @@ export const BookingWizard: React.FC<BookingWizardProps> = ({
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-bold text-gray-300 mb-1">
+                  <label htmlFor="booking-last-name" className="block text-xs font-bold text-gray-300 mb-1">
                     Last Name *
                   </label>
                   <input
+                    id="booking-last-name"
                     type="text"
                     required
+                    maxLength={80}
+                    autoComplete="family-name"
                     value={lastName}
                     onChange={(e) => setLastName(e.target.value)}
                     placeholder="e.g. Sharma"
@@ -597,12 +599,15 @@ export const BookingWizard: React.FC<BookingWizardProps> = ({
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-bold text-gray-300 mb-1">
+                  <label htmlFor="booking-email" className="block text-xs font-bold text-gray-300 mb-1">
                     Email Address * (For Confirmation)
                   </label>
                   <input
+                    id="booking-email"
                     type="email"
                     required
+                    maxLength={254}
+                    autoComplete="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="rahul.sharma@example.in"
@@ -610,40 +615,48 @@ export const BookingWizard: React.FC<BookingWizardProps> = ({
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-bold text-gray-300 mb-1">
+                  <label htmlFor="booking-phone" className="block text-xs font-bold text-gray-300 mb-1">
                     Phone Number * (WhatsApp / Call)
                   </label>
                   <input
+                    id="booking-phone"
                     type="tel"
                     required
+                    maxLength={30}
+                    autoComplete="tel"
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
-                    placeholder="+91-9171606807"
+                    placeholder="+91 91716 06807"
                     className="w-full px-4 py-2.5 rounded-xl bg-[#241D16] border border-white/15 text-white text-sm focus:outline-none focus:border-[#BFA476] placeholder-gray-500"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-bold text-gray-300 mb-1">
-                    Age
+                  <label htmlFor="booking-age" className="block text-xs font-bold text-gray-300 mb-1">
+                    Age (optional)
                   </label>
                   <input
+                    id="booking-age"
                     type="number"
                     min={18}
-                    max={99}
+                    max={120}
+                    inputMode="numeric"
                     value={age}
-                    onChange={(e) => setAge(Number(e.target.value))}
-                    className="w-full px-4 py-2.5 rounded-xl bg-[#241D16] border border-white/15 text-white text-sm focus:outline-none focus:border-[#BFA476]"
+                    onChange={(e) => setAge(e.target.value)}
+                    placeholder="Optional"
+                    className="w-full px-4 py-2.5 rounded-xl bg-[#241D16] border border-white/15 text-white text-sm focus:outline-none focus:border-[#BFA476] placeholder-gray-500"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-bold text-gray-300 mb-1">
-                    Gender Identity
+                  <label htmlFor="booking-gender" className="block text-xs font-bold text-gray-300 mb-1">
+                    Gender (optional)
                   </label>
                   <select
+                    id="booking-gender"
                     value={gender}
                     onChange={(e) => setGender(e.target.value)}
                     className="w-full px-4 py-2.5 rounded-xl bg-[#241D16] border border-white/15 text-white text-sm focus:outline-none focus:border-[#BFA476]"
                   >
+                    <option value="" className="bg-[#241D16]">Select (optional)</option>
                     <option value="Male" className="bg-[#241D16]">Male</option>
                     <option value="Non-Binary" className="bg-[#241D16]">Non-Binary</option>
                     <option value="Prefer Not to Say" className="bg-[#241D16]">Prefer Not to Say</option>
@@ -658,9 +671,10 @@ export const BookingWizard: React.FC<BookingWizardProps> = ({
                 </label>
                 <textarea
                   rows={2}
+                  maxLength={1000}
                   value={notes}
                   onChange={(e) => setNotes(e.target.value)}
-                  placeholder="e.g., Focus on lower back stiffness, preferred pressure intensity, or shoulder tension..."
+                  placeholder="e.g. Focus on shoulder tension, preferred pressure, or accessibility needs..."
                   className="w-full px-4 py-2.5 rounded-xl bg-[#241D16] border border-white/15 text-white text-sm focus:outline-none focus:border-[#BFA476] placeholder-gray-500"
                 />
               </div>
@@ -690,61 +704,67 @@ export const BookingWizard: React.FC<BookingWizardProps> = ({
                 </div>
                 {appliedCoupon && (
                   <p className="text-xs text-emerald-400 font-bold mt-2 flex items-center gap-1">
-                    ✓ Code "{appliedCoupon.code}" applied! Discount: ₹{appliedCoupon.discount}
+                    âœ“ Code "{appliedCoupon.code}" applied! Discount: â‚¹{appliedCoupon.discount}
                   </p>
                 )}
-                {couponError && <p className="text-xs text-rose-400 font-medium mt-2">✕ {couponError}</p>}
+                {couponError && <p className="text-xs text-rose-400 font-medium mt-2">âœ• {couponError}</p>}
               </div>
 
-              {/* Payment Method Selection */}
-              <div>
-                <label className="block text-xs font-bold text-gray-300 mb-2">
-                  Preferred Payment Method
-                </label>
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                  {[
-                    { id: 'pay_at_venue', label: 'Pay at Venue', icon: Building2 },
-                    { id: 'upi', label: 'Instant UPI / QR', icon: Smartphone },
-                    { id: 'credit_card', label: 'Credit / Debit Card', icon: CreditCard },
-                    { id: 'paypal', label: 'PayPal / Online', icon: Sparkles },
-                  ].map((pm) => {
-                    const IconComp = pm.icon;
-                    const isSelected = paymentMethod === pm.id;
-                    return (
-                      <button
-                        key={pm.id}
-                        type="button"
-                        onClick={() => setPaymentMethod(pm.id as any)}
-                        className={`p-3 rounded-xl border text-xs font-bold transition-all text-center cursor-pointer flex flex-col items-center gap-1.5 ${
-                          isSelected
-                            ? 'border-[#BFA476] bg-brand-500/20 text-white shadow-md'
-                            : 'border-white/10 bg-[#201A14] text-gray-300 hover:bg-[#241D16]'
-                        }`}
-                      >
-                        <IconComp className={`w-4 h-4 ${isSelected ? 'text-[var(--brand-ink)]' : 'text-gray-400'}`} />
-                        <span>{pm.label}</span>
-                      </button>
-                    );
-                  })}
+              {/* Payment Terms */}
+              <div className="rounded-2xl border border-[#BFA476]/30 bg-[#211B16] p-4 text-xs text-gray-300">
+                <div className="flex items-start gap-2.5">
+                  <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-[var(--brand-ink)]" />
+                  <div className="space-y-1">
+                    <p className="font-bold text-white">Payment at venue</p>
+                    <p className="leading-relaxed">
+                      The website does not collect card, UPI or wallet payments. Payment is made at
+                      the venue unless the concierge confirms another method in writing.
+                    </p>
+                  </div>
                 </div>
               </div>
 
               {/* Order Summary Box */}
-              <div className="p-4 rounded-2xl bg-[#211B16] border border-[#BFA476]/30 space-y-2 text-xs">
+              <div className="space-y-2 rounded-2xl border border-[#BFA476]/30 bg-[#211B16] p-4 text-xs">
                 <div className="flex justify-between text-gray-300">
                   <span>Therapy Session ({currentService?.title}):</span>
-                  <span className="font-mono">₹{subtotal}</span>
+                  <span className="font-mono">â‚¹{subtotal}</span>
                 </div>
                 {appliedCoupon && (
-                  <div className="flex justify-between text-emerald-400 font-medium">
+                  <div className="flex justify-between font-medium text-emerald-400">
                     <span>Discount ({appliedCoupon.code}):</span>
-                    <span className="font-mono">-₹{appliedCoupon.discount}</span>
+                    <span className="font-mono">-â‚¹{appliedCoupon.discount}</span>
                   </div>
                 )}
-                <div className="flex justify-between text-sm font-bold text-white pt-2 border-t border-white/10">
-                  <span>Total Payable:</span>
-                  <span className="font-serif font-extrabold text-[var(--brand-ink)] text-base">₹{totalAmount}</span>
+                <div className="flex justify-between border-t border-white/10 pt-2 text-sm font-bold text-white">
+                  <span>Estimated total (pay at venue):</span>
+                  <span className="font-serif text-base font-extrabold text-[var(--brand-ink)]">â‚¹{totalAmount}</span>
                 </div>
+              </div>
+
+              <div className="space-y-2 rounded-2xl border border-white/10 bg-[#201A14] p-4 text-xs text-gray-300">
+                <label htmlFor="booking-consent" className="flex items-start gap-2.5">
+                  <input
+                    id="booking-consent"
+                    type="checkbox"
+                    required
+                    checked={consent}
+                    onChange={(event) => setConsent(event.target.checked)}
+                    className="mt-0.5 h-4 w-4 shrink-0 accent-[#BFA476]"
+                  />
+                  <span className="leading-relaxed">
+                    I agree to the{' '}
+                    <a
+                      href="/privacy-policy"
+                      target="_blank"
+                      rel="noreferrer"
+                      className="font-semibold text-[var(--brand-ink)] underline underline-offset-2"
+                    >
+                      Privacy Policy
+                    </a>{' '}
+                    and to being contacted about this appointment request.
+                  </span>
+                </label>
               </div>
 
               <div className="flex justify-between pt-4 border-t border-white/10">
@@ -762,11 +782,11 @@ export const BookingWizard: React.FC<BookingWizardProps> = ({
                   className="px-8 py-3.5 rounded-2xl bg-linear-to-r from-[#C3AA7E] to-[#BFA476] text-brand-950 font-bold text-sm shadow-xl hover:brightness-110 transition-all flex items-center gap-2 cursor-pointer disabled:opacity-50"
                 >
                   {submitting ? (
-                    <span>Reserving Appointment...</span>
+                    <span>Sending request...</span>
                   ) : (
                     <>
                       <CheckCircle2 className="w-5 h-5 text-brand-200" />
-                      <span>Confirm & Reserve Appointment</span>
+                      <span>Send Booking Request</span>
                     </>
                   )}
                 </button>
@@ -774,125 +794,7 @@ export const BookingWizard: React.FC<BookingWizardProps> = ({
             </form>
           </motion.div>
         )}
-
-        {/* STEP 5: CONFIRMATION RECEIPT */}
-        {step === 5 && completedBooking && (
-          <motion.div
-            key="step5"
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="text-center space-y-6 py-4 relative z-10"
-          >
-            <div className="w-20 h-20 rounded-full bg-brand-500/20 border-4 border-[#BFA476] text-[var(--brand-ink)] flex items-center justify-center mx-auto shadow-2xl shadow-[#BFA476]/30">
-              <CheckCircle2 className="w-10 h-10" />
-            </div>
-
-            <div>
-              <span className="inline-block px-3.5 py-1 rounded-full text-xs font-extrabold bg-emerald-500/20 text-emerald-300 uppercase tracking-widest border border-emerald-500/30 mb-2">
-                Reservation Confirmed
-              </span>
-              <h2 className="text-3xl font-serif font-bold text-white">
-                Thank You, {completedBooking.firstName || 'Guest'}!
-              </h2>
-              <p className="text-gray-300 text-sm mt-1 max-w-md mx-auto">
-                Your massage therapy session has been confirmed. Details sent to{' '}
-                <strong className="text-white">{completedBooking.email}</strong>.
-              </p>
-            </div>
-
-            {/* Receipt Card */}
-            <div className="bg-[#201A14] border border-white/10 rounded-3xl p-6 text-left max-w-xl mx-auto shadow-xl space-y-3 font-sans">
-              <div className="flex justify-between items-center pb-3 border-b border-white/10">
-                <div>
-                  <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block">
-                    Booking Reference
-                  </span>
-                  <span className="text-xl font-serif font-bold text-white">
-                    {completedBooking.bookingNumber}
-                  </span>
-                </div>
-                <div className="text-right">
-                  <span className="text-xs font-bold text-emerald-300 bg-emerald-950/60 px-3 py-1 rounded-full border border-emerald-500/30">
-                    Status: {completedBooking.status.toUpperCase()}
-                  </span>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-4 text-xs py-2">
-                <div>
-                  <span className="text-gray-400 font-semibold block">Massage Therapy:</span>
-                  <span className="font-bold text-white text-sm">{completedBooking.serviceTitle}</span>
-                </div>
-                <div>
-                  <span className="text-gray-400 font-semibold block">Male Therapist:</span>
-                  <span className="font-bold text-white text-sm">{completedBooking.therapistName}</span>
-                </div>
-                <div>
-                  <span className="text-gray-400 font-semibold block">Scheduled Date & Time:</span>
-                  <span className="font-bold text-[var(--brand-ink)] text-sm">
-                    {completedBooking.date} @ {formatSlot12h(completedBooking.timeSlot)}
-                  </span>
-                </div>
-                <div>
-                  <span className="text-gray-400 font-semibold block">Payment Terms:</span>
-                  <span className="font-bold text-[var(--brand-ink)] text-sm font-mono">
-                    ₹{completedBooking.totalPaid} ({completedBooking.paymentMethod.replace(/_/g, ' ')})
-                  </span>
-                </div>
-              </div>
-
-              <div className="pt-3 border-t border-white/10 text-[11px] text-gray-400 flex items-center gap-2">
-                <ShieldCheck className="w-4 h-4 text-[var(--brand-ink)] shrink-0" />
-                <span>Please arrive 10 mins early. Private steam & shower facilities included.</span>
-              </div>
-            </div>
-
-            <div className="flex flex-wrap items-center justify-center gap-3 pt-4">
-              <button
-                id="receipt-manage-btn"
-                onClick={() => setShowConfirmationModal(true)}
-                className="px-5 py-2.5 rounded-xl bg-brand-500/20 text-[var(--brand-ink)] border border-[#BFA476]/40 font-bold text-xs hover:bg-brand-500/30 flex items-center gap-2 cursor-pointer transition-colors"
-              >
-                <Sparkles className="w-4 h-4" />
-                <span>Reschedule / Cancel Booking</span>
-              </button>
-
-              <button
-                id="receipt-print-btn"
-                onClick={handlePrint}
-                className="px-5 py-2.5 rounded-xl border border-white/20 text-gray-300 font-semibold text-xs hover:bg-white/10 flex items-center gap-2 cursor-pointer"
-              >
-                <Printer className="w-4 h-4" />
-                <span>Print Pass</span>
-              </button>
-
-              {onClose && (
-                <button
-                  id="receipt-done-btn"
-                  onClick={onClose}
-                  className="px-6 py-2.5 rounded-xl bg-brand-500 hover:bg-brand-400 text-black font-extrabold text-xs shadow-md transition-all cursor-pointer"
-                >
-                  Close Window
-                </button>
-              )}
-            </div>
-          </motion.div>
-        )}
       </AnimatePresence>
-
-      {/* Confirmation Modal with Reschedule / Cancel capabilities */}
-      {showConfirmationModal && completedBooking && (
-        <BookingConfirmationModal
-          isOpen={showConfirmationModal}
-          onClose={() => setShowConfirmationModal(false)}
-          booking={completedBooking}
-          therapists={therapists}
-          services={services}
-          onBookingUpdated={(updated) => {
-            setCompletedBooking(updated);
-          }}
-        />
-      )}
     </div>
   );
 };

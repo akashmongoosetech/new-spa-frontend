@@ -1,0 +1,188 @@
+{
+  "siteName": "Tripod Wellness",
+  "siteUrl": "https://tripod-wellness.netlify.app",
+  "defaultTitle": "Tripod Wellness | Men's Massage Therapy Indore",
+  "defaultDescription": "Men-to-men massage therapy in Indore, Ujjain and Dewas. View therapies, meet the team, and book a private appointment online.",
+  "defaultOgImage": "/brand/og-default.jpg",
+  "privatePrefixes": [
+    "/admin",
+    "/admin-login",
+    "/admin-signup",
+    "/forgot-password",
+    "/reset-password",
+    "/profile",
+    "/unauthorized",
+    "/thank-you",
+    "/unsubscribe"
+  ],
+  "routes": [
+    {
+      "path": "/",
+      "title": "Tripod Wellness | Men's Massage Therapy Indore",
+      "description": "Men-to-men massage therapy in Indore, Ujjain and Dewas. View therapies, meet the team, and book a private appointment online.",
+      "robots": "index, follow",
+      "changeFrequency": "weekly",
+      "priority": "1.0"
+    },
+    {
+      "path": "/about",
+      "title": "About Tripod Wellness | Men's Massage Indore",
+      "description": "Learn about Tripod Wellness, a men-to-men massage therapy practice serving Indore, Ujjain and Dewas. View our approach, team and appointment options.",
+      "robots": "index, follow",
+      "changeFrequency": "monthly",
+      "priority": "0.8"
+    },
+    {
+      "path": "/services",
+      "title": "Massage Therapies & Prices | Tripod Wellness",
+      "description": "View massage therapies and prices at Tripod Wellness in Indore, Ujjain and Dewas. Compare session lengths and book a private appointment online.",
+      "robots": "index, follow",
+      "changeFrequency": "weekly",
+      "priority": "0.9"
+    },
+    {
+      "path": "/gallery",
+      "title": "Facility Gallery | Tripod Wellness",
+      "description": "View the Tripod Wellness facility gallery. Facility photography is published only when approved; contact the concierge for images and appointment details.",
+      "robots": "index, follow",
+      "changeFrequency": "monthly",
+      "priority": "0.6"
+    },
+    {
+      "path": "/therapists",
+      "title": "Our Male Massage Therapists | Tripod Wellness",
+      "description": "Meet the male massage therapists at Tripod Wellness. View team profiles, specialties and experience, then book a private appointment in Indore.",
+      "robots": "index, follow",
+      "changeFrequency": "monthly",
+      "priority": "0.8"
+    },
+    {
+      "path": "/booking",
+      "title": "Book a Men's Massage | Tripod Wellness",
+      "description": "Request a men-to-men massage at Tripod Wellness. Choose a therapy, therapist, date and time. The concierge confirms availability by email after the request.",
+      "robots": "index, follow",
+      "changeFrequency": "weekly",
+      "priority": "0.9"
+    },
+    {
+      "path": "/contact",
+      "title": "Contact & Location | Tripod Wellness",
+      "description": "Contact Tripod Wellness for appointments and questions. Find phone, WhatsApp, email, service-area and concierge response details for Indore, Ujjain and Dewas.",
+      "robots": "index, follow",
+      "changeFrequency": "monthly",
+      "priority": "0.7"
+    },
+    {
+      "path": "/blog",
+      "title": "Men's Wellness Journal | Tripod Wellness",
+      "description": "Read the Tripod Wellness journal for men's massage, recovery and wellness guides. Articles are published only when verified content is available.",
+      "robots": "index, follow",
+      "changeFrequency": "weekly",
+      "priority": "0.6"
+    },
+    {
+      "path": "/faq",
+      "title": "Frequently Asked Questions | Tripod Wellness",
+      "description": "Find answers about Tripod Wellness appointments, massage therapies, booking and privacy. Contact the concierge if your question is not listed.",
+      "robots": "index, follow",
+      "changeFrequency": "monthly",
+      "priority": "0.6"
+    },
+    {
+      "path": "/privacy-policy",
+      "title": "Privacy Policy | Tripod Wellness",
+      "description": "Read how Tripod Wellness collects, uses and protects appointment, contact, newsletter and website data. This policy is a template pending review.",
+      "robots": "noindex, nofollow",
+      "changeFrequency": "yearly",
+      "priority": "0.2"
+    },
+    {
+      "path": "/terms-and-conditions",
+      "title": "Terms & Conditions | Tripod Wellness",
+      "description": "Read the terms for using the Tripod Wellness website and booking massage appointments. This page is a template pending owner and legal review.",
+      "robots": "noindex, nofollow",
+      "changeFrequency": "yearly",
+      "priority": "0.3"
+    },
+    {
+      "path": "/refund-policy",
+      "title": "Refund & Cancellation Policy | Tripod Wellness",
+      "description": "Read the Tripod Wellness cancellation and refund policy, including the notice period, rescheduling steps and how to contact the concierge.",
+      "robots": "noindex, nofollow",
+      "changeFrequency": "yearly",
+      "priority": "0.3"
+    },
+    {
+      "path": "/cookie-policy",
+      "title": "Cookie & Consent Policy | Tripod Wellness",
+      "description": "Read how Tripod Wellness uses local storage and optional analytics, and how to give or withdraw consent for non-essential tracking.",
+      "robots": "noindex, nofollow",
+      "changeFrequency": "yearly",
+      "priority": "0.2"
+    },
+    {
+      "path": "/sitemap",
+      "title": "Site Map & Pages | Tripod Wellness",
+      "description": "Browse all public Tripod Wellness pages, including therapies, therapists, booking, contact, journal and legal information.",
+      "robots": "index, follow",
+      "changeFrequency": "monthly",
+      "priority": "0.4"
+    },
+    {
+      "path": "/unsubscribe",
+      "title": "Newsletter Unsubscribe | Tripod Wellness",
+      "description": "Manage your Tripod Wellness newsletter subscription. Enter your email address to unsubscribe from future email updates at any time.",
+      "robots": "noindex, nofollow",
+      "changeFrequency": "yearly",
+      "priority": "0.1"
+    },
+    {
+      "path": "/thank-you",
+      "title": "Thank You for Contacting Tripod Wellness",
+      "description": "Your Tripod Wellness request has been received. Review the next steps or contact the concierge if you need to update your details.",
+      "robots": "noindex, nofollow",
+      "changeFrequency": "yearly",
+      "priority": "0.1"
+    },
+    {
+      "path": "/admin-login",
+      "title": "Staff Sign In | Tripod Wellness",
+      "description": "Sign in to the Tripod Wellness staff portal. This page is restricted to authorised staff and is not indexed by search engines.",
+      "robots": "noindex, nofollow",
+      "changeFrequency": "yearly",
+      "priority": "0.1"
+    },
+    {
+      "path": "/admin-signup",
+      "title": "Staff Application | Tripod Wellness",
+      "description": "Apply for a Tripod Wellness staff account. Applications are reviewed by a director before any staff portal access is granted.",
+      "robots": "noindex, nofollow",
+      "changeFrequency": "yearly",
+      "priority": "0.1"
+    },
+    {
+      "path": "/forgot-password",
+      "title": "Reset Staff Password | Tripod Wellness",
+      "description": "Request a password reset for your Tripod Wellness staff account. Enter your staff email address to receive password reset instructions.",
+      "robots": "noindex, nofollow",
+      "changeFrequency": "yearly",
+      "priority": "0.1"
+    },
+    {
+      "path": "/profile",
+      "title": "Staff Profile | Tripod Wellness",
+      "description": "View and update your Tripod Wellness staff profile. This page is restricted to authorised staff and is not indexed by search engines.",
+      "robots": "noindex, nofollow",
+      "changeFrequency": "yearly",
+      "priority": "0.1"
+    },
+    {
+      "path": "/unauthorized",
+      "title": "Access Restricted | Tripod Wellness",
+      "description": "You do not have permission to view this Tripod Wellness page. Return to the public site or sign in with an authorised staff account.",
+      "robots": "noindex, nofollow",
+      "changeFrequency": "yearly",
+      "priority": "0.1"
+    }
+  ]
+}

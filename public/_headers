@@ -1,10 +1,55 @@
 /*
+  Strict-Transport-Security: max-age=31536000; includeSubDomains
   X-Content-Type-Options: nosniff
   X-Frame-Options: DENY
   Referrer-Policy: strict-origin-when-cross-origin
-  Permissions-Policy: geolocation=(), microphone=(), camera=(), payment=()
+  Permissions-Policy: geolocation=(), microphone=(), camera=(), payment=(), usb=()
   Cross-Origin-Opener-Policy: same-origin
-  Content-Security-Policy-Report-Only: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data: https:; connect-src 'self' https:; frame-ancestors 'none'; base-uri 'self'; form-action 'self'
+  X-Permitted-Cross-Domain-Policies: none
+  Cache-Control: public, max-age=0, must-revalidate
+  Content-Security-Policy: default-src 'self'; script-src 'self' https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https:; font-src 'self' data: https://fonts.gstatic.com; connect-src 'self' https://new-spa-backend.onrender.com https://www.google-analytics.com https://region1.google-analytics.com https://www.googletagmanager.com; media-src 'self'; object-src 'none'; frame-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests
+
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
 
 /brand/*
   Cache-Control: public, max-age=31536000, immutable
+
+/admin*
+  X-Robots-Tag: noindex, nofollow
+
+/admin-login
+  X-Robots-Tag: noindex, nofollow
+
+/admin-signup
+  X-Robots-Tag: noindex, nofollow
+
+/forgot-password
+  X-Robots-Tag: noindex, nofollow
+
+/reset-password/*
+  X-Robots-Tag: noindex, nofollow
+
+/profile
+  X-Robots-Tag: noindex, nofollow
+
+/unauthorized
+  X-Robots-Tag: noindex, nofollow
+
+/thank-you
+  X-Robots-Tag: noindex, nofollow
+
+/unsubscribe
+  X-Robots-Tag: noindex, nofollow
+
+/privacy-policy
+  X-Robots-Tag: noindex, nofollow
+
+/terms-and-conditions
+  X-Robots-Tag: noindex, nofollow
+
+/refund-policy
+  X-Robots-Tag: noindex, nofollow
+
+/cookie-policy
+  X-Robots-Tag: noindex, nofollow

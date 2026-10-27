@@ -47,17 +47,17 @@ interface AdminHeaderProps {
 export const AdminHeader: React.FC<AdminHeaderProps> = ({
   currentUser,
   notifications = [],
-  onMarkNotificationRead = (_id: string) => {},
-  onMarkAllRead = () => {},
-  onClearNotification = (_id: string) => {},
-  onQuickAction = (_action: 'add_booking' | 'add_therapist' | 'add_service') => {},
-  onChangePasswordClick = () => {},
-  onProfileClick = () => {},
+  onMarkNotificationRead = (_id: string) => { },
+  onMarkAllRead = () => { },
+  onClearNotification = (_id: string) => { },
+  onQuickAction = (_action: 'add_booking' | 'add_therapist' | 'add_service') => { },
+  onChangePasswordClick = () => { },
+  onProfileClick = () => { },
   onLogout,
   searchQuery,
   setSearchQuery,
   onNavigateTab,
-  onToggleMobileMenu = () => {},
+  onToggleMobileMenu = () => { },
 }) => {
   const [showNotificationsDropdown, setShowNotificationsDropdown] = useState(false);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
@@ -181,9 +181,8 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({
                   safeNotifications.map((n) => (
                     <div
                       key={n.id}
-                      className={`p-3.5 flex items-start gap-3 transition-colors ${
-                        !n.read ? 'bg-brand-50/50' : 'hover:bg-gray-50'
-                      }`}
+                      className={`p-3.5 flex items-start gap-3 transition-colors ${!n.read ? 'bg-brand-50/50' : 'hover:bg-gray-50'
+                        }`}
                     >
                       <div className="mt-0.5">
                         {n.type === 'booking' && <CheckCircle2 className="w-4 h-4 text-[var(--brand-ink)]" />}

@@ -173,7 +173,7 @@ export const ScheduleManager: React.FC = () => {
             </div>
             <div>
               <h3 className="font-extrabold text-sm tracking-wide">Emergency Spa Closure Override</h3>
-              <p className="text-xs text-rose-200 mt-0.5">Instantly block all incoming client online bookings for emergencies or private VIP events.</p>
+              <p className="text-xs text-rose-200 mt-0.5">Instantly block all incoming online booking requests for closures or private events.</p>
             </div>
           </div>
           <button
@@ -196,7 +196,7 @@ export const ScheduleManager: React.FC = () => {
               onBlur={() => {
                 if (reasonDraft !== config.emergencyClosureReason) handleSaveConfig({ emergencyClosureReason: reasonDraft });
               }}
-              placeholder="e.g. Spa temporarily closed for exclusive private VIP executive event."
+              placeholder="e.g. Closed for a private appointment"
               className="w-full px-3.5 py-2 rounded-xl bg-black/40 border border-rose-700 text-white text-xs outline-none"
             />
           </div>

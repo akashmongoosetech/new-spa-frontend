@@ -5,10 +5,10 @@ import { mockSettings } from '../../data/mockData';
 import { api } from '../../services/api';
 
 const CATEGORY_LABELS: Record<string, string> = {
-  suites: 'VIP Suites',
-  hydrotherapy: 'Hydrotherapy & Steam',
-  equipment: 'Professional Equipment',
-  ambiance: 'Ambiance & Lounge',
+  suites: 'Therapy Rooms',
+  hydrotherapy: 'Hydrotherapy',
+  equipment: 'Equipment',
+  ambiance: 'Ambiance',
 };
 
 export const GalleryPageWrapper: React.FC = () => {
@@ -23,23 +23,28 @@ export const GalleryPageWrapper: React.FC = () => {
   useEffect(() => {
     (async () => {
       try {
-        const g = await api.getGallery();
-        if (!Array.isArray(g)) return;
-        const mapped: GalleryPhoto[] = g.map((item) => ({
-          id: item.id,
-          title: item.title || 'Sanctuary Feature',
-          subtitle: item.subtitle || '',
-          category: (['suites', 'equipment', 'ambiance', 'hydrotherapy'].includes(item.category) ? item.category : 'ambiance') as GalleryPhoto['category'],
-          categoryLabel: item.categoryLabel || item.category_label || CATEGORY_LABELS[item.category] || 'Sanctuary',
-          url: item.imageUrl || item.image_url || '',
-          description: item.description || '',
-          highlights: Array.isArray(item.highlights) ? item.highlights : [],
-          dimensions: item.dimensions || '',
-          sanitizationLevel: item.sanitizationLevel || item.sanitization_level || '',
-        }));
-        setPhotos(mapped.filter((p) => p.url));
+        const gallery = await api.getGallery();
+        if (!Array.isArray(gallery)) return;
+        const mapped: GalleryPhoto[] = gallery
+          .filter((item) => item.imageUrl || item.image_url)
+          .map((item) => ({
+            id: item.id,
+            title: item.title || 'Facility photo',
+            subtitle: item.subtitle || '',
+            category: (['suites', 'equipment', 'ambiance', 'hydrotherapy'].includes(item.category)
+              ? item.category
+              : 'ambiance') as GalleryPhoto['category'],
+            categoryLabel:
+              item.categoryLabel ||
+              item.category_label ||
+              CATEGORY_LABELS[item.category] ||
+              'Facility',
+            url: item.imageUrl || item.image_url || '',
+            description: item.description || '',
+          }));
+        setPhotos(mapped);
       } catch (err) {
-        // keep empty state
+        // The gallery shows an honest empty state when the API is unavailable.
       }
     })();
   }, []);

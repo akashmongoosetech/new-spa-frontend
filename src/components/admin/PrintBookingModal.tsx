@@ -29,7 +29,7 @@ export const PrintBookingModal: React.FC<PrintBookingModalProps> = ({ isOpen, on
               </div>
               <h2 className="font-extrabold text-gray-900 text-lg tracking-wider">TRIPOD WELLNESS</h2>
             </div>
-            <p className="text-xs text-gray-500 mt-1">Premier Men-to-Men Massage & Wellness Suites</p>
+            <p className="text-xs text-gray-500 mt-1">Men-to-Men Massage Therapy</p>
             <p className="text-[11px] text-gray-400">Indore, Ujjain, Dewas • +91 91716 06807</p>
           </div>
           <div className="text-right">
@@ -84,7 +84,7 @@ export const PrintBookingModal: React.FC<PrintBookingModalProps> = ({ isOpen, on
         {/* Rules & Policy */}
         <div className="p-3 bg-amber-50 rounded-xl text-[10px] text-amber-800 leading-relaxed border border-amber-100">
           <p className="font-bold mb-0.5">Spa Protocol & Arrival Rules:</p>
-          Please arrive 15 minutes prior to your scheduled therapy time. Complimentary herbal tea and private hydrotherapy shower suites are prepared for your arrival. Rescheduling requires 4 hours advance notice.
+          Please arrive 15 minutes before the scheduled therapy time. Contact the concierge for any change or cancellation; the applicable notice period is confirmed in writing.
         </div>
 
         {/* Action Buttons */}
