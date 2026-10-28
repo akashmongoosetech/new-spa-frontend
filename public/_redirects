@@ -8,4 +8,21 @@
 /reset-password/*     /index.html  200
 /assets/*             /assets/:splat  200
 
+# Direct visits to known SPA routes. Static route files normally take priority;
+# these are a fallback for hosts whose build runs `vite build` directly.
+/about                /index.html  200
+/booking              /index.html  200
+/blog                 /index.html  200
+/contact              /index.html  200
+/cookie-policy        /index.html  200
+/faq                  /index.html  200
+/gallery              /index.html  200
+/privacy-policy       /index.html  200
+/refund-policy        /index.html  200
+/services             /index.html  200
+/sitemap              /index.html  200
+/terms-and-conditions /index.html  200
+/thank-you            /index.html  200
+/therapists           /index.html  200
+
 /*  /404.html  404
