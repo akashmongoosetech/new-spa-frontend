@@ -91,8 +91,11 @@ export const updatePageSEO = (config: SEOConfig = {}): void => {
   const robots = config.robots || DEFAULT_SEO.robots;
 
   const currentPath = normalizePath(config.path || window.location.pathname);
+  // Netlify serves directory-index pages at a trailing-slash URL, so keep the
+  // canonical and og:url aligned with the URL that actually returns 200.
+  const canonicalPath = currentPath === '/' ? '/' : `${currentPath}/`;
   const canonicalUrl = (
-    config.canonicalUrl || `${SITE_URL}${currentPath === '/' ? '/' : currentPath}`
+    config.canonicalUrl || `${SITE_URL}${canonicalPath}`
   ).replace(/([^:]\/)\/+/g, '$1');
 
   document.title = title;

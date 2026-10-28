@@ -53,7 +53,8 @@ function routeMeta(path) {
 }
 
 function canonicalFor(path) {
-  return `${SITE_URL}${path === '/' ? '/' : path}`;
+  if (path === '/') return `${SITE_URL}/`;
+  return `${SITE_URL}${path.replace(/\/+$/, '')}/`;
 }
 
 function buildHead({ title, description, robots = 'index, follow', path, type = 'website', image = OG_IMAGE, imageAlt = FALLBACK_IMAGE_ALT, canonical = true }) {
