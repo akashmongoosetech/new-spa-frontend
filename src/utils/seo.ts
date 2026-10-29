@@ -20,13 +20,23 @@ export interface SEOConfig {
   title?: string;
   description?: string;
   keywords?: string;
+  ogTitle?: string;
+  ogDescription?: string;
   ogImage?: string;
   ogImageAlt?: string;
+  twitterTitle?: string;
+  twitterDescription?: string;
+  twitterImage?: string;
+  twitterCard?: string;
   favicon?: string;
   canonicalUrl?: string;
   path?: string;
   type?: 'website' | 'article' | 'profile' | 'business';
   robots?: string;
+  articlePublishedTime?: string;
+  articleModifiedTime?: string;
+  articleSection?: string;
+  articleTags?: string[];
   jsonLd?: Record<string, any> | Array<Record<string, any>>;
 }
 
@@ -85,7 +95,12 @@ export const updatePageSEO = (config: SEOConfig = {}): void => {
 
   const title = metaContent(config.title || DEFAULT_SEO.title);
   const description = metaContent(config.description || DEFAULT_SEO.description);
-  const ogImage = config.ogImage || DEFAULT_SEO.ogImage;
+  const ogTitle = metaContent(config.ogTitle || title);
+  const ogDescription = metaContent(config.ogDescription || description);
+  const twitterTitle = metaContent(config.twitterTitle || ogTitle);
+  const twitterDescription = metaContent(config.twitterDescription || ogDescription);
+  const ogImage = config.ogImage || config.twitterImage || DEFAULT_SEO.ogImage;
+  const twitterImage = config.twitterImage || ogImage;
   const ogImageAlt = metaContent(config.ogImageAlt || DEFAULT_SEO.ogImageAlt);
   const type = config.type || DEFAULT_SEO.type;
   const robots = config.robots || DEFAULT_SEO.robots;
@@ -94,9 +109,18 @@ export const updatePageSEO = (config: SEOConfig = {}): void => {
   // Netlify serves directory-index pages at a trailing-slash URL, so keep the
   // canonical and og:url aligned with the URL that actually returns 200.
   const canonicalPath = currentPath === '/' ? '/' : `${currentPath}/`;
-  const canonicalUrl = (
+  let canonicalUrl = (
     config.canonicalUrl || `${SITE_URL}${canonicalPath}`
   ).replace(/([^:]\/)\/+/g, '$1');
+  try {
+    const parsed = new URL(canonicalUrl);
+    if (!/\.[a-z0-9]{2,8}$/i.test(parsed.pathname) && !parsed.pathname.endsWith('/')) {
+      parsed.pathname = `${parsed.pathname}/`;
+      canonicalUrl = parsed.toString();
+    }
+  } catch {
+    // A relative canonical is resolved below by setMeta/upsertLink callers.
+  }
 
   document.title = title;
 
@@ -109,8 +133,8 @@ export const updatePageSEO = (config: SEOConfig = {}): void => {
 
   // Open Graph
   setMeta('property', 'og:site_name', SITE_NAME);
-  setMeta('property', 'og:title', title);
-  setMeta('property', 'og:description', description);
+  setMeta('property', 'og:title', ogTitle);
+  setMeta('property', 'og:description', ogDescription);
   setMeta('property', 'og:type', type === 'business' ? 'website' : type);
   setMeta('property', 'og:url', canonicalUrl);
   setMeta('property', 'og:image', ogImage);
@@ -120,13 +144,28 @@ export const updatePageSEO = (config: SEOConfig = {}): void => {
   setMeta('property', 'og:locale', 'en_IN');
 
   // Twitter cards
-  setMeta('name', 'twitter:card', 'summary_large_image');
-  setMeta('name', 'twitter:title', title);
-  setMeta('name', 'twitter:description', description);
-  setMeta('name', 'twitter:image', ogImage);
+  setMeta('name', 'twitter:card', config.twitterCard || 'summary_large_image');
+  setMeta('name', 'twitter:title', twitterTitle);
+  setMeta('name', 'twitter:description', twitterDescription);
+  setMeta('name', 'twitter:image', twitterImage);
   setMeta('name', 'twitter:image:alt', ogImageAlt);
   if (TWITTER_HANDLE) setMeta('name', 'twitter:site', TWITTER_HANDLE);
   else removeMeta('name', 'twitter:site');
+
+  // Article metadata is static in the initial document. Replace it on every
+  // SPA navigation so a previous article's dates/tags never leak to a new page.
+  document.querySelectorAll('meta[property^="article:"]').forEach((elem) => elem.remove());
+  if (type === 'article') {
+    if (config.articlePublishedTime) setMeta('property', 'article:published_time', config.articlePublishedTime);
+    if (config.articleModifiedTime) setMeta('property', 'article:modified_time', config.articleModifiedTime);
+    if (config.articleSection) setMeta('property', 'article:section', config.articleSection);
+    for (const tag of config.articleTags || []) {
+      const elem = document.createElement('meta');
+      elem.setAttribute('property', 'article:tag');
+      elem.setAttribute('content', metaContent(tag));
+      document.head.appendChild(elem);
+    }
+  }
 
   // Canonical and icons
   upsertLink('canonical', canonicalUrl);

@@ -30,6 +30,20 @@ function escapeXml(value = '') {
   return escapeHtml(value);
 }
 
+function isoDate(value) {
+  if (!value) return '';
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? '' : date.toISOString();
+}
+
+function absoluteAsset(value) {
+  const raw = clean(value);
+  if (!raw) return '';
+  if (/^https?:\/\//i.test(raw)) return raw;
+  if (/^\/(?!\/)/.test(raw)) return `${SITE_URL}${raw}`;
+  return '';
+}
+
 function clampTitle(value) {
   let title = clean(value);
   if (title.length < 30) title = clean(`${title} | ${raw.siteName}`);
@@ -57,18 +71,42 @@ function canonicalFor(path) {
   return `${SITE_URL}${path.replace(/\/+$/, '')}/`;
 }
 
-function buildHead({ title, description, robots = 'index, follow', path, type = 'website', image = OG_IMAGE, imageAlt = FALLBACK_IMAGE_ALT, canonical = true }) {
+function buildHead({
+  title,
+  description,
+  robots = 'index, follow',
+  path,
+  type = 'website',
+  image = OG_IMAGE,
+  imageAlt = FALLBACK_IMAGE_ALT,
+  canonical = true,
+  canonicalUrl,
+  ogTitle,
+  ogDescription,
+  twitterTitle,
+  twitterDescription,
+  twitterImage,
+  twitterCard,
+  jsonLd,
+}) {
+  const pageCanonical = canonicalUrl || canonicalFor(path);
+  const resolvedTitle = clean(title);
+  const resolvedDescription = clean(description);
+  const effectiveOgTitle = clean(ogTitle) || resolvedTitle;
+  const effectiveOgDescription = clean(ogDescription) || resolvedDescription;
+  const effectiveTwitterTitle = clean(twitterTitle) || effectiveOgTitle;
+  const effectiveTwitterDescription = clean(twitterDescription) || effectiveOgDescription;
+  const effectiveTwitterImage = absoluteAsset(twitterImage) || image;
   const tags = [
-    `<title>${escapeHtml(title)}</title>`,
-    `<meta name="description" content="${escapeHtml(description)}" />`,
+    `<title>${escapeHtml(resolvedTitle)}</title>`,
+    `<meta name="description" content="${escapeHtml(resolvedDescription)}" />`,
     `<meta name="robots" content="${escapeHtml(robots)}" />`,
   ];
 
   if (canonical) {
-    const url = canonicalFor(path);
     tags.push(
-      `<link rel="canonical" href="${escapeHtml(url)}" />`,
-      `<meta property="og:url" content="${escapeHtml(url)}" />`
+      `<link rel="canonical" href="${escapeHtml(pageCanonical)}" />`,
+      `<meta property="og:url" content="${escapeHtml(pageCanonical)}" />`
     );
   }
 
@@ -76,21 +114,25 @@ function buildHead({ title, description, robots = 'index, follow', path, type = 
     `<meta property="og:site_name" content="${escapeHtml(raw.siteName)}" />`,
     `<meta property="og:locale" content="en_IN" />`,
     `<meta property="og:type" content="${escapeHtml(type === 'business' ? 'website' : type)}" />`,
-    `<meta property="og:title" content="${escapeHtml(title)}" />`,
-    `<meta property="og:description" content="${escapeHtml(description)}" />`,
+    `<meta property="og:title" content="${escapeHtml(effectiveOgTitle)}" />`,
+    `<meta property="og:description" content="${escapeHtml(effectiveOgDescription)}" />`,
     `<meta property="og:image" content="${escapeHtml(image)}" />`,
     `<meta property="og:image:width" content="1200" />`,
     `<meta property="og:image:height" content="630" />`,
     `<meta property="og:image:alt" content="${escapeHtml(imageAlt)}" />`,
-    `<meta name="twitter:card" content="summary_large_image" />`,
-    `<meta name="twitter:title" content="${escapeHtml(title)}" />`,
-    `<meta name="twitter:description" content="${escapeHtml(description)}" />`,
-    `<meta name="twitter:image" content="${escapeHtml(image)}" />`,
+    `<meta name="twitter:card" content="${escapeHtml(twitterCard || 'summary_large_image')}" />`,
+    `<meta name="twitter:title" content="${escapeHtml(effectiveTwitterTitle)}" />`,
+    `<meta name="twitter:description" content="${escapeHtml(effectiveTwitterDescription)}" />`,
+    `<meta name="twitter:image" content="${escapeHtml(effectiveTwitterImage)}" />`,
     `<meta name="twitter:image:alt" content="${escapeHtml(imageAlt)}" />`
   );
 
   if (TWITTER_HANDLE) {
     tags.push(`<meta name="twitter:site" content="${escapeHtml(TWITTER_HANDLE)}" />`);
+  }
+
+  if (jsonLd) {
+    tags.push(`<script type="application/ld+json">${JSON.stringify(jsonLd).replace(/</g, '\\u003c')}</script>`);
   }
 
   return tags.join('\n    ');
@@ -159,11 +201,21 @@ function isUnverifiedStockImage(url = '') {
   }
 }
 
+async function fetchPublishedBlogs() {
+  try {
+    const data = await fetchJson('/blog/sitemap');
+    if (Array.isArray(data)) return data;
+  } catch (newEndpointError) {
+    // The backend may not yet expose the new endpoint during a rolling deploy.
+  }
+  return fetchJson('/blogs/public');
+}
+
 const [servicesResult, therapistsResult, blogsResult, faqsResult, galleryResult] =
   await Promise.allSettled([
     fetchJson('/services'),
     fetchJson('/therapists'),
-    fetchJson('/blogs/public'),
+    fetchPublishedBlogs(),
     fetchJson('/faqs?all=true'),
     fetchJson('/gallery'),
   ]);
@@ -181,7 +233,9 @@ const therapists = settle('therapists', therapistsResult, isActive);
 const blogs = settle(
   'blog posts',
   blogsResult,
-  (post) => post?.is_published !== 0 && post?.isPublished !== false && post?.slug
+  (post) => post?.slug && (
+    post?.status ? post.status === 'published' : (post?.is_published !== 0 && post?.isPublished !== false)
+  )
 );
 const faqs = settle(
   'FAQs',
@@ -199,6 +253,7 @@ const gallery = settle(
 );
 
 const baseHtml = await readFile(join(dist, 'index.html'), 'utf8');
+const blogFetchSucceeded = blogsResult.status === 'fulfilled' && Array.isArray(blogsResult.value);
 const blogPublished = blogs.length > 0;
 const faqPublished = faqs.length > 0;
 const galleryPublished = gallery.length > 0;
@@ -208,7 +263,7 @@ for (const route of raw.routes) {
   const isFaqIndex = route.path === '/faq';
   const isGalleryIndex = route.path === '/gallery';
   const robots =
-    (isBlogIndex && !blogPublished) ||
+    (isBlogIndex && !blogPublished && blogFetchSucceeded) ||
     (isFaqIndex && !faqPublished) ||
     (isGalleryIndex && !galleryPublished)
       ? 'noindex, follow'
@@ -305,13 +360,40 @@ for (const therapist of therapists) {
 for (const post of blogs) {
   const slug = clean(post.slug);
   if (!slug) continue;
-  const title = clampTitle(`${clean(post.title)} | ${raw.siteName}`);
-  const description = clampDescription(
-    post.excerpt || post.summary,
-    `Read this article from the ${raw.siteName} journal. View verified men's massage and wellness guidance, then book a private appointment in Indore.`
-  );
+  if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/i.test(slug)) {
+    warnings.push(`Skipped blog post with an unsafe slug: ${slug}`);
+    continue;
+  }
+  const resolved = post.resolvedSeo || {};
+  const rawTitle = resolved.title || post.title;
+  const title = resolved.title
+    ? clean(resolved.title)
+    : clampTitle(`${clean(post.title)} | ${raw.siteName}`);
+  const description = resolved.description
+    ? clean(resolved.description)
+    : clampDescription(
+      post.excerptText || post.excerpt || post.summary,
+      `Read this article from the ${raw.siteName} journal. View verified men's massage and wellness guidance, then book a private appointment in Indore.`
+    );
   const path = `/blog/${slug}`;
-  detailPages.push({ path, title, description, type: 'article' });
+  const image = absoluteAsset(resolved.ogImageUrl) || absoluteAsset(post.featuredImageUrl) || OG_IMAGE;
+  detailPages.push({
+    path,
+    title,
+    description,
+    type: 'article',
+    image,
+    imageAlt: resolved.ogImageAlt || post.featuredImageAlt || rawTitle || title,
+    canonicalUrl: resolved.canonicalUrl || canonicalFor(path),
+    ogTitle: resolved.ogTitle,
+    ogDescription: resolved.ogDescription,
+    twitterTitle: resolved.twitterTitle,
+    twitterDescription: resolved.twitterDescription,
+    twitterImage: resolved.twitterImageUrl,
+    twitterCard: resolved.twitterCard,
+    jsonLd: post.jsonLd,
+    lastModified: post.updatedAt || post.publishedAt,
+  });
 }
 
 for (const page of detailPages) {
@@ -320,9 +402,19 @@ for (const page of detailPages) {
     buildHead({
       title: page.title,
       description: page.description,
-      robots: 'index, follow',
+      robots: page.robots || 'index, follow',
       path: page.path,
       type: page.type,
+      image: page.image,
+      imageAlt: page.imageAlt,
+      canonicalUrl: page.canonicalUrl,
+      ogTitle: page.ogTitle,
+      ogDescription: page.ogDescription,
+      twitterTitle: page.twitterTitle,
+      twitterDescription: page.twitterDescription,
+      twitterImage: page.twitterImage,
+      twitterCard: page.twitterCard,
+      jsonLd: page.jsonLd,
     })
   );
   await writePage(`${page.path.replace(/^\//, '')}/index.html`, html);
@@ -331,7 +423,7 @@ for (const page of detailPages) {
 const sitemapEntries = [];
 for (const route of raw.routes) {
   if (route.robots.includes('noindex')) continue;
-  if (route.path === '/blog' && !blogPublished) continue;
+  if (route.path === '/blog' && !blogPublished && blogFetchSucceeded) continue;
   if (route.path === '/faq' && !faqPublished) continue;
   if (route.path === '/gallery' && !galleryPublished) continue;
   sitemapEntries.push({
@@ -341,7 +433,13 @@ for (const route of raw.routes) {
   });
 }
 for (const page of detailPages) {
-  sitemapEntries.push({ path: page.path, changeFrequency: 'monthly', priority: '0.7' });
+  sitemapEntries.push({
+    path: page.path,
+    canonicalUrl: page.canonicalUrl,
+    changeFrequency: 'monthly',
+    priority: '0.7',
+    lastModified: page.lastModified,
+  });
 }
 
 const sitemap = [
@@ -349,7 +447,8 @@ const sitemap = [
   '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
   ...sitemapEntries.map(
     (entry) =>
-      `  <url>\n    <loc>${escapeXml(canonicalFor(entry.path))}</loc>` +
+      `  <url>\n    <loc>${escapeXml(entry.canonicalUrl || canonicalFor(entry.path))}</loc>` +
+      (isoDate(entry.lastModified) ? `\n    <lastmod>${escapeXml(isoDate(entry.lastModified))}</lastmod>` : '') +
       (entry.changeFrequency ? `\n    <changefreq>${escapeXml(entry.changeFrequency)}</changefreq>` : '') +
       (entry.priority ? `\n    <priority>${escapeXml(entry.priority)}</priority>` : '') +
       '\n  </url>'

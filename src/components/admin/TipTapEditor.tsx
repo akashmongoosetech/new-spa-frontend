@@ -1,21 +1,55 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Placeholder from '@tiptap/extension-placeholder';
-import Link from '@tiptap/extension-link';
 import Image from '@tiptap/extension-image';
 import { Table } from '@tiptap/extension-table';
 import { TableRow } from '@tiptap/extension-table-row';
 import { TableCell } from '@tiptap/extension-table-cell';
 import { TableHeader } from '@tiptap/extension-table-header';
-import Underline from '@tiptap/extension-underline';
-import Strike from '@tiptap/extension-strike';
 import TextAlign from '@tiptap/extension-text-align';
 import CodeBlockLowlight from '@tiptap/extension-code-block-lowlight';
 import Highlight from '@tiptap/extension-highlight';
-import TaskList from '@tiptap/extension-task-list';
-import TaskItem from '@tiptap/extension-task-item';
+import Subscript from '@tiptap/extension-subscript';
+import Superscript from '@tiptap/extension-superscript';
+import {
+  BackgroundColor,
+  Color,
+  FontFamily,
+  FontSize,
+  LineHeight,
+  TextStyle,
+} from '@tiptap/extension-text-style';
 import { common, createLowlight } from 'lowlight';
+import {
+  AlignCenter,
+  AlignJustify,
+  AlignLeft,
+  AlignRight,
+  Bold,
+  Code2,
+  Columns3,
+  Eraser,
+  Highlighter,
+  ImagePlus,
+  Italic,
+  Link2,
+  List,
+  ListOrdered,
+  Minus,
+  Palette,
+  Quote,
+  Redo2,
+  Rows3,
+  Strikethrough,
+  Subscript as SubscriptIcon,
+  Superscript as SuperscriptIcon,
+  Table2,
+  Trash2,
+  Underline as UnderlineIcon,
+  Undo2,
+  Unlink,
+} from 'lucide-react';
 
 const lowlight = createLowlight(common);
 
@@ -27,7 +61,41 @@ interface TipTapEditorProps {
   disabled?: boolean;
   className?: string;
   onFocus?: () => void;
+  minHeight?: string;
+  compact?: boolean;
 }
+
+function isSafeEditorUrl(value: string): boolean {
+  const url = value.trim();
+  return /^(https?:\/\/|\/(?!\/)|mailto:|tel:|#)/i.test(url);
+}
+
+const ToolbarButton: React.FC<{
+  onClick: () => void;
+  active?: boolean;
+  disabled?: boolean;
+  title: string;
+  children: React.ReactNode;
+}> = ({ onClick, active = false, disabled = false, title, children }) => (
+  <button
+    type="button"
+    onMouseDown={(event) => event.preventDefault()}
+    onClick={onClick}
+    disabled={disabled}
+    title={title}
+    aria-label={title}
+    aria-pressed={active}
+    className={`inline-flex h-8 min-w-8 items-center justify-center rounded-lg px-1.5 text-xs transition-colors disabled:cursor-not-allowed disabled:opacity-40 ${
+      active
+        ? 'bg-brand-500 text-brand-950 shadow-sm'
+        : 'text-gray-600 hover:bg-white hover:text-[var(--brand-ink)]'
+    }`}
+  >
+    {children}
+  </button>
+);
+
+const Divider: React.FC = () => <span className="mx-1 h-6 w-px shrink-0 bg-gray-300" />;
 
 export const TipTapEditor: React.FC<TipTapEditorProps> = ({
   value,
@@ -37,252 +105,342 @@ export const TipTapEditor: React.FC<TipTapEditorProps> = ({
   disabled = false,
   className = '',
   onFocus,
+  minHeight = '300px',
+  compact = false,
 }) => {
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
         codeBlock: false,
+        link: {
+          openOnClick: false,
+          autolink: true,
+          linkOnPaste: true,
+          HTMLAttributes: {
+            class: 'text-[var(--brand-ink)] underline underline-offset-2',
+            rel: 'noopener noreferrer',
+          },
+        },
       }),
       Placeholder.configure({ placeholder: placeholder || 'Start writing...' }),
-      Link.configure({
-        openOnClick: false,
-        HTMLAttributes: { class: 'text-[var(--brand-ink)] underline hover:text-[var(--brand-ink)]' },
+      Image.configure({
+        allowBase64: false,
+        HTMLAttributes: { class: 'max-w-full h-auto rounded-lg', loading: 'lazy' },
       }),
-      Image.configure({ HTMLAttributes: { class: 'max-w-full h-auto rounded-lg' } }),
       Table.configure({ resizable: true }),
       TableRow,
       TableCell,
       TableHeader,
-      Underline,
-      Strike,
       TextAlign.configure({ types: ['heading', 'paragraph'] }),
       CodeBlockLowlight.configure({ lowlight }),
       Highlight.configure({ multicolor: true }),
-      TaskList,
-      TaskItem.configure({ nested: true }),
+      TextStyle,
+      Color,
+      BackgroundColor,
+      FontFamily,
+      FontSize,
+      LineHeight,
+      Subscript,
+      Superscript,
     ],
-    content: value,
+    content: value || '',
     editable: !disabled,
-    onUpdate: ({ editor }) => onChange(editor.getHTML()),
+    editorProps: {
+      attributes: {
+        class: 'p-4 focus:outline-none',
+        style: `min-height: ${minHeight}`,
+      },
+    },
+    onUpdate: ({ editor: current }) => {
+      onChange(current.isEmpty ? '' : current.getHTML());
+    },
     onFocus: () => onFocus?.(),
   });
 
-  if (!editor) return null;
+  // The edit form loads its record asynchronously. Tiptap only reads `content`
+  // on creation, so push later values into the instance without emitting an
+  // update (which would fight the parent form state and reset the cursor).
+  useEffect(() => {
+    if (!editor) return;
+    const current = editor.isEmpty ? '' : editor.getHTML();
+    if (current === (value || '')) return;
+    editor.commands.setContent(value || '', { emitUpdate: false });
+  }, [editor, value]);
+
+  useEffect(() => {
+    if (editor) editor.setEditable(!disabled);
+  }, [editor, disabled]);
+
+  if (!editor) {
+    return (
+      <div className={`rounded-xl border border-gray-200 bg-gray-50 p-4 text-xs text-gray-500 ${className}`}>
+        Loading editor...
+      </div>
+    );
+  }
+
+  const setLink = () => {
+    const previous = editor.getAttributes('link').href || '';
+    const url = window.prompt('Link URL (https://, mailto:, tel: or a site path)', previous || 'https://');
+    if (url === null) return;
+    const trimmed = url.trim();
+    if (!trimmed) {
+      editor.chain().focus().extendMarkRange('link').unsetLink().run();
+      return;
+    }
+    if (!isSafeEditorUrl(trimmed)) {
+      window.alert('Enter a safe URL beginning with https://, http://, mailto:, tel:, # or /.');
+      return;
+    }
+    editor.chain().focus().extendMarkRange('link').setLink({ href: trimmed }).run();
+  };
+
+  const insertImage = () => {
+    const url = window.prompt('Image URL (https:// or a site path beginning with /)', 'https://');
+    if (url === null) return;
+    const trimmed = url.trim();
+    if (!trimmed) return;
+    if (!isSafeEditorUrl(trimmed)) {
+      window.alert('Enter a safe image URL beginning with https://, http:// or /.');
+      return;
+    }
+    const alt = window.prompt('Image alt text (required for accessibility)', '') || '';
+    editor.chain().focus().setImage({ src: trimmed, alt }).run();
+  };
+
+  const textStyle = editor.getAttributes('textStyle');
+  const headingLevel = editor.isActive('heading') ? editor.getAttributes('heading').level : '';
 
   return (
     <div className={className}>
       {label && (
-        <label className="block text-xs font-bold uppercase text-gray-700 mb-2">
+        <label className="mb-2 block text-xs font-bold uppercase text-gray-700">
           {label}
         </label>
       )}
 
-      <div className="border border-gray-200 rounded-t-xl bg-gray-50 p-2 space-y-1">
-        <div className="flex flex-wrap gap-1">
+      <div className="rounded-t-xl border border-gray-200 bg-gray-50">
+        <div className="flex flex-wrap items-center gap-0.5 border-b border-gray-200 p-2">
           <select
-            value={editor.isActive('heading') ? editor.getAttributes('heading').level : ''}
-            onChange={(e) => {
-              const level = parseInt(e.target.value) as 1 | 2 | 3 | 4 | 5 | 6;
-              if (level) editor.chain().focus().toggleHeading({ level }).run();
+            aria-label="Text style"
+            title="Text style"
+            value={headingLevel || 'p'}
+            disabled={disabled}
+            onChange={(event) => {
+              const level = Number(event.target.value);
+              if (level) editor.chain().focus().toggleHeading({ level: level as 1 | 2 | 3 | 4 | 5 | 6 }).run();
               else editor.chain().focus().setParagraph().run();
             }}
-            disabled={disabled}
-            className="px-2 py-1 text-xs border border-gray-300 rounded bg-white focus:outline-none focus:ring-1 focus:ring-[#BFA476]"
+            className="h-8 rounded-lg border border-gray-300 bg-white px-2 text-xs focus:outline-none focus:ring-1 focus:ring-[#BFA476]"
           >
-            <option value="">Paragraph</option>
+            <option value="p">Paragraph</option>
             <option value="1">Heading 1</option>
             <option value="2">Heading 2</option>
             <option value="3">Heading 3</option>
             <option value="4">Heading 4</option>
-            <option value="5">Heading 5</option>
-            <option value="6">Heading 6</option>
           </select>
 
-          <div className="w-px h-6 bg-gray-300 mx-1" />
+          {!compact && (
+            <>
+              <select
+                aria-label="Font family"
+                title="Font family"
+                value={textStyle.fontFamily || ''}
+                disabled={disabled}
+                onChange={(event) => {
+                  if (event.target.value) editor.chain().focus().setFontFamily(event.target.value).run();
+                  else editor.chain().focus().unsetFontFamily().run();
+                }}
+                className="h-8 max-w-28 rounded-lg border border-gray-300 bg-white px-2 text-xs focus:outline-none focus:ring-1 focus:ring-[#BFA476]"
+              >
+                <option value="">Font</option>
+                <option value="'Plus Jakarta Sans', sans-serif">Sans</option>
+                <option value="'Playfair Display', Georgia, serif">Serif</option>
+                <option value="'Cormorant Garamond', Georgia, serif">Display</option>
+                <option value="Georgia, serif">Georgia</option>
+                <option value="Arial, Helvetica, sans-serif">Arial</option>
+              </select>
 
-          <button
-            onClick={() => editor.chain().focus().toggleBold().run()}
-            disabled={disabled || !editor.can().chain().focus().toggleBold().run()}
-            className={`px-2 py-1 text-xs rounded ${editor.isActive('bold') ? 'bg-brand-500 text-brand-950' : 'text-gray-600 hover:bg-gray-100'}`}
-            title="Bold"
-          >
-            <strong>B</strong>
-          </button>
-          <button
-            onClick={() => editor.chain().focus().toggleItalic().run()}
-            disabled={disabled || !editor.can().chain().focus().toggleItalic().run()}
-            className={`px-2 py-1 text-xs rounded ${editor.isActive('italic') ? 'bg-brand-500 text-brand-950' : 'text-gray-600 hover:bg-gray-100'}`}
-            title="Italic"
-          >
-            <em>I</em>
-          </button>
-          <button
-            onClick={() => editor.chain().focus().toggleUnderline().run()}
-            disabled={disabled || !editor.can().chain().focus().toggleUnderline().run()}
-            className={`px-2 py-1 text-xs rounded ${editor.isActive('underline') ? 'bg-brand-500 text-brand-950' : 'text-gray-600 hover:bg-gray-100'}`}
-            title="Underline"
-          >
-            <u>U</u>
-          </button>
-          <button
-            onClick={() => editor.chain().focus().toggleStrike().run()}
-            disabled={disabled || !editor.can().chain().focus().toggleStrike().run()}
-            className={`px-2 py-1 text-xs rounded ${editor.isActive('strike') ? 'bg-brand-500 text-brand-950' : 'text-gray-600 hover:bg-gray-100'}`}
-            title="Strikethrough"
-          >
-            <s>S</s>
-          </button>
-          <button
-            onClick={() => editor.chain().focus().toggleHighlight().run()}
-            disabled={disabled || !editor.can().chain().focus().toggleHighlight().run()}
-            className={`px-2 py-1 text-xs rounded ${editor.isActive('highlight') ? 'bg-brand-500 text-brand-950' : 'text-gray-600 hover:bg-gray-100'}`}
-            title="Highlight"
-          >
-            <mark>H</mark>
-          </button>
+              <select
+                aria-label="Font size"
+                title="Font size"
+                value={textStyle.fontSize || ''}
+                disabled={disabled}
+                onChange={(event) => {
+                  if (event.target.value) editor.chain().focus().setFontSize(event.target.value).run();
+                  else editor.chain().focus().unsetFontSize().run();
+                }}
+                className="h-8 rounded-lg border border-gray-300 bg-white px-2 text-xs focus:outline-none focus:ring-1 focus:ring-[#BFA476]"
+              >
+                <option value="">Size</option>
+                {['12px', '14px', '16px', '18px', '20px', '24px', '28px', '32px', '40px'].map((size) => (
+                  <option key={size} value={size}>{size.replace('px', '')}</option>
+                ))}
+              </select>
 
-          <div className="w-px h-6 bg-gray-300 mx-1" />
+              <select
+                aria-label="Line height"
+                title="Line spacing"
+                value={textStyle.lineHeight || ''}
+                disabled={disabled}
+                onChange={(event) => {
+                  if (event.target.value) editor.chain().focus().setLineHeight(event.target.value).run();
+                  else editor.chain().focus().unsetLineHeight().run();
+                }}
+                className="h-8 rounded-lg border border-gray-300 bg-white px-2 text-xs focus:outline-none focus:ring-1 focus:ring-[#BFA476]"
+              >
+                <option value="">Spacing</option>
+                <option value="1.2">1.2</option>
+                <option value="1.4">1.4</option>
+                <option value="1.6">1.6</option>
+                <option value="1.8">1.8</option>
+                <option value="2">2.0</option>
+              </select>
+            </>
+          )}
 
-          <button
-            onClick={() => editor.chain().focus().setTextAlign('left').run()}
-            disabled={disabled || !editor.can().chain().focus().setTextAlign('left').run()}
-            className={`px-2 py-1 text-xs rounded ${editor.isActive({ textAlign: 'left' }) ? 'bg-brand-500 text-brand-950' : 'text-gray-600 hover:bg-gray-100'}`}
-            title="Align Left"
-          >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4h13M3 8h13M3 12h13M3 16h13" /></svg>
-          </button>
-          <button
-            onClick={() => editor.chain().focus().setTextAlign('center').run()}
-            disabled={disabled || !editor.can().chain().focus().setTextAlign('center').run()}
-            className={`px-2 py-1 text-xs rounded ${editor.isActive({ textAlign: 'center' }) ? 'bg-brand-500 text-brand-950' : 'text-gray-600 hover:bg-gray-100'}`}
-            title="Align Center"
-          >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 4h6M9 8h6M9 12h6M9 16h6" /></svg>
-          </button>
-          <button
-            onClick={() => editor.chain().focus().setTextAlign('right').run()}
-            disabled={disabled || !editor.can().chain().focus().setTextAlign('right').run()}
-            className={`px-2 py-1 text-xs rounded ${editor.isActive({ textAlign: 'right' }) ? 'bg-brand-500 text-brand-950' : 'text-gray-600 hover:bg-gray-100'}`}
-            title="Align Right"
-          >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 4h13M8 8h13M8 12h13M8 16h13" /></svg>
-          </button>
-          <button
-            onClick={() => editor.chain().focus().setTextAlign('justify').run()}
-            disabled={disabled || !editor.can().chain().focus().setTextAlign('justify').run()}
-            className={`px-2 py-1 text-xs rounded ${editor.isActive({ textAlign: 'justify' }) ? 'bg-brand-500 text-brand-950' : 'text-gray-600 hover:bg-gray-100'}`}
-            title="Justify"
-          >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4h18M3 8h18M3 12h18M3 16h18" /></svg>
-          </button>
+          <Divider />
 
-          <div className="w-px h-6 bg-gray-300 mx-1" />
+          <ToolbarButton title="Bold" active={editor.isActive('bold')} disabled={disabled} onClick={() => editor.chain().focus().toggleBold().run()}>
+            <Bold className="h-4 w-4" />
+          </ToolbarButton>
+          <ToolbarButton title="Italic" active={editor.isActive('italic')} disabled={disabled} onClick={() => editor.chain().focus().toggleItalic().run()}>
+            <Italic className="h-4 w-4" />
+          </ToolbarButton>
+          <ToolbarButton title="Underline" active={editor.isActive('underline')} disabled={disabled} onClick={() => editor.chain().focus().toggleUnderline().run()}>
+            <UnderlineIcon className="h-4 w-4" />
+          </ToolbarButton>
+          <ToolbarButton title="Strikethrough" active={editor.isActive('strike')} disabled={disabled} onClick={() => editor.chain().focus().toggleStrike().run()}>
+            <Strikethrough className="h-4 w-4" />
+          </ToolbarButton>
+          <ToolbarButton title="Highlight" active={editor.isActive('highlight')} disabled={disabled} onClick={() => editor.chain().focus().toggleHighlight({ color: '#f5ede0' }).run()}>
+            <Highlighter className="h-4 w-4" />
+          </ToolbarButton>
+          <ToolbarButton title="Subscript" active={editor.isActive('subscript')} disabled={disabled} onClick={() => editor.chain().focus().toggleSubscript().run()}>
+            <SubscriptIcon className="h-4 w-4" />
+          </ToolbarButton>
+          <ToolbarButton title="Superscript" active={editor.isActive('superscript')} disabled={disabled} onClick={() => editor.chain().focus().toggleSuperscript().run()}>
+            <SuperscriptIcon className="h-4 w-4" />
+          </ToolbarButton>
 
-          <button
-            onClick={() => editor.chain().focus().toggleBulletList().run()}
-            disabled={disabled || !editor.can().chain().focus().toggleBulletList().run()}
-            className={`px-2 py-1 text-xs rounded ${editor.isActive('bulletList') ? 'bg-brand-500 text-brand-950' : 'text-gray-600 hover:bg-gray-100'}`}
-            title="Bullet List"
-          >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 11h14M5 11l-1.5 1.5M5 11l-1.5 -1.5M5 6h14M5 6l-1.5 1.5M5 6l-1.5 -1.5M5 16h14M5 16l-1.5 1.5M5 16l-1.5 -1.5" /></svg>
-          </button>
-          <button
-            onClick={() => editor.chain().focus().toggleOrderedList().run()}
-            disabled={disabled || !editor.can().chain().focus().toggleOrderedList().run()}
-            className={`px-2 py-1 text-xs rounded ${editor.isActive('orderedList') ? 'bg-brand-500 text-brand-950' : 'text-gray-600 hover:bg-gray-100'}`}
-            title="Numbered List"
-          >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 9h18M3 15h18M3 3h18M3 21h18" /></svg>
-          </button>
-          <button
-            onClick={() => editor.chain().focus().toggleTaskList().run()}
-            disabled={disabled || !editor.can().chain().focus().toggleTaskList().run()}
-            className={`px-2 py-1 text-xs rounded ${editor.isActive('taskList') ? 'bg-brand-500 text-brand-950' : 'text-gray-600 hover:bg-gray-100'}`}
-            title="Task List"
-          >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" /></svg>
-          </button>
+          {!compact && (
+            <>
+              <label className="ml-1 inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg text-gray-600 hover:bg-white" title="Text colour">
+                <Palette className="h-4 w-4" />
+                <input
+                  type="color"
+                  aria-label="Text colour"
+                  value={textStyle.color || '#523f28'}
+                  disabled={disabled}
+                  onChange={(event) => editor.chain().focus().setColor(event.target.value).run()}
+                  className="sr-only"
+                />
+              </label>
+              <label className="inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg text-gray-600 hover:bg-white" title="Highlight colour">
+                <span className="h-4 w-4 rounded border border-gray-400 bg-[#f5ede0]" />
+                <input
+                  type="color"
+                  aria-label="Highlight colour"
+                  value={textStyle.backgroundColor || '#f5ede0'}
+                  disabled={disabled}
+                  onChange={(event) => editor.chain().focus().setBackgroundColor(event.target.value).run()}
+                  className="sr-only"
+                />
+              </label>
+            </>
+          )}
 
-          <div className="w-px h-6 bg-gray-300 mx-1" />
+          <Divider />
 
-          <button
-            onClick={() => editor.chain().focus().toggleBlockquote().run()}
-            disabled={disabled || !editor.can().chain().focus().toggleBlockquote().run()}
-            className={`px-2 py-1 text-xs rounded ${editor.isActive('blockquote') ? 'bg-brand-500 text-brand-950' : 'text-gray-600 hover:bg-gray-100'}`}
-            title="Blockquote"
-          >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" /></svg>
-          </button>
-          <button
-            onClick={() => editor.chain().focus().toggleCodeBlock().run()}
-            disabled={disabled || !editor.can().chain().focus().toggleCodeBlock().run()}
-            className={`px-2 py-1 text-xs rounded ${editor.isActive('codeBlock') ? 'bg-brand-500 text-brand-950' : 'text-gray-600 hover:bg-gray-100'}`}
-            title="Code Block"
-          >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" /></svg>
-          </button>
+          <ToolbarButton title="Align left" active={editor.isActive({ textAlign: 'left' })} disabled={disabled} onClick={() => editor.chain().focus().setTextAlign('left').run()}>
+            <AlignLeft className="h-4 w-4" />
+          </ToolbarButton>
+          <ToolbarButton title="Align centre" active={editor.isActive({ textAlign: 'center' })} disabled={disabled} onClick={() => editor.chain().focus().setTextAlign('center').run()}>
+            <AlignCenter className="h-4 w-4" />
+          </ToolbarButton>
+          <ToolbarButton title="Align right" active={editor.isActive({ textAlign: 'right' })} disabled={disabled} onClick={() => editor.chain().focus().setTextAlign('right').run()}>
+            <AlignRight className="h-4 w-4" />
+          </ToolbarButton>
+          <ToolbarButton title="Justify" active={editor.isActive({ textAlign: 'justify' })} disabled={disabled} onClick={() => editor.chain().focus().setTextAlign('justify').run()}>
+            <AlignJustify className="h-4 w-4" />
+          </ToolbarButton>
 
-          <div className="w-px h-6 bg-gray-300 mx-1" />
+          <Divider />
 
-          <button
-            onClick={() => editor.chain().focus().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run()}
+          <ToolbarButton title="Bullet list" active={editor.isActive('bulletList')} disabled={disabled} onClick={() => editor.chain().focus().toggleBulletList().run()}>
+            <List className="h-4 w-4" />
+          </ToolbarButton>
+          <ToolbarButton title="Numbered list" active={editor.isActive('orderedList')} disabled={disabled} onClick={() => editor.chain().focus().toggleOrderedList().run()}>
+            <ListOrdered className="h-4 w-4" />
+          </ToolbarButton>
+          <ToolbarButton title="Blockquote" active={editor.isActive('blockquote')} disabled={disabled} onClick={() => editor.chain().focus().toggleBlockquote().run()}>
+            <Quote className="h-4 w-4" />
+          </ToolbarButton>
+          <ToolbarButton title="Code block" active={editor.isActive('codeBlock')} disabled={disabled} onClick={() => editor.chain().focus().toggleCodeBlock().run()}>
+            <Code2 className="h-4 w-4" />
+          </ToolbarButton>
+          <ToolbarButton title="Horizontal rule" disabled={disabled} onClick={() => editor.chain().focus().setHorizontalRule().run()}>
+            <Minus className="h-4 w-4" />
+          </ToolbarButton>
+
+          <Divider />
+
+          <ToolbarButton title="Add or edit link" active={editor.isActive('link')} disabled={disabled} onClick={setLink}>
+            <Link2 className="h-4 w-4" />
+          </ToolbarButton>
+          <ToolbarButton title="Remove link" disabled={disabled || !editor.isActive('link')} onClick={() => editor.chain().focus().extendMarkRange('link').unsetLink().run()}>
+            <Unlink className="h-4 w-4" />
+          </ToolbarButton>
+          <ToolbarButton title="Insert image from URL" disabled={disabled} onClick={insertImage}>
+            <ImagePlus className="h-4 w-4" />
+          </ToolbarButton>
+
+          <Divider />
+
+          <ToolbarButton title="Insert table" disabled={disabled} onClick={() => editor.chain().focus().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run()}>
+            <Table2 className="h-4 w-4" />
+          </ToolbarButton>
+          {editor.isActive('table') && (
+            <>
+              <ToolbarButton title="Add row" disabled={disabled} onClick={() => editor.chain().focus().addRowAfter().run()}>
+                <Rows3 className="h-4 w-4" />
+              </ToolbarButton>
+              <ToolbarButton title="Add column" disabled={disabled} onClick={() => editor.chain().focus().addColumnAfter().run()}>
+                <Columns3 className="h-4 w-4" />
+              </ToolbarButton>
+              <ToolbarButton title="Delete table" disabled={disabled} onClick={() => editor.chain().focus().deleteTable().run()}>
+                <Trash2 className="h-4 w-4" />
+              </ToolbarButton>
+            </>
+          )}
+
+          <Divider />
+
+          <ToolbarButton title="Undo" disabled={disabled || !editor.can().undo()} onClick={() => editor.chain().focus().undo().run()}>
+            <Undo2 className="h-4 w-4" />
+          </ToolbarButton>
+          <ToolbarButton title="Redo" disabled={disabled || !editor.can().redo()} onClick={() => editor.chain().focus().redo().run()}>
+            <Redo2 className="h-4 w-4" />
+          </ToolbarButton>
+          <ToolbarButton
+            title="Clear formatting"
             disabled={disabled}
-            className="px-2 py-1 text-xs rounded text-gray-600 hover:bg-gray-100"
-            title="Insert Table"
+            onClick={() => editor.chain().focus().unsetAllMarks().clearNodes().run()}
           >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M3 14h18M3 18h18M3 6h18v12H3V6z" /></svg>
-          </button>
-
-          <div className="w-px h-6 bg-gray-300 mx-1" />
-
-          <button
-            type="button"
-            onClick={() => {
-              const url = window.prompt('Enter URL (https://…):', 'https://');
-              if (!url) return;
-              const trimmed = url.trim();
-              if (!/^(https?:\/\/|mailto:|tel:)/i.test(trimmed)) return;
-              editor.chain().focus().extendMarkRange('link').setLink({ href: trimmed }).run();
-            }}
-            disabled={disabled || !editor.can().chain().focus().setLink({ href: '#' }).run()}
-            className={`px-2 py-1 text-xs rounded ${editor.isActive('link') ? 'bg-brand-500 text-brand-950' : 'text-gray-600 hover:bg-gray-100'}`}
-            title="Add Link"
-          >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" /></svg>
-          </button>
-
-          <div className="w-px h-6 bg-gray-300 mx-1" />
-
-          <button
-            onClick={() => editor.chain().focus().undo().run()}
-            disabled={disabled || !editor.can().undo()}
-            className="px-2 py-1 text-xs rounded text-gray-600 hover:bg-gray-100"
-            title="Undo"
-          >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6" /></svg>
-          </button>
-          <button
-            onClick={() => editor.chain().focus().redo().run()}
-            disabled={disabled || !editor.can().redo()}
-            className="px-2 py-1 text-xs rounded text-gray-600 hover:bg-gray-100"
-            title="Redo"
-          >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 10h-10a8 8 0 00-8 8v2M21 10l-6 6m6-6l-6-6" /></svg>
-          </button>
-          <button
-            onClick={() => editor.chain().focus().clearNodes().run()}
-            disabled={disabled}
-            className="px-2 py-1 text-xs rounded text-gray-600 hover:bg-gray-100"
-            title="Clear Formatting"
-          >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
-          </button>
+            <Eraser className="h-4 w-4" />
+          </ToolbarButton>
         </div>
       </div>
 
-      <div className="border border-gray-200 border-t-0 rounded-b-xl bg-white min-h-[200px]">
-        <EditorContent editor={editor} className="prose prose-sm max-w-none p-4 focus:outline-none min-h-[200px]" />
+      <div className="rounded-b-xl border border-t-0 border-gray-200 bg-white">
+        <EditorContent
+          editor={editor}
+          className="prose prose-sm max-w-none focus:outline-none"
+        />
       </div>
+      <p className="mt-1 text-[10px] text-gray-400">
+        Add descriptive alt text to every image. Use headings in order and avoid pasting scripts or unsupported widgets.
+      </p>
     </div>
   );
 };

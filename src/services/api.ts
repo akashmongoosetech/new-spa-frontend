@@ -6,6 +6,9 @@ import {
   Coupon,
   Testimonial,
   BlogPost,
+  BlogCategory,
+  BlogPublicDetail,
+  PaginatedBlogPosts,
   ContactMessage,
   BusinessSettings,
   EmailLog,
@@ -159,33 +162,87 @@ function mapTestimonial(t: any): Testimonial {
   };
 }
 
+function blogStatusOf(b: any): BlogPost['status'] {
+  if (b.status === 'published' || b.status === 'draft' || b.status === 'unpublished') return b.status;
+  if (b.status === 'inactive') return 'unpublished';
+  return b.published === false || b.published === 0 ? 'draft' : 'published';
+}
+
 function mapBlogPost(b: any): BlogPost {
+  const status = blogStatusOf(b);
+  const readingTime = Number(b.readingTime || b.reading_time || 0) || undefined;
+  const readTime = b.read_time || b.readTime || (readingTime ? `${readingTime} min read` : '1 min read');
+  const summaryHtml = b.excerpt || b.summary || '';
+  const safeExcerpt = b.safe_excerpt || b.excerptText || b.excerpt_text ||
+    String(summaryHtml).replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+  const seo = b.seo ? {
+    metaTitle: b.seo.meta_title || b.seo.metaTitle || '',
+    metaDescription: b.seo.meta_description || b.seo.metaDescription || '',
+    canonicalUrl: b.seo.canonical_url || b.seo.canonicalUrl || '',
+    ogTitle: b.seo.og_title || b.seo.ogTitle || '',
+    ogDescription: b.seo.og_description || b.seo.ogDescription || '',
+    ogImageUrl: b.seo.og_image_url || b.seo.ogImageUrl || '',
+    twitterTitle: b.seo.twitter_title || b.seo.twitterTitle || '',
+    twitterDescription: b.seo.twitter_description || b.seo.twitterDescription || '',
+    twitterImageUrl: b.seo.twitter_image_url || b.seo.twitterImageUrl || '',
+    keywords: b.seo.keywords || [],
+  } : undefined;
+  const resolved = b.resolved_seo || b.resolvedSeo;
+  const imageUrl = b.featured_image_url || b.featuredImageUrl || b.image_url || b.imageUrl || b.cover_image || b.coverImage || '';
   return {
     id: b.id,
-    title: b.title,
-    slug: b.slug,
-    category: b.category,
-    author: b.author,
-    therapistName: b.therapist_name || b.therapistName,
-    therapistAvatarUrl: b.therapist_avatar_url || b.therapistAvatarUrl,
-    date: b.date || b.created_at,
-    readTime: b.read_time || `${Math.max(1, Math.ceil((b.content || '').split(' ').length / 200))} min read`,
-    summary: b.excerpt || b.summary,
-    content: b.content,
-    imageUrl: b.image_url || b.cover_image,
-    tags: b.tags || [],
-    published: b.published !== false && b.published !== 0,
-    status: b.status,
-    featureOnHomePage: b.feature_on_home_page === 1 || b.featureOnHomePage === true,
-    seo: b.seo ? {
-      metaTitle: b.seo.meta_title || b.seo.metaTitle,
-      metaDescription: b.seo.meta_description || b.seo.metaDescription,
-      keywords: b.seo.keywords,
+    title: b.title || '',
+    slug: b.slug || '',
+    category: b.category || '',
+    categoryId: b.category_id || b.categoryId || '',
+    author: b.author || '',
+    therapistName: b.therapist_name || b.therapistName || '',
+    therapistAvatarUrl: b.therapist_avatar_url || b.therapistAvatarUrl || '',
+    date: b.published_at || b.publishedAt || b.date || b.created_at || b.createdAt,
+    publishedAt: b.published_at || b.publishedAt || undefined,
+    readTime,
+    readingTime,
+    summary: summaryHtml,
+    excerptText: b.excerpt_text || b.excerptText || safeExcerpt,
+    content: b.content || '',
+    imageUrl,
+    featuredImageUrl: imageUrl,
+    featuredImageAlt: b.featured_image_alt || b.featuredImageAlt || '',
+    tags: Array.isArray(b.tags) ? b.tags : [],
+    published: status === 'published',
+    status,
+    isFeatured: b.is_featured === 1 || b.isFeatured === true || b.feature_on_home_page === 1 || b.featureOnHomePage === true,
+    featureOnHomePage: b.is_featured === 1 || b.isFeatured === true || b.feature_on_home_page === 1 || b.featureOnHomePage === true,
+    sections: Array.isArray(b.sections)
+      ? b.sections.map((section: any, index: number) => ({
+          id: section.id || `${b.slug || 'section'}-${index + 1}`,
+          heading: section.heading || '',
+          content: section.content || '',
+          order: Number.isFinite(Number(section.order)) ? Number(section.order) : index,
+        }))
+      : [],
+    seo,
+    resolvedSeo: resolved ? {
+      title: resolved.title,
+      description: resolved.description,
+      canonicalUrl: resolved.canonical_url || resolved.canonicalUrl,
+      canonical_url: resolved.canonical_url || resolved.canonicalUrl,
+      robots: resolved.robots,
+      ogTitle: resolved.og_title || resolved.ogTitle,
+      ogDescription: resolved.og_description || resolved.ogDescription,
+      ogImageUrl: resolved.og_image_url || resolved.ogImageUrl,
+      ogImageAlt: resolved.og_image_alt || resolved.ogImageAlt,
+      twitterTitle: resolved.twitter_title || resolved.twitterTitle,
+      twitterDescription: resolved.twitter_description || resolved.twitterDescription,
+      twitterImageUrl: resolved.twitter_image_url || resolved.twitterImageUrl,
+      twitterCard: resolved.twitter_card || resolved.twitterCard,
+      keywords: resolved.keywords || [],
     } : undefined,
-    safeExcerpt: b.safe_excerpt,
-    excerptHtml: b.excerpt_html,
-    createdAt: b.created_at,
-    updatedAt: b.updated_at,
+    previousSlugs: b.previous_slugs || b.previousSlugs || [],
+    safeExcerpt,
+    excerptHtml: b.excerpt_html || b.excerptHtml,
+    createdAt: b.created_at || b.createdAt,
+    updatedAt: b.updated_at || b.updatedAt,
   };
 }
 
@@ -664,99 +721,193 @@ export const api = {
   },
 
   async getBlogs(admin = false): Promise<BlogPost[]> {
-    const { data } = await http.get<BlogPost[]>('/blogs', { params: admin ? { all: '1' } : {} });
-    return (Array.isArray(data) ? data : []).map(mapBlogPost);
+    if (admin) {
+      const result = await this.getAdminBlogs({ limit: 500 });
+      return result.items;
+    }
+    const result = await this.getPublicBlogs({ limit: 200 });
+    return result.items;
   },
 
   async getAllBlogs(): Promise<BlogPost[]> {
-    return this.getBlogs(true);
+    return (await this.getAdminBlogs({ limit: 500 })).items;
   },
 
-  async getPublicBlogs(): Promise<BlogPost[]> {
-    const { data } = await http.get<BlogPost[]>('/blogs/public');
-    return data.map(mapBlogPost);
+  async getAdminBlogs(params: {
+    page?: number;
+    limit?: number;
+    q?: string;
+    status?: string;
+    category?: string;
+    isFeatured?: boolean;
+    sort?: string;
+  } = {}): Promise<PaginatedBlogPosts> {
+    const { data } = await http.get<any>('/admin/blogs', { params });
+    return {
+      items: (Array.isArray(data?.items) ? data.items : []).map(mapBlogPost),
+      pagination: data?.pagination || {
+        page: params.page || 1,
+        limit: params.limit || 10,
+        total: 0,
+        totalPages: 1,
+      },
+    };
   },
 
-  async getFeaturedBlogs(): Promise<BlogPost[]> {
-    const { data } = await http.get<BlogPost[]>('/blogs/featured');
-    return data.map(mapBlogPost);
+  async getPublicBlogs(params: {
+    page?: number;
+    limit?: number;
+    q?: string;
+    category?: string;
+    tag?: string;
+    isFeatured?: boolean;
+    sort?: string;
+  } = {}): Promise<PaginatedBlogPosts> {
+    const { data } = await http.get<any>('/blog/posts', { params });
+    return {
+      items: (Array.isArray(data?.items) ? data.items : []).map(mapBlogPost),
+      pagination: data?.pagination || {
+        page: params.page || 1,
+        limit: params.limit || 9,
+        total: 0,
+        totalPages: 1,
+      },
+    };
   },
 
-  async getBlogBySlug(slug: string): Promise<BlogPost | null> {
+  async getFeaturedBlogs(limit = 6): Promise<BlogPost[]> {
+    const { data } = await http.get<any[]>('/blog/featured', { params: { limit } });
+    return (Array.isArray(data) ? data : []).map(mapBlogPost);
+  },
+
+  async getPublicBlogDetail(slug: string): Promise<BlogPublicDetail | null> {
     try {
-      const { data } = await http.get<BlogPost>(`/blogs/slug/${slug}`);
-      return mapBlogPost(data);
+      const { data } = await http.get<any>(`/blog/posts/${encodeURIComponent(slug)}`);
+      return {
+        post: mapBlogPost(data?.post || data),
+        related: (Array.isArray(data?.related) ? data.related : []).map(mapBlogPost),
+        previous: data?.previous ? mapBlogPost(data.previous) : null,
+        next: data?.next ? mapBlogPost(data.next) : null,
+        redirectTo: data?.redirectTo || data?.post?.redirectTo || null,
+        jsonLd: data?.jsonLd || null,
+      };
     } catch (error) {
       if (axios.isAxiosError(error) && error.response?.status === 404) return null;
       throw error;
     }
   },
 
+  async getBlogBySlug(slug: string): Promise<BlogPost | null> {
+    const detail = await this.getPublicBlogDetail(slug);
+    return detail?.post || null;
+  },
+
   async getBlogById(id: string): Promise<BlogPost> {
-    const { data } = await http.get<BlogPost>(`/blogs/${id}`);
+    const { data } = await http.get<any>(`/admin/blogs/${id}`);
     return mapBlogPost(data);
   },
 
   async createBlog(data: Partial<BlogPost>): Promise<BlogPost> {
-    const res = await http.post<BlogPost>('/blogs', {
-      title: data.title,
-      excerpt: data.summary,
-      content: data.content,
-      category: data.category,
-      author: data.author,
-      therapistName: data.therapistName,
-      therapistAvatarUrl: data.therapistAvatarUrl,
-      imageUrl: data.imageUrl,
-      coverImage: data.imageUrl,
-      tags: data.tags,
-      readTime: data.readTime,
-      seo: data.seo,
-      status: data.status,
-      featureOnHomePage: data.featureOnHomePage,
-      slug: data.slug,
-    });
+    const res = await http.post<any>('/admin/blogs', this.blogPayload(data));
     return mapBlogPost(res.data);
   },
 
   async updateBlog(id: string, data: Partial<BlogPost>): Promise<BlogPost> {
-    const res = await http.put<BlogPost>(`/blogs/${id}`, {
+    const res = await http.put<any>(`/admin/blogs/${id}`, this.blogPayload(data));
+    return mapBlogPost(res.data);
+  },
+
+  blogPayload(data: Partial<BlogPost>) {
+    return {
       title: data.title,
+      slug: data.slug || undefined,
       excerpt: data.summary,
       content: data.content,
       category: data.category,
+      categoryId: data.categoryId || undefined,
       author: data.author,
       therapistName: data.therapistName,
       therapistAvatarUrl: data.therapistAvatarUrl,
-      imageUrl: data.imageUrl,
-      coverImage: data.imageUrl,
+      featuredImageUrl: data.featuredImageUrl !== undefined ? data.featuredImageUrl : data.imageUrl,
+      featuredImageAlt: data.featuredImageAlt,
       tags: data.tags,
-      readTime: data.readTime,
-      seo: data.seo,
       status: data.status,
-      featureOnHomePage: data.featureOnHomePage,
-      slug: data.slug,
-    });
-    return mapBlogPost(res.data);
+      isFeatured: data.isFeatured ?? data.featureOnHomePage,
+      sections: data.sections,
+      seo: data.seo,
+      expectedUpdatedAt: data.updatedAt,
+    };
   },
 
   async deleteBlog(id: string): Promise<{ success: boolean }> {
-    const res = await http.delete<{ success: boolean }>(`/blogs/${id}`);
+    const res = await http.delete<{ success: boolean }>(`/admin/blogs/${id}`);
     return res.data;
   },
 
-  async toggleBlogPublish(id: string): Promise<BlogPost> {
-    const res = await http.patch<BlogPost>(`/blogs/${id}/publish`);
+  async setBlogStatus(id: string, status: BlogPost['status']): Promise<BlogPost> {
+    const res = await http.patch<any>(`/admin/blogs/${id}/status`, { status });
     return mapBlogPost(res.data);
   },
 
-  async toggleBlogFeature(id: string): Promise<BlogPost> {
-    const res = await http.patch<BlogPost>(`/blogs/${id}/feature`);
+  async setBlogFeatured(id: string, isFeatured: boolean): Promise<BlogPost> {
+    const res = await http.patch<any>(`/admin/blogs/${id}/featured`, { isFeatured });
     return mapBlogPost(res.data);
   },
 
-  async toggleBlogStatus(id: string): Promise<BlogPost> {
-    const res = await http.patch<BlogPost>(`/blogs/${id}/status`);
-    return mapBlogPost(res.data);
+  async toggleBlogPublish(id: string, currentStatus?: BlogPost['status']): Promise<BlogPost> {
+    return this.setBlogStatus(id, currentStatus === 'published' ? 'unpublished' : 'published');
+  },
+
+  async toggleBlogFeature(id: string, isFeatured?: boolean): Promise<BlogPost> {
+    return this.setBlogFeatured(id, !isFeatured);
+  },
+
+  async toggleBlogStatus(id: string, currentStatus?: BlogPost['status']): Promise<BlogPost> {
+    return this.setBlogStatus(id, currentStatus === 'unpublished' ? 'published' : 'unpublished');
+  },
+
+  async getBlogCategories(): Promise<BlogCategory[]> {
+    const { data } = await http.get<any[]>('/admin/blogs/categories');
+    return (Array.isArray(data) ? data : []).map((category) => ({
+      id: category.id,
+      name: category.name,
+      slug: category.slug,
+      description: category.description || '',
+      count: category.count || 0,
+      createdAt: category.createdAt,
+      updatedAt: category.updatedAt,
+    }));
+  },
+
+  async createBlogCategory(data: { name: string; slug?: string; description?: string }): Promise<BlogCategory> {
+    const res = await http.post<any>('/admin/blogs/categories', data);
+    return { ...res.data, count: res.data?.count || 0 };
+  },
+
+  async updateBlogCategory(id: string, data: { name: string; slug?: string; description?: string }): Promise<BlogCategory> {
+    const res = await http.put<any>(`/admin/blogs/categories/${id}`, data);
+    return { ...res.data, count: res.data?.count || 0 };
+  },
+
+  async deleteBlogCategory(id: string): Promise<{ success: boolean }> {
+    const res = await http.delete<{ success: boolean }>(`/admin/blogs/categories/${id}`);
+    return res.data;
+  },
+
+  async getPublicBlogCategories(): Promise<BlogCategory[]> {
+    const { data } = await http.get<any[]>('/blog/categories');
+    return (Array.isArray(data) ? data : []).map((category) => ({
+      id: category.slug || category.name,
+      name: category.name,
+      slug: category.slug,
+      description: category.description || '',
+      count: category.count || 0,
+    }));
+  },
+
+  async getPublicBlogTags(): Promise<Array<{ name: string; slug: string; count: number }>> {
+    const { data } = await http.get<any[]>('/blog/tags');
+    return Array.isArray(data) ? data : [];
   },
 
   // Gallery

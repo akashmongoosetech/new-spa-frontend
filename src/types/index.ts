@@ -105,32 +105,108 @@ export interface Testimonial {
   approved: boolean;
 }
 
+export type BlogStatus = 'draft' | 'published' | 'unpublished';
+
+export interface BlogSeo {
+  metaTitle?: string;
+  metaDescription?: string;
+  canonicalUrl?: string;
+  ogTitle?: string;
+  ogDescription?: string;
+  ogImageUrl?: string;
+  twitterTitle?: string;
+  twitterDescription?: string;
+  twitterImageUrl?: string;
+  keywords?: string[];
+}
+
+export interface BlogResolvedSeo {
+  title?: string;
+  description?: string;
+  canonicalUrl?: string;
+  canonical_url?: string;
+  robots?: string;
+  ogTitle?: string;
+  ogDescription?: string;
+  ogImageUrl?: string;
+  ogImageAlt?: string;
+  twitterTitle?: string;
+  twitterDescription?: string;
+  twitterImageUrl?: string;
+  twitterCard?: string;
+  keywords?: string[];
+}
+
+export interface BlogSection {
+  id?: string;
+  heading: string;
+  content: string;
+  order?: number;
+}
+
 export interface BlogPost {
   id: string;
   title: string;
   slug: string;
   category: string;
+  categoryId?: string;
   author: string;
   therapistName?: string;
   therapistAvatarUrl?: string;
   date: string;
+  publishedAt?: string;
   readTime: string;
+  readingTime?: number;
   summary: string;
+  excerptText?: string;
   content: string;
   imageUrl: string;
+  featuredImageUrl?: string;
+  featuredImageAlt?: string;
   tags: string[];
   published: boolean;
-  status?: 'active' | 'inactive';
+  status: BlogStatus;
+  isFeatured?: boolean;
   featureOnHomePage?: boolean;
-  seo?: {
-    metaTitle?: string;
-    metaDescription?: string;
-    keywords?: string[];
-  };
+  sections?: BlogSection[];
+  seo?: BlogSeo;
+  resolvedSeo?: BlogResolvedSeo;
+  previousSlugs?: string[];
   safeExcerpt?: string;
   excerptHtml?: string;
   createdAt?: string;
   updatedAt?: string;
+}
+
+export interface PaginationMeta {
+  page: number;
+  limit: number;
+  total: number;
+  totalPages: number;
+}
+
+export interface PaginatedBlogPosts {
+  items: BlogPost[];
+  pagination: PaginationMeta;
+}
+
+export interface BlogCategory {
+  id: string;
+  name: string;
+  slug: string;
+  description?: string;
+  count: number;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface BlogPublicDetail {
+  post: BlogPost;
+  related: BlogPost[];
+  previous: BlogPost | null;
+  next: BlogPost | null;
+  redirectTo?: string | null;
+  jsonLd?: Record<string, any> | null;
 }
 
 export interface ContactMessage {

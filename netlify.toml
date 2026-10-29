@@ -10,3 +10,17 @@
 
 # Redirects and headers live in public/_redirects and public/_headers so the same
 # behavior is used by CLI and Git-based deployments.
+
+# Live blog metadata + real 404s and a live sitemap. The files generated at build
+# time remain the fallback whenever the API is unreachable.
+[[edge_functions]]
+  function = "blog-meta"
+  path = "/blog"
+
+[[edge_functions]]
+  function = "blog-meta"
+  path = "/blog/*"
+
+[[edge_functions]]
+  function = "blog-sitemap"
+  path = "/sitemap.xml"
