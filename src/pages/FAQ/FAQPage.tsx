@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useOutletContext, useNavigate } from 'react-router-dom';
-import { HelpCircle, ArrowRight } from 'lucide-react';
+import { HelpCircle, ArrowRight, RefreshCw } from 'lucide-react';
 import { FAQ as FaqType } from '../../types';
 import { mockSettings } from '../../data/mockData';
 import { api } from '../../services/api';
@@ -17,20 +17,26 @@ export const FAQPageWrapper: React.FC = () => {
   const [faqs, setFaqs] = useState<FaqType[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [retryToken, setRetryToken] = useState(0);
 
   useEffect(() => {
+    let cancelled = false;
+    setLoading(true);
+    setError(null);
     (async () => {
       try {
         const data = await api.getFaqs('true');
+        if (cancelled) return;
         const publishedFaqs = data.filter((f: FaqType) => f.isPublished !== 0);
         setFaqs(publishedFaqs);
-        setLoading(false);
       } catch (err: any) {
-        setError(err?.message || 'Failed to load FAQs');
-        setLoading(false);
+        if (!cancelled) setError(err?.message || 'Failed to load FAQs');
+      } finally {
+        if (!cancelled) setLoading(false);
       }
     })();
-  }, []);
+    return () => { cancelled = true; };
+  }, [retryToken]);
 
   if (loading) {
     return (
@@ -61,6 +67,15 @@ export const FAQPageWrapper: React.FC = () => {
               : 'Verified answers are being prepared. If you have a question about appointments, therapies or privacy, the concierge can help.'}
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
+            {error && (
+              <button
+                type="button"
+                onClick={() => setRetryToken((value) => value + 1)}
+                className="inline-flex items-center gap-2 rounded-xl bg-brand-500 px-5 py-3 text-sm font-bold text-brand-950 hover:bg-brand-400 transition-colors"
+              >
+                <RefreshCw className="h-4 w-4" /> Try again
+              </button>
+            )}
             <Link
               to="/contact"
               className="inline-flex items-center gap-2 rounded-xl bg-brand-500 px-5 py-3 text-sm font-bold text-brand-950 hover:bg-brand-400 transition-colors"

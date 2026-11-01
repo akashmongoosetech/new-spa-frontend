@@ -1,4 +1,4 @@
-﻿import axios from 'axios';
+﻿import axios, { type InternalAxiosRequestConfig } from 'axios';
 import {
   Service,
   Therapist,
@@ -27,7 +27,30 @@ const API_BASE =
 const TOKEN_KEY = 'aura_admin_token';
 const USER_KEY = 'aura_admin_user';
 
-const http = axios.create({ baseURL: API_BASE, withCredentials: true, timeout: 20000 });
+// Reads can legitimately take longer than a normal request when the API host
+// is waking from an idle/sleep state. Mutations keep the shorter timeout so a
+// failed write does not leave the UI waiting unnecessarily.
+const configuredReadTimeout = Number(import.meta.env.VITE_API_READ_TIMEOUT_MS);
+const READ_TIMEOUT_MS =
+  Number.isFinite(configuredReadTimeout) && configuredReadTimeout > 0
+    ? configuredReadTimeout
+    : 45_000;
+const WRITE_TIMEOUT_MS = 20_000;
+const MAX_READ_RETRIES = 2;
+
+const RETRYABLE_STATUS = new Set([408, 502, 503, 504]);
+const RETRYABLE_CODES = new Set([
+  'ECONNABORTED',
+  'ETIMEDOUT',
+  'ERR_NETWORK',
+  'ECONNRESET',
+  'ENOTFOUND',
+  'EAI_AGAIN',
+]);
+
+type RetryableConfig = InternalAxiosRequestConfig & { __retryCount?: number };
+
+const http = axios.create({ baseURL: API_BASE, withCredentials: true, timeout: WRITE_TIMEOUT_MS });
 
 // Attach the stored JWT (if any) to every request.
 http.interceptors.request.use((config) => {
@@ -35,13 +58,21 @@ http.interceptors.request.use((config) => {
   if (token) {
     (config.headers as Record<string, string>).Authorization = `Bearer ${token}`;
   }
+  if ((config.method || 'get').toLowerCase() === 'get') {
+    config.timeout = READ_TIMEOUT_MS;
+  }
   return config;
 });
 
-// If the backend rejects a token, drop the stored session.
+function wait(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+// If the backend rejects a token, drop the stored session. Idempotent GETs are
+// also retried after transient failures (including a cold API instance).
 http.interceptors.response.use(
   (res) => res,
-  (error) => {
+  async (error) => {
     if (error?.response?.status === 401) {
       const hadSession = Boolean(localStorage.getItem(TOKEN_KEY));
       localStorage.removeItem(TOKEN_KEY);
@@ -56,8 +87,27 @@ http.interceptors.response.use(
       ) {
         window.location.assign('/admin-login');
       }
+      return Promise.reject(error);
     }
-    return Promise.reject(error);
+
+    const config = error?.config as RetryableConfig | undefined;
+    if (!config || (config.method || '').toLowerCase() !== 'get' || axios.isCancel(error)) {
+      return Promise.reject(error);
+    }
+
+    const status = error?.response?.status;
+    const retryable =
+      !error?.response || RETRYABLE_STATUS.has(status) || RETRYABLE_CODES.has(error?.code);
+    if (!retryable) return Promise.reject(error);
+
+    const retryCount = config.__retryCount || 0;
+    if (retryCount >= MAX_READ_RETRIES) return Promise.reject(error);
+
+    config.__retryCount = retryCount + 1;
+    // Short backoff plus jitter: the first retry is normally enough once the
+    // sleeping backend has started responding.
+    await wait(750 * 2 ** retryCount + Math.floor(Math.random() * 250));
+    return http.request(config);
   }
 );
 

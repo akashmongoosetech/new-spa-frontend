@@ -9,6 +9,7 @@ import {
   MapPin,
   MessageCircle,
   HelpCircle,
+  User,
 } from 'lucide-react';
 import { BusinessSettings, Service, Therapist } from '../types';
 import { publicWorkingHours } from '../utils/settings';
@@ -19,6 +20,10 @@ interface HomePageProps {
   settings: BusinessSettings;
   services: Service[];
   therapists: Therapist[];
+  servicesLoading?: boolean;
+  therapistsLoading?: boolean;
+  servicesError?: boolean;
+  therapistsError?: boolean;
   onOpenBooking: (serviceId?: string) => void;
   setActiveTab: (tab: string) => void;
 }
@@ -35,6 +40,10 @@ export const HomePage: React.FC<HomePageProps> = ({
   settings,
   services,
   therapists,
+  servicesLoading = false,
+  therapistsLoading = false,
+  servicesError = false,
+  therapistsError = false,
   onOpenBooking,
   setActiveTab,
 }) => {
@@ -135,7 +144,22 @@ export const HomePage: React.FC<HomePageProps> = ({
           ))}
         </div>
 
-        {filteredServices.length > 0 ? (
+        {servicesLoading ? (
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3" aria-label="Loading therapies">
+            {Array.from({ length: 3 }).map((_, index) => (
+              <div key={index} className="overflow-hidden rounded-3xl border border-gray-100 bg-white">
+                <div className="h-56 animate-pulse bg-gray-100" />
+                <div className="space-y-3 p-6">
+                  <div className="h-3 w-24 animate-pulse rounded bg-gray-100" />
+                  <div className="h-5 w-4/5 animate-pulse rounded bg-gray-100" />
+                  <div className="h-3 w-full animate-pulse rounded bg-gray-100" />
+                  <div className="h-3 w-2/3 animate-pulse rounded bg-gray-100" />
+                  <div className="h-10 w-full animate-pulse rounded-2xl bg-gray-100" />
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : filteredServices.length > 0 ? (
           <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
             {filteredServices.map((service) => (
               <div
@@ -213,6 +237,23 @@ export const HomePage: React.FC<HomePageProps> = ({
               </div>
             ))}
           </div>
+        ) : servicesError && safeServices.length === 0 ? (
+          <div className="rounded-3xl border border-amber-200 bg-amber-50 p-10 text-center">
+            <Sparkles className="mx-auto h-8 w-8 text-amber-600" />
+            <h3 className="mt-3 font-serif text-xl font-bold text-gray-900">
+              The live therapy menu could not be loaded
+            </h3>
+            <p className="mx-auto mt-2 max-w-lg text-sm text-gray-600">
+              Please use Retry above. If the problem continues, contact the concierge for the
+              current therapy menu.
+            </p>
+            <button
+              onClick={() => setActiveTab('contact')}
+              className="mt-5 inline-flex items-center gap-2 rounded-xl bg-brand-500 px-5 py-3 text-sm font-bold text-brand-950"
+            >
+              Contact concierge <ArrowRight className="h-4 w-4" />
+            </button>
+          </div>
         ) : (
           <div className="rounded-3xl border border-gray-200 bg-white p-10 text-center">
             <Sparkles className="mx-auto h-8 w-8 text-[var(--brand-ink)]" />
@@ -242,7 +283,7 @@ export const HomePage: React.FC<HomePageProps> = ({
         </div>
       </section>
 
-      {safeTherapists.length > 0 && (
+      {(therapistsLoading || therapistsError || safeTherapists.length > 0) && (
         <section className="border-y border-gray-100 bg-white py-16">
           <div className="mx-auto max-w-7xl px-4 sm:px-6">
             <div className="mx-auto mb-12 max-w-2xl space-y-3 text-center">
@@ -258,48 +299,73 @@ export const HomePage: React.FC<HomePageProps> = ({
               </p>
             </div>
 
-            <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
-              {safeTherapists.map((therapist) => (
-                <div
-                  key={therapist.id}
-                  className="space-y-4 rounded-3xl border border-gray-100 bg-[#FAFAFA] p-5 text-center transition-all hover:shadow-lg"
-                >
-                  <div className="mx-auto h-28 w-28 overflow-hidden rounded-full shadow-md ring-4 ring-white">
-                    <EntityImage
-                      src={therapist.photoUrl || therapist.imageUrl}
-                      alt={`${therapist.name}, massage therapist`}
-                      className="h-full w-full object-cover"
-                      placeholderClassName="h-full w-full rounded-full"
-                      label={therapist.name}
-                    />
+            {therapistsLoading ? (
+              <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4" aria-label="Loading therapists">
+                {Array.from({ length: 4 }).map((_, index) => (
+                  <div key={index} className="space-y-4 rounded-3xl border border-gray-100 bg-[#FAFAFA] p-5">
+                    <div className="mx-auto h-28 w-28 animate-pulse rounded-full bg-gray-100" />
+                    <div className="mx-auto h-4 w-2/3 animate-pulse rounded bg-gray-100" />
+                    <div className="mx-auto h-3 w-1/2 animate-pulse rounded bg-gray-100" />
+                    <div className="mx-auto h-3 w-full animate-pulse rounded bg-gray-100" />
+                    <div className="h-9 w-full animate-pulse rounded-xl bg-gray-100" />
                   </div>
-                  <div>
-                    <h3 className="font-serif text-lg font-bold text-gray-900">{therapist.name}</h3>
-                    <p className="mt-0.5 text-xs font-semibold text-[var(--brand-ink)]">
-                      {therapist.title}
-                    </p>
-                  </div>
-                  <p className="line-clamp-3 text-xs leading-relaxed text-gray-600">{therapist.bio}</p>
-                  <div className="flex flex-wrap justify-center gap-1">
-                    {(therapist.specialties || []).map((specialty, index) => (
-                      <span
-                        key={index}
-                        className="rounded-md border bg-white px-2.5 py-0.5 text-[10px] font-medium text-gray-600"
-                      >
-                        {specialty}
-                      </span>
-                    ))}
-                  </div>
-                  <button
-                    id={`book-therapist-${therapist.id}`}
-                    onClick={() => onOpenBooking()}
-                    className="w-full cursor-pointer rounded-xl bg-[#1A1A1A] py-2.5 text-xs font-bold text-white transition-colors hover:bg-brand-500 hover:text-brand-950"
+                ))}
+              </div>
+            ) : therapistsError ? (
+              <div className="rounded-3xl border border-amber-200 bg-amber-50 p-10 text-center">
+                <User className="mx-auto h-8 w-8 text-amber-600" />
+                <h3 className="mt-3 font-serif text-xl font-bold text-gray-900">
+                  The live therapist directory could not be loaded
+                </h3>
+                <p className="mx-auto mt-2 max-w-lg text-sm text-gray-600">
+                  Please use Retry above. You can still contact the concierge for the current team
+                  and appointment availability.
+                </p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
+                {safeTherapists.map((therapist) => (
+                  <div
+                    key={therapist.id}
+                    className="space-y-4 rounded-3xl border border-gray-100 bg-[#FAFAFA] p-5 text-center transition-all hover:shadow-lg"
                   >
-                    Book with {(therapist.name || '').split(' ')[0]}
-                  </button>
-                </div>
-              ))}
-            </div>
+                    <div className="mx-auto h-28 w-28 overflow-hidden rounded-full shadow-md ring-4 ring-white">
+                      <EntityImage
+                        src={therapist.photoUrl || therapist.imageUrl}
+                        alt={`${therapist.name}, massage therapist`}
+                        className="h-full w-full object-cover"
+                        placeholderClassName="h-full w-full rounded-full"
+                        label={therapist.name}
+                      />
+                    </div>
+                    <div>
+                      <h3 className="font-serif text-lg font-bold text-gray-900">{therapist.name}</h3>
+                      <p className="mt-0.5 text-xs font-semibold text-[var(--brand-ink)]">
+                        {therapist.title}
+                      </p>
+                    </div>
+                    <p className="line-clamp-3 text-xs leading-relaxed text-gray-600">{therapist.bio}</p>
+                    <div className="flex flex-wrap justify-center gap-1">
+                      {(therapist.specialties || []).map((specialty, index) => (
+                        <span
+                          key={index}
+                          className="rounded-md border bg-white px-2.5 py-0.5 text-[10px] font-medium text-gray-600"
+                        >
+                          {specialty}
+                        </span>
+                      ))}
+                    </div>
+                    <button
+                      id={`book-therapist-${therapist.id}`}
+                      onClick={() => onOpenBooking()}
+                      className="w-full cursor-pointer rounded-xl bg-[#1A1A1A] py-2.5 text-xs font-bold text-white transition-colors hover:bg-brand-500 hover:text-brand-950"
+                    >
+                      Book with {(therapist.name || '').split(' ')[0]}
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
 
             <div className="pt-10 text-center">
               <button

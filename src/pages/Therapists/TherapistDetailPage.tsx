@@ -2,6 +2,7 @@ import React from 'react';
 import { useParams, Link, useOutletContext } from 'react-router-dom';
 import { Calendar, ArrowLeft, CheckCircle2, Clock } from 'lucide-react';
 import { mockSettings } from '../../data/mockData';
+import { LoadingSpinner } from '../../components/ui/LoadingSpinner';
 import { SEO } from '../../components/ui/SEO';
 import { clampSeoDescription, clampSeoTitle } from '../../utils/seo';
 import { EntityImage } from '../../components/ui/EntityImage';
@@ -12,15 +13,46 @@ export const TherapistDetailPage: React.FC = () => {
   const context = useOutletContext<{
     therapists?: any[];
     settings?: typeof mockSettings;
+    therapistsLoading?: boolean;
+    therapistsError?: boolean;
+    retryCatalog?: () => void;
     onOpenBooking?: (serviceId?: string) => void;
   }>() || {};
 
   const therapists = context.therapists ?? [];
   const settings = context.settings || mockSettings;
+  const therapistsLoading = context.therapistsLoading ?? false;
+  const therapistsError = context.therapistsError ?? false;
 
   const therapist = therapists.find(
     (t) => t.id === slug || t.name.toLowerCase().replace(/\s+/g, '-') === slug
   );
+
+  if (therapistsLoading && therapists.length === 0) {
+    return (
+      <div className="flex min-h-[50vh] items-center justify-center">
+        <LoadingSpinner label="Loading therapist profile..." />
+      </div>
+    );
+  }
+
+  if (therapistsError && therapists.length === 0) {
+    return (
+      <div className="mx-auto flex min-h-[50vh] max-w-xl flex-col items-center justify-center px-4 text-center">
+        <h1 className="font-serif text-2xl font-bold text-gray-900">Therapist profile unavailable</h1>
+        <p className="mt-3 text-sm leading-relaxed text-gray-600">
+          The live therapist directory could not be loaded. Please retry, or contact the concierge.
+        </p>
+        <button
+          type="button"
+          onClick={context.retryCatalog}
+          className="mt-6 rounded-xl bg-brand-500 px-5 py-3 text-sm font-bold text-brand-950 hover:bg-brand-400"
+        >
+          Retry
+        </button>
+      </div>
+    );
+  }
 
   if (!therapist) {
     return <NotFound />;

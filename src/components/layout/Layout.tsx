@@ -27,6 +27,23 @@ export interface LayoutProps {
   showAssistantChat?: boolean;
 }
 
+type CatalogResource = 'services' | 'therapists' | 'settings';
+
+// React StrictMode mounts public effects twice in development. Share the
+// in-flight request so the first page load never fires duplicate catalog calls.
+const catalogInFlight: Partial<Record<CatalogResource, Promise<unknown>>> = {};
+
+function loadCatalogResource<T>(key: CatalogResource, loader: () => Promise<T>): Promise<T> {
+  const existing = catalogInFlight[key];
+  if (existing) return existing as Promise<T>;
+
+  const request = loader().finally(() => {
+    if (catalogInFlight[key] === request) delete catalogInFlight[key];
+  });
+  catalogInFlight[key] = request;
+  return request;
+}
+
 export const Layout: React.FC<LayoutProps> = ({
   children,
   settings: propSettings,
@@ -45,27 +62,74 @@ export const Layout: React.FC<LayoutProps> = ({
   const [settings, setSettings] = useState<BusinessSettings>(propSettings || mockSettings);
   const [services, setServices] = useState<Service[]>(propServices || []);
   const [therapists, setTherapists] = useState<Therapist[]>(propTherapists || []);
+  const [servicesLoading, setServicesLoading] = useState(true);
+  const [therapistsLoading, setTherapistsLoading] = useState(true);
+  const [settingsLoading, setSettingsLoading] = useState(true);
+  const [servicesError, setServicesError] = useState(false);
+  const [therapistsError, setTherapistsError] = useState(false);
+  const [settingsError, setSettingsError] = useState(false);
+  const [catalogError, setCatalogError] = useState('');
+  const [catalogRetryToken, setCatalogRetryToken] = useState(0);
 
-  // Load real data from the API when this layout is used without injected props.
+  // Load the public catalog independently so one slow endpoint does not hold
+  // back data from the other sections. Failures are surfaced instead of being
+  // silently converted into "empty" data.
   useEffect(() => {
     let cancelled = false;
-    (async () => {
-      try {
-        const [svc, thp, st] = await Promise.all([
-          api.getServices().catch(() => []),
-          api.getTherapists().catch(() => []),
-          api.getSettings().catch(() => null),
-        ]);
-        if (cancelled) return;
-        if (Array.isArray(svc)) setServices(svc);
-        if (Array.isArray(thp)) setTherapists(thp);
-        if (st) setSettings(st);
-      } catch (err) {
-        // keep placeholder state
+    const markFailed = () => {
+      if (!cancelled) {
+        setCatalogError('Some live content could not be loaded right now.');
       }
-    })();
+    };
+
+    setCatalogError('');
+    setServicesError(false);
+    setTherapistsError(false);
+    setSettingsError(false);
+    setServicesLoading(true);
+    setTherapistsLoading(true);
+    setSettingsLoading(true);
+
+    loadCatalogResource('services', () => api.getServices())
+      .then((svc) => {
+        if (!cancelled && Array.isArray(svc)) setServices(svc);
+      })
+      .catch(() => {
+        if (!cancelled) setServicesError(true);
+        markFailed();
+      })
+      .finally(() => {
+        if (!cancelled) setServicesLoading(false);
+      });
+
+    loadCatalogResource('therapists', () => api.getTherapists())
+      .then((thp) => {
+        if (!cancelled && Array.isArray(thp)) setTherapists(thp);
+      })
+      .catch(() => {
+        if (!cancelled) setTherapistsError(true);
+        markFailed();
+      })
+      .finally(() => {
+        if (!cancelled) setTherapistsLoading(false);
+      });
+
+    loadCatalogResource('settings', () => api.getSettings())
+      .then((st) => {
+        if (!cancelled && st) setSettings(st);
+      })
+      .catch(() => {
+        if (!cancelled) setSettingsError(true);
+        markFailed();
+      })
+      .finally(() => {
+        if (!cancelled) setSettingsLoading(false);
+      });
+
     return () => { cancelled = true; };
-  }, []);
+  }, [catalogRetryToken]);
+
+  const retryCatalog = () => setCatalogRetryToken((value) => value + 1);
 
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
   const [isBookingOpen, setIsBookingOpen] = useState(false);
@@ -139,6 +203,18 @@ export const Layout: React.FC<LayoutProps> = ({
   }, []);
 
   const handleOpenBooking = (serviceId?: string) => {
+    if (services.length === 0 && servicesLoading) {
+      addToast('info', 'The live therapy menu is still loading. Please try again in a moment.');
+      return;
+    }
+    if (services.length === 0 && servicesError) {
+      addToast('error', 'The live therapy menu could not be loaded. Please use Retry above.');
+      return;
+    }
+    if (services.length === 0) {
+      addToast('info', 'No therapies are currently available online. Please contact the concierge.');
+      return;
+    }
     if (propOnOpenBooking) {
       propOnOpenBooking(serviceId);
     } else {
@@ -229,12 +305,34 @@ export const Layout: React.FC<LayoutProps> = ({
       />
 
       <main className="flex-grow">
+        {catalogError && (
+          <div className="border-b border-amber-200 bg-amber-50">
+            <div className="mx-auto flex max-w-7xl flex-col gap-2 px-4 py-2.5 text-xs text-amber-900 sm:flex-row sm:items-center sm:justify-between sm:px-6">
+              <p>{catalogError} The rest of the page is still available.</p>
+              <button
+                type="button"
+                onClick={retryCatalog}
+                className="self-start rounded-lg border border-amber-300 bg-white px-3 py-1.5 font-bold text-amber-900 transition-colors hover:bg-amber-100 sm:self-auto"
+              >
+                Retry
+              </button>
+            </div>
+          </div>
+        )}
         {children || (
           <Outlet
             context={{
               services,
               therapists,
               settings,
+              servicesLoading,
+              therapistsLoading,
+              settingsLoading,
+              servicesError,
+              therapistsError,
+              settingsError,
+              catalogError,
+              retryCatalog,
               onOpenBooking: handleOpenBooking,
               addToast,
             }}

@@ -9,6 +9,10 @@ export const HomePageWrapper: React.FC = () => {
     services?: any[];
     therapists?: any[];
     settings?: typeof mockSettings;
+    servicesLoading?: boolean;
+    therapistsLoading?: boolean;
+    servicesError?: boolean;
+    therapistsError?: boolean;
     onOpenBooking?: (serviceId?: string) => void;
   }>() || {};
 
@@ -17,6 +21,10 @@ export const HomePageWrapper: React.FC = () => {
       settings={context.settings || mockSettings}
       services={context.services ?? []}
       therapists={context.therapists ?? []}
+      servicesLoading={context.servicesLoading}
+      therapistsLoading={context.therapistsLoading}
+      servicesError={context.servicesError}
+      therapistsError={context.therapistsError}
       onOpenBooking={context.onOpenBooking || (() => {})}
       setActiveTab={(tab) => {
         if (tab === 'home') navigate('/');

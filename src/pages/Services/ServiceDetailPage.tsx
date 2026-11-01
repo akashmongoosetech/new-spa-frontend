@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link, useOutletContext, useNavigate } from 'react-router-dom';
 import { Clock, CheckCircle2, Calendar, ArrowLeft, ShieldCheck, Sparkles } from 'lucide-react';
+import { LoadingSpinner } from '../../components/ui/LoadingSpinner';
 import { SEO } from '../../components/ui/SEO';
 import { clampSeoDescription, clampSeoTitle } from '../../utils/seo';
 import { EntityImage } from '../../components/ui/EntityImage';
@@ -18,12 +19,17 @@ export const ServiceDetailPage: React.FC = () => {
     services?: any[];
     settings?: typeof defaultSettings;
     therapists?: any[];
+    servicesLoading?: boolean;
+    servicesError?: boolean;
+    retryCatalog?: () => void;
     onOpenBooking?: (serviceId?: string) => void;
   }>() || {};
 
   const services = context.services ?? [];
   const therapists = context.therapists || [];
   const settings = context.settings || defaultSettings;
+  const servicesLoading = context.servicesLoading ?? false;
+  const servicesError = context.servicesError ?? false;
 
   const service = services.find(
     (s) => s.slug === slug || s.id === slug
@@ -47,6 +53,7 @@ export const ServiceDetailPage: React.FC = () => {
   const [bookingStatus, setBookingStatus] = useState<'idle' | 'submitting'>('idle');
   const [availableSlots, setAvailableSlots] = useState<string[]>([]);
   const [slotsLoading, setSlotsLoading] = useState(false);
+  const [slotsError, setSlotsError] = useState(false);
   const [consent, setConsent] = useState(false);
   const [website, setWebsite] = useState('');
 
@@ -55,6 +62,7 @@ export const ServiceDetailPage: React.FC = () => {
     let cancelled = false;
     if (!bookingData.selectedDate) return;
     setSlotsLoading(true);
+    setSlotsError(false);
     api.getAvailability(bookingData.selectedDate, bookingData.selectedTherapist || 'any')
       .then((res) => {
         if (cancelled) return;
@@ -67,7 +75,10 @@ export const ServiceDetailPage: React.FC = () => {
         );
       })
       .catch(() => {
-        if (!cancelled) setAvailableSlots([]);
+        if (!cancelled) {
+          setAvailableSlots([]);
+          setSlotsError(true);
+        }
       })
       .finally(() => {
         if (!cancelled) setSlotsLoading(false);
@@ -121,6 +132,32 @@ export const ServiceDetailPage: React.FC = () => {
       });
     }
   };
+
+  if (servicesLoading && services.length === 0) {
+    return (
+      <div className="flex min-h-[50vh] items-center justify-center">
+        <LoadingSpinner label="Loading therapy details..." />
+      </div>
+    );
+  }
+
+  if (servicesError && services.length === 0) {
+    return (
+      <div className="mx-auto flex min-h-[50vh] max-w-xl flex-col items-center justify-center px-4 text-center">
+        <h1 className="font-serif text-2xl font-bold text-gray-900">Therapy details unavailable</h1>
+        <p className="mt-3 text-sm leading-relaxed text-gray-600">
+          The live therapy menu could not be loaded. Please retry, or contact the concierge.
+        </p>
+        <button
+          type="button"
+          onClick={context.retryCatalog}
+          className="mt-6 rounded-xl bg-brand-500 px-5 py-3 text-sm font-bold text-brand-950 hover:bg-brand-400"
+        >
+          Retry
+        </button>
+      </div>
+    );
+  }
 
   if (!service) {
     return <NotFound />;
@@ -304,7 +341,10 @@ export const ServiceDetailPage: React.FC = () => {
                     className="w-full border border-gray-300 rounded-xl py-3 px-4 text-sm focus:border-[#BFA476] focus:outline-none disabled:bg-gray-100"
                   >
                     {slotsLoading && <option value="">Loading available slots…</option>}
-                    {!slotsLoading && availableSlots.length === 0 && (
+                    {!slotsLoading && slotsError && (
+                      <option value="">Availability could not be loaded — try again</option>
+                    )}
+                    {!slotsLoading && !slotsError && availableSlots.length === 0 && (
                       <option value="">No slots available — choose another date</option>
                     )}
                     {availableSlots.map((slot) => (

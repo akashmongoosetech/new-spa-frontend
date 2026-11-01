@@ -7,12 +7,16 @@ import { Modal } from '../components/ui/Modal';
 interface ServicesPageProps {
   services: Service[];
   settings: BusinessSettings;
+  servicesLoading?: boolean;
+  servicesError?: boolean;
   onOpenBooking: (serviceId?: string) => void;
 }
 
 export const ServicesPage: React.FC<ServicesPageProps> = ({
   services,
   settings,
+  servicesLoading = false,
+  servicesError = false,
   onOpenBooking,
 }) => {
   const [activeCategory, setActiveCategory] = useState<string>('all');
@@ -70,7 +74,19 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({
 
         {/* Services List */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filteredServices.map((srv) => (
+          {servicesLoading ? (
+            Array.from({ length: 3 }).map((_, index) => (
+              <div key={index} className="overflow-hidden rounded-3xl border border-gray-100 bg-white">
+                <div className="h-60 animate-pulse bg-gray-100" />
+                <div className="space-y-2 p-6">
+                  <div className="h-3 w-28 animate-pulse rounded bg-gray-100" />
+                  <div className="h-5 w-4/5 animate-pulse rounded bg-gray-100" />
+                  <div className="h-3 w-full animate-pulse rounded bg-gray-100" />
+                  <div className="h-3 w-2/3 animate-pulse rounded bg-gray-100" />
+                </div>
+              </div>
+            ))
+          ) : filteredServices.map((srv) => (
             <div
               key={srv.id}
               className="bg-white rounded-3xl overflow-hidden border border-gray-100 shadow-md hover:shadow-xl transition-all duration-300 flex flex-col justify-between"
@@ -150,6 +166,22 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({
             </div>
           ))}
         </div>
+
+        {!servicesLoading && filteredServices.length === 0 && (
+          <div className={`rounded-3xl border p-10 text-center ${servicesError && safeServices.length === 0 ? 'border-amber-200 bg-amber-50' : 'border-gray-200 bg-white'}`}>
+            <Info className="mx-auto h-8 w-8 text-[var(--brand-ink)]" />
+            <h2 className="mt-3 font-serif text-xl font-bold text-gray-900">
+              {servicesError && safeServices.length === 0
+                ? 'The live therapy menu could not be loaded'
+                : 'Therapy details are being updated'}
+            </h2>
+            <p className="mx-auto mt-2 max-w-lg text-sm text-gray-600">
+              {servicesError && safeServices.length === 0
+                ? 'Please use Retry above. If the problem continues, contact the concierge for the current therapy menu.'
+                : 'Please contact the concierge for the current therapy menu, session lengths and prices.'}
+            </p>
+          </div>
+        )}
       </div>
 
       {/* Service Detail Modal */}

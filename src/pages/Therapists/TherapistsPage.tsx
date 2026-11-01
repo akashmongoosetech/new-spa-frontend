@@ -12,10 +12,14 @@ export const TherapistsPage: React.FC = () => {
   const context = useOutletContext<{
     therapists?: any[];
     settings?: typeof mockSettings;
+    therapistsLoading?: boolean;
+    therapistsError?: boolean;
     onOpenBooking?: (serviceId?: string) => void;
   }>() || {};
 
   const therapists = context.therapists ?? [];
+  const therapistsLoading = context.therapistsLoading ?? false;
+  const therapistsError = context.therapistsError ?? false;
 
   return (
     <div className="min-h-screen bg-[#FAFAFA] py-12 font-sans">
@@ -33,7 +37,21 @@ export const TherapistsPage: React.FC = () => {
           </p>
         </div>
 
-        {therapists.length > 0 ? (
+        {therapistsLoading ? (
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3" aria-label="Loading therapists">
+            {Array.from({ length: 3 }).map((_, index) => (
+              <div key={index} className="overflow-hidden rounded-2xl border border-gray-100 bg-white">
+                <div className="h-64 animate-pulse bg-gray-100" />
+                <div className="space-y-3 p-6">
+                  <div className="h-5 w-2/3 animate-pulse rounded bg-gray-100" />
+                  <div className="h-3 w-1/2 animate-pulse rounded bg-gray-100" />
+                  <div className="h-3 w-full animate-pulse rounded bg-gray-100" />
+                  <div className="h-3 w-4/5 animate-pulse rounded bg-gray-100" />
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : therapists.length > 0 ? (
           <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
             {therapists.map((therapist) => (
               <div
@@ -97,6 +115,23 @@ export const TherapistsPage: React.FC = () => {
                 </div>
               </div>
             ))}
+          </div>
+        ) : therapistsError ? (
+          <div className="rounded-3xl border border-amber-200 bg-amber-50 p-10 text-center">
+            <User className="mx-auto h-8 w-8 text-amber-600" />
+            <h2 className="mt-3 font-serif text-xl font-bold text-gray-900">
+              The live therapist directory could not be loaded
+            </h2>
+            <p className="mx-auto mt-2 max-w-lg text-sm text-gray-600">
+              Please use Retry above. You can still contact the concierge for the current team and
+              appointment availability.
+            </p>
+            <Link
+              to="/contact"
+              className="mt-5 inline-flex items-center gap-2 rounded-xl bg-brand-500 px-5 py-3 text-sm font-bold text-brand-950"
+            >
+              Contact concierge <ArrowRight className="h-4 w-4" />
+            </Link>
           </div>
         ) : (
           <div className="rounded-3xl border border-gray-200 bg-white p-10 text-center">

@@ -7,6 +7,8 @@ export const ServicesPageWrapper: React.FC = () => {
   const context = useOutletContext<{
     services?: any[];
     settings?: typeof mockSettings;
+    servicesLoading?: boolean;
+    servicesError?: boolean;
     onOpenBooking?: (serviceId?: string) => void;
   }>() || {};
 
@@ -14,6 +16,8 @@ export const ServicesPageWrapper: React.FC = () => {
     <OriginalServicesPage
       services={context.services ?? []}
       settings={context.settings || mockSettings}
+      servicesLoading={context.servicesLoading}
+      servicesError={context.servicesError}
       onOpenBooking={context.onOpenBooking || (() => {})}
     />
   );

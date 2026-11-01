@@ -26,6 +26,7 @@ export const AvailabilityCalendar: React.FC<AvailabilityCalendarProps> = ({
 }) => {
   const [slots, setSlots] = useState<TimeSlotItem[]>([]);
   const [loading, setLoading] = useState(false);
+  const [availabilityError, setAvailabilityError] = useState(false);
   const [horizonDays, setHorizonDays] = useState(14);
 
   // Booking horizon follows the backend advanceBookingDays setting (14 fallback).
@@ -60,11 +61,14 @@ export const AvailabilityCalendar: React.FC<AvailabilityCalendarProps> = ({
   useEffect(() => {
     const fetchSlots = async () => {
       setLoading(true);
+      setAvailabilityError(false);
       try {
         const data = await api.getAvailability(selectedDate, selectedTherapistId);
         setSlots(data.slots || []);
       } catch (err) {
         console.error('Error fetching availability:', err);
+        setSlots([]);
+        setAvailabilityError(true);
       } finally {
         setLoading(false);
       }
@@ -236,8 +240,10 @@ export const AvailabilityCalendar: React.FC<AvailabilityCalendarProps> = ({
               groupSlots.night
             )}
             {safeSlots.length === 0 && (
-              <p className="text-xs text-gray-400 text-center py-4">
-                No slots available on this date — pick another day.
+              <p className={`text-xs text-center py-4 ${availabilityError ? 'text-amber-400' : 'text-gray-400'}`}>
+                {availabilityError
+                  ? 'Live availability could not be loaded. Please check another date or try again.'
+                  : 'No slots available on this date - pick another day.'}
               </p>
             )}
           </div>
