@@ -6,7 +6,7 @@
   NODE_VERSION = "22"
   NPM_FLAGS = "--no-audit --no-fund"
   VITE_API_URL = "https://new-spa-backend.onrender.com/api"
-  VITE_SITE_URL = "https://tripod-wellness.netlify.app"
+  VITE_SITE_URL = "https://tripod-wellness.netlify.app","https://tripodwellness.us.ci/","https://tripodwellness.de5.net/"
 
 # Redirects and headers live in public/_redirects and public/_headers so the same
 # behavior is used by CLI and Git-based deployments.
